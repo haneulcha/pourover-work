@@ -1,0 +1,11 @@
+/* Motion primitives — duration / easing. */
+
+:root {
+  --motion-duration-base: 320ms;
+  --motion-duration-long: 450ms;
+  --motion-easing: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  /* Screen transitions (View Transitions API) — base보다 느리고 부드럽게 */
+  --motion-duration-screen: 600ms;
+  --motion-easing-screen: cubic-bezier(0.34, 1.12, 0.36, 1);
+}

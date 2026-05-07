@@ -1,0 +1,47 @@
+/* Brewing domain tokens — BrewingScreen, drawdown hero, ring labels.
+   spec 외 brand 차별화 영역. semantic 참조하지 않고 자체 값. */
+
+:root {
+  /* Liquid gradient stops (coffee amber, red-shifted, 반투명) */
+  --color-brewing-liquid-top: rgba(231, 183, 129, 0.45);
+  --color-brewing-liquid-mid: rgba(196, 124, 68, 0.65);
+  --color-brewing-liquid-deep: rgba(138, 70, 32, 0.82);
+  --color-brewing-liquid-bottom: rgba(76, 38, 18, 0.9);
+
+  /* Ring on liquid */
+  --color-ring-future: var(--neutral-400);
+  --color-ring-on-liquid: rgba(251, 247, 239, 0.42);
+  --color-ring-on-liquid-label: rgba(251, 247, 239, 0.78);
+
+  /* Liquid surface */
+  --color-meniscus-highlight: rgba(255, 247, 228, 0.55);
+
+  /* Text on liquid (drawdown hero) */
+  --color-text-on-liquid: var(--neutral-0);
+
+  /* Cup rim shadows */
+  --shadow-rim-inset: inset 0 6px 14px -10px rgba(0, 0, 0, 0.18);
+  --shadow-cup-inset: inset 0 8px 16px -12px rgba(0, 0, 0, 0.12);
+
+  /* Sizing */
+  --brewing-rim-height: 92px;
+  --brewing-hero-gap: 12px;
+}
+
+[data-theme="dark"] {
+  --color-brewing-liquid-top: rgba(243, 204, 158, 0.78);
+  --color-brewing-liquid-mid: rgba(216, 148, 88, 0.86);
+  --color-brewing-liquid-deep: rgba(158, 88, 48, 0.92);
+  --color-brewing-liquid-bottom: rgba(96, 48, 24, 0.97);
+
+  --color-ring-future: var(--neutral-500);
+  --color-ring-on-liquid: rgba(251, 247, 239, 0.32);
+  --color-ring-on-liquid-label: rgba(251, 247, 239, 0.72);
+
+  --color-meniscus-highlight: rgba(255, 247, 228, 0.42);
+
+  --color-text-on-liquid: var(--neutral-0);
+
+  --shadow-rim-inset: inset 0 6px 14px -10px rgba(0, 0, 0, 0.5);
+  --shadow-cup-inset: inset 0 8px 16px -12px rgba(0, 0, 0, 0.4);
+}

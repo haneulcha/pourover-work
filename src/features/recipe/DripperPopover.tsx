@@ -32,7 +32,7 @@ export function DripperPopover({
       <div
         role="dialog"
         aria-label="드리퍼 선택"
-        className="absolute left-[4.25rem] top-full z-popover min-w-popover origin-top-left rounded-card border border-border bg-surface p-1 shadow-popover motion-safe:animate-popover-in"
+        className="absolute left-[4.25rem] top-full z-popover min-w-popover origin-top-left rounded-card border border-surface-hairline bg-surface p-1 shadow-floating motion-safe:animate-popover-in"
       >
         {options.map((opt) => {
           const isSelected = opt.id === selected;
@@ -44,14 +44,14 @@ export function DripperPopover({
               aria-label={opt.name}
               onClick={() => onSelect(opt.id)}
               className={cx(
-                "flex w-full items-center gap-3 rounded-control-group px-2 py-2 text-left transition-colors",
-                isSelected ? "bg-surface-inset" : "hover:bg-surface-inset/60",
+                "flex w-full items-center gap-3 rounded-card px-2 py-2 text-left transition-colors",
+                isSelected ? "bg-surface-strong" : "hover:bg-surface-strong/60",
               )}
             >
               <DripperIcon type={opt.id} size={32} selected={isSelected} />
               <div className="flex-1">
-                <div className="text-sm font-medium">{opt.name}</div>
-                <div className="text-2xs text-text-muted">
+                <div className="text-body-sm font-medium">{opt.name}</div>
+                <div className="text-caption-xxs text-text-muted">
                   {opt.methodSubtitle}
                 </div>
               </div>

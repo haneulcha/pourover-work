@@ -1,5 +1,7 @@
+/* Raw color scales — 직접 사용 금지. semantic 또는 component 토큰을 통해서만 참조. */
+
 :root {
-  /* Neutral scale — ivory → espresso (브랜드 앵커 정렬: 채도 ↑, 명도 ↓) */
+  /* Neutral scale — ivory → espresso (브랜드 앵커 정렬) */
   --neutral-0: #fbf7ef;
   --neutral-50: #f5efe4;
   --neutral-100: #ebe3d2;
@@ -25,49 +27,13 @@
   --accent-800: #6e4420;
   --accent-900: #543319;
 
-  /* Signal */
+  /* Status scales — 50(bg, 매우 옅음) + 500(text, 진함). spec 4 status × 2 variants. */
+  --red-50: #fbeae6;
   --red-500: #c45a4d;
-  --amber-500: #d49a3c;
+  --green-50: #eef5ea;
   --green-500: #6b9360;
-
-  /* Radius — 브랜드 톤(따뜻하고 후한 곡률) */
-  --radius-xs: 4px;
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
-  --radius-xl: 20px;
-  --radius-pill: 9999px;
-
-  /* Motion */
-  --motion-duration-base: 320ms;
-  --motion-duration-long: 450ms;
-  --motion-easing: cubic-bezier(0.2, 0.8, 0.2, 1);
-
-  /* Screen transitions (View Transitions API) — 전 UI 공용 모션보다 느리고 부드럽게 */
-  --motion-duration-screen: 600ms;
-  --motion-easing-screen: cubic-bezier(0.34, 1.12, 0.36, 1);
-
-  /* Typography — 일관된 배수 스케일 + 히어로 전용 2개 */
-  --font-size-2xs: 10px;
-  --font-size-xs: 12px;
-  --font-size-sm: 14px;
-  --font-size-md: 16px;
-  --font-size-lg: 20px;
-  --font-size-xl: 22px;
-  --font-size-2xl: 24px;
-  --font-size-hero-sm: 72px;
-  --font-size-hero-lg: 96px;
-
-  --line-height-tight: 1;
-  --line-height-snug: 1.2;
-  --line-height-base: 1.5;
-
-  --letter-spacing-wide: 0.04em;
-  --letter-spacing-wider: 0.08em;
-  --letter-spacing-widest: 0.12em;
-
-  /* Shadow — 부상 레이어(control/popover/dialog) 전용, 매우 옅게 */
-  --shadow-hairline: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.04), 0 2px 6px rgba(0, 0, 0, 0.04);
-  --shadow-lift: 0 2px 8px rgba(0, 0, 0, 0.06), 0 6px 16px rgba(0, 0, 0, 0.06);
+  --amber-50: #faf0d9;
+  --amber-500: #d49a3c;
+  --blue-50: #eaf1f8;
+  --blue-500: #4a78a3;
 }

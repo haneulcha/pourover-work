@@ -9,13 +9,13 @@ const noRestrictedClassName = [
     selector:
       "JSXAttribute[name.name='className'] Literal[value=/\\btext-\\[/]",
     message:
-      "Use a semantic text-* token (text-2xs/xs/sm/md/lg/xl/2xl/hero-sm/hero-lg). Arbitrary text-[Npx] is banned.",
+      "Use a named text style (text-heading-{xl,lg,md,sm,xs,xxs} | text-body-{lg,md,sm} | text-caption-{md,sm,xs,xxs}). Arbitrary text-[Npx] is banned.",
   },
   {
     selector:
-      "JSXAttribute[name.name='className'] Literal[value=/\\btext-base\\b/]",
+      "JSXAttribute[name.name='className'] Literal[value=/\\btext-(base|2xs|xs|sm|md|lg|xl|2xl|3xl|4xl|5xl|6xl|7xl|8xl|9xl)\\b/]",
     message:
-      "Use text-md instead of text-base (our scale defines 16px as md).",
+      "Raw size text-* is banned. Use only text-heading-*, text-body-*, or text-caption-* named styles.",
   },
   {
     selector:
@@ -33,7 +33,7 @@ const noRestrictedClassName = [
     selector:
       "JSXAttribute[name.name='className'] Literal[value=/\\brounded-(xs|sm|md|lg|xl|2xl|3xl|full)\\b/]",
     message:
-      "Use semantic rounded-* alias (rounded-control-compact/control/control-group/button/card/surface/pill). Size-named rounded-* is banned.",
+      "Use semantic rounded-* alias (rounded-subtle/button/input/card/large/pill). Size-named rounded-* is banned.",
   },
   {
     selector:
@@ -44,12 +44,12 @@ const noRestrictedClassName = [
     selector:
       "JSXAttribute[name.name='className'] Literal[value=/\\bshadow-(sm|md|lg|xl|2xl|inner)\\b/]",
     message:
-      "Use semantic shadow-raised/popover/dialog. Size-named shadow-* is banned.",
+      "Use semantic shadow tier (shadow-hairline/raised/floating/overlay) or domain shadow (shadow-rim-inset/cup-inset). Size-named shadow-* is banned.",
   },
   {
     selector: "JSXAttribute[name.name='className'] Literal[value=/\\bshadow-\\[/]",
     message:
-      "Use semantic shadow-raised/popover/dialog. Arbitrary shadow-[...] is banned.",
+      "Use semantic shadow tier or domain shadow. Arbitrary shadow-[...] is banned.",
   },
   {
     selector:

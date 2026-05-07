@@ -1,0 +1,35 @@
+/* Typography primitives — font family chains 및 raw scale.
+   Named text style(heading-xl, body-md, …)은 tailwind.config.ts의 fontSize에서 정의. */
+
+:root {
+  --font-sans:
+    "Pretendard Variable", "Pretendard", "Inter", -apple-system, BlinkMacSystemFont,
+    system-ui, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --font-mono:
+    "Geist Mono", "IBM Plex Mono", "D2Coding", "Noto Sans Mono CJK KR", "SF Mono",
+    Consolas, monospace;
+
+  /* Font-size raw scale (px). named text style 정의에서 참조 또는 임의 사용 금지. */
+  --font-size-10: 10px;
+  --font-size-11: 11px;
+  --font-size-12: 12px;
+  --font-size-14: 14px;
+  --font-size-16: 16px;
+  --font-size-18: 18px;
+  --font-size-20: 20px;
+  --font-size-24: 24px;
+  --font-size-32: 32px;
+  --font-size-48: 48px;
+  --font-size-64: 64px;
+
+  /* Line-height raw */
+  --line-height-tight: 1;
+  --line-height-snug: 1.2;
+  --line-height-base: 1.5;
+
+  /* Letter-spacing raw — spec heading은 -0.02em, badge는 +0.05em */
+  --letter-spacing-tight: -0.02em;
+  --letter-spacing-wide: 0.05em;
+  --letter-spacing-wider: 0.08em;
+  --letter-spacing-widest: 0.12em;
+}

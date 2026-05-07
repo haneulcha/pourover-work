@@ -11,13 +11,13 @@ type Props = {
 
 export function WallScreen({ selectedDripper, onPickDripper }: Props) {
   return (
-    <div className="mx-auto flex min-h-svh max-w-lg flex-col bg-wall text-text-primary">
+    <div className="mx-auto flex min-h-svh max-w-lg flex-col bg-surface-strong text-text-primary">
       {/* 타이틀 zone */}
       <header className="text-center w-full px-5 pt-16">
-        <h1 className="text-2xl font-medium leading-none tracking-tight">
+        <h1 className="text-heading-sm font-medium leading-none tracking-tight">
           핸드 드립 계산기
         </h1>
-        <p className="text-md text-text-secondary mt-2">저만 믿고 따라오세요</p>
+        <p className="text-body-md text-text-secondary mt-2">저만 믿고 따라오세요</p>
       </header>
 
       {/* shelf */}
@@ -36,11 +36,11 @@ export function WallScreen({ selectedDripper, onPickDripper }: Props) {
                 aria-pressed={isSelected}
                 aria-label={d.name}
                 style={{ viewTransitionName: `dripper-${d.id}` }}
-                className="transition-colors hover:bg-surface-inset/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-focus"
+                className="transition-colors hover:bg-surface-strong/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-focus"
               >
                 <span
                   className={cx(
-                    "text-sm -mb-2 block",
+                    "text-body-sm -mb-2 block",
                     isSelected
                       ? "font-medium text-text-primary"
                       : "text-text-secondary",
@@ -54,7 +54,7 @@ export function WallScreen({ selectedDripper, onPickDripper }: Props) {
           })}
         </div>
         <div className="mx-8 h-px bg-border-strong" />
-        <p className="mt-8 text-center text-sm text-text-muted">
+        <p className="mt-8 text-center text-body-sm text-text-muted">
           드리퍼를 선택하면 레시피를 고르러 가요
         </p>
       </section>

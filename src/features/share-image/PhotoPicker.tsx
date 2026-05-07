@@ -19,14 +19,14 @@ export function PhotoPicker({ onPick }: Props) {
       <button
         type="button"
         onClick={() => cameraRef.current?.click()}
-        className="rounded-button border border-text-primary bg-surface-subtle py-3.5 text-sm font-medium transition-colors hover:bg-surface-inset"
+        className="rounded-button border border-text-primary bg-surface-soft py-3.5 text-body-sm font-medium transition-colors hover:bg-surface-strong"
       >
         사진 찍기
       </button>
       <button
         type="button"
         onClick={() => galleryRef.current?.click()}
-        className="rounded-button border border-border bg-surface py-3.5 text-sm font-medium transition-colors hover:bg-surface-inset"
+        className="rounded-button border border-surface-hairline bg-surface py-3.5 text-body-sm font-medium transition-colors hover:bg-surface-strong"
       >
         갤러리에서 선택
       </button>

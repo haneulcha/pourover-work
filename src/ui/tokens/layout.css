@@ -1,0 +1,26 @@
+/* Layout — spacing scale, z-index, opacity, sizes. */
+
+:root {
+  /* Spacing (spec 정합) — Tailwind spacing extend로도 노출됨 */
+  --space-xxs: 4px;
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-xxl: 48px;
+  --space-section: 80px;
+
+  /* Z-index — 부상 레이어 순서 */
+  --z-popover: 20;
+  --z-dialog: 30;
+
+  /* Opacity — 의미 있는 감쇠 값 */
+  --opacity-disabled: 0.4;
+  --opacity-dim: 0.6;
+  --opacity-muted: 0.88;
+
+  /* Size — 컴포넌트 sizing primitive */
+  --size-popover-min: 11rem;
+  --size-progress-rail: 2px;
+}

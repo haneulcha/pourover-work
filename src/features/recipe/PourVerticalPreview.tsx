@@ -55,7 +55,7 @@ export function PourVerticalPreview({
         y1={padT}
         x2={axisX}
         y2={height - padB}
-        stroke="var(--color-border)"
+        stroke="var(--color-bg-hairline)"
         strokeWidth={STROKE.hairline}
       />
 
@@ -89,7 +89,7 @@ export function PourVerticalPreview({
               x={barStart + barW + 8}
               y={y + 3.5}
               fontSize={12}
-              fill="var(--color-text-primary)"
+              fill="var(--color-text-ink)"
               className="tabular-nums"
             >
               +{p.pourAmount}g
@@ -119,8 +119,8 @@ export function PourVerticalPreview({
           cx={axisX}
           cy={ty(totalTimeSec)}
           r={nodeR}
-          fill="var(--color-text-secondary)"
-          stroke="var(--color-text-secondary)"
+          fill="var(--color-text-body)"
+          stroke="var(--color-text-body)"
         />
       </g>
     </svg>
@@ -141,7 +141,7 @@ const Label = ({
       x={x - 12}
       y={y + 4}
       fontSize={12}
-      fill="var(--color-text-secondary)"
+      fill="var(--color-text-body)"
       textAnchor="end"
       className="tabular-nums"
     >

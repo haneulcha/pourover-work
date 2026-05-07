@@ -13,47 +13,59 @@ export default {
       },
       borderRadius: {
         none: "0",
-        xs: "var(--radius-xs)",
-        sm: "var(--radius-sm)",
-        DEFAULT: "var(--radius-control)",
-        md: "var(--radius-md)",
-        lg: "var(--radius-lg)",
-        xl: "var(--radius-xl)",
-        full: "var(--radius-pill)",
-        "control-compact": "var(--radius-control-compact)",
-        control: "var(--radius-control)",
-        "control-group": "var(--radius-control-group)",
+        subtle: "var(--radius-subtle)",
+        DEFAULT: "var(--radius-button)",
         button: "var(--radius-button)",
+        input: "var(--radius-input)",
         card: "var(--radius-card)",
-        surface: "var(--radius-surface)",
+        large: "var(--radius-large)",
         pill: "var(--radius-pill)",
       },
+      // Named text styles — heading / body / caption 3 계열만.
+      // 다른 named style(code/button/card/nav/link/badge/hero/brewing-hero)은 폐지 →
+      // 위 3계열 + font-* / tracking-* / font-mono 등 utility 조합으로 표현.
+      // raw size utility(text-2xs..2xl)도 폐지. 모든 텍스트는 named style 사용.
+      // [size, { lineHeight, letterSpacing?, fontWeight? }]
       fontSize: {
-        "2xs": ["var(--font-size-2xs)", { lineHeight: "var(--line-height-base)" }],
-        xs: ["var(--font-size-xs)", { lineHeight: "var(--line-height-base)" }],
-        sm: ["var(--font-size-sm)", { lineHeight: "var(--line-height-base)" }],
-        md: ["var(--font-size-md)", { lineHeight: "var(--line-height-base)" }],
-        lg: ["var(--font-size-lg)", { lineHeight: "var(--line-height-snug)" }],
-        xl: ["var(--font-size-xl)", { lineHeight: "var(--line-height-snug)" }],
-        "2xl": ["var(--font-size-2xl)", { lineHeight: "var(--line-height-snug)" }],
-        "hero-sm": ["var(--font-size-hero-sm)", { lineHeight: "var(--line-height-tight)" }],
-        "hero-lg": ["var(--font-size-hero-lg)", { lineHeight: "var(--line-height-tight)" }],
-        "brewing-hero": ["var(--font-size-brewing-hero)", { lineHeight: "var(--line-height-tight)" }],
+        "heading-xl": ["64px", { lineHeight: "1.1", letterSpacing: "-0.02em", fontWeight: "500" }],
+        "heading-lg": ["48px", { lineHeight: "1.1", letterSpacing: "-0.02em", fontWeight: "500" }],
+        "heading-md": ["32px", { lineHeight: "1.2", fontWeight: "600" }],
+        "heading-sm": ["24px", { lineHeight: "1.3", fontWeight: "600" }],
+        "heading-xs": ["18px", { lineHeight: "1.4", fontWeight: "600" }],
+        "heading-xxs": ["16px", { lineHeight: "1.4", fontWeight: "600" }],
+        "body-lg": ["20px", { lineHeight: "1.5" }],
+        "body-md": ["16px", { lineHeight: "1.5" }],
+        "body-sm": ["14px", { lineHeight: "1.5" }],
+        "caption-md": ["14px", { lineHeight: "1.4" }],
+        "caption-sm": ["12px", { lineHeight: "1.4" }],
+        "caption-xs": ["11px", { lineHeight: "1.3" }],
+        "caption-xxs": ["10px", { lineHeight: "1.3" }],
       },
-      lineHeight: {
-        tight: "var(--line-height-tight)",
-        snug: "var(--line-height-snug)",
-        base: "var(--line-height-base)",
+      fontFamily: {
+        sans: "var(--font-sans)",
+        mono: "var(--font-mono)",
       },
       letterSpacing: {
+        tight: "var(--letter-spacing-tight)",
         wide: "var(--letter-spacing-wide)",
         wider: "var(--letter-spacing-wider)",
         widest: "var(--letter-spacing-widest)",
       },
+      spacing: {
+        xxs: "var(--space-xxs)",
+        xs: "var(--space-xs)",
+        sm: "var(--space-sm)",
+        md: "var(--space-md)",
+        lg: "var(--space-lg)",
+        xl: "var(--space-xl)",
+        xxl: "var(--space-xxl)",
+        section: "var(--space-section)",
+      },
       boxShadow: {
-        raised: "var(--shadow-control-raised)",
-        popover: "var(--shadow-popover)",
-        dialog: "var(--shadow-dialog)",
+        hairline: "var(--shadow-hairline)",
+        raised: "var(--shadow-raised)",
+        floating: "var(--shadow-floating)",
+        overlay: "var(--shadow-overlay)",
         "rim-inset": "var(--shadow-rim-inset)",
         "cup-inset": "var(--shadow-cup-inset)",
       },
@@ -68,10 +80,8 @@ export default {
         },
       },
       animation: {
-        "popover-in":
-          "popover-in var(--motion-duration-base) var(--motion-easing) both",
-        "overlay-in":
-          "overlay-in var(--motion-duration-base) var(--motion-easing) both",
+        "popover-in": "popover-in var(--motion-duration-base) var(--motion-easing) both",
+        "overlay-in": "overlay-in var(--motion-duration-base) var(--motion-easing) both",
       },
       zIndex: {
         popover: "var(--z-popover)",
@@ -90,36 +100,41 @@ export default {
         "brewing-rim": "var(--brewing-rim-height)",
       },
       colors: {
+        // Surface (spec bg/* 슬롯)
         surface: {
-          DEFAULT: "var(--color-surface)",
-          subtle: "var(--color-surface-subtle)",
-          inset: "var(--color-surface-inset)",
+          DEFAULT: "var(--color-bg-canvas)",
+          soft: "var(--color-bg-soft)",
+          strong: "var(--color-bg-strong)",
+          card: "var(--color-bg-card)",
+          hairline: "var(--color-bg-hairline)",
         },
-        border: {
-          DEFAULT: "var(--color-border)",
-          strong: "var(--color-border-strong)",
-        },
+        // Text — Tailwind class는 친숙한 이름 유지, 내부 CSS var는 spec(text/*) 정합
         text: {
-          primary: "var(--color-text-primary)",
-          secondary: "var(--color-text-secondary)",
+          primary: "var(--color-text-ink)",
+          secondary: "var(--color-text-body)",
           muted: "var(--color-text-muted)",
-          "on-accent": "var(--color-text-on-accent)",
-          "on-liquid": "var(--color-text-on-liquid)",
+          "on-accent": "var(--color-text-on-primary)",
+          "on-liquid": "var(--color-text-on-liquid)", // brewing domain
         },
+        // Accent
         accent: {
-          DEFAULT: "var(--color-accent)",
+          DEFAULT: "var(--color-accent-primary)",
           hover: "var(--color-accent-hover)",
           active: "var(--color-accent-active)",
         },
         focus: "var(--color-focus-ring)",
-        danger: "var(--color-danger)",
-        warning: "var(--color-warning)",
-        success: "var(--color-success)",
+        // Status — 친숙한 단일 키 유지 (각각 status text 색상에 매핑)
+        danger: "var(--color-status-error-text)",
+        warning: "var(--color-status-warning-text)",
+        success: "var(--color-status-success-text)",
+        overlay: { scrim: "var(--color-overlay-scrim)" },
+        // Brewing domain
         brewing: {
           "liquid-top": "var(--color-brewing-liquid-top)",
           "liquid-mid": "var(--color-brewing-liquid-mid)",
           "liquid-deep": "var(--color-brewing-liquid-deep)",
           "liquid-bottom": "var(--color-brewing-liquid-bottom)",
+          meniscus: "var(--color-meniscus-highlight)",
         },
         pour: {
           bloom: "var(--color-pour-bloom)",
@@ -128,14 +143,11 @@ export default {
         ring: {
           future: "var(--color-ring-future)",
           "on-liquid": "var(--color-ring-on-liquid)",
+          "on-liquid-label": "var(--color-ring-on-liquid-label)",
         },
         timeline: {
           axis: "var(--color-timeline-axis)",
           grid: "var(--color-timeline-grid)",
-        },
-        wall: "var(--color-wall)",
-        overlay: {
-          scrim: "var(--color-overlay-scrim)",
         },
       },
     },

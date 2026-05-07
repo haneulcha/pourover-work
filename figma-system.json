@@ -1,0 +1,946 @@
+{
+  "variableCollections": [
+    {
+      "name": "Color Primitives",
+      "modes": [
+        {
+          "name": "Light",
+          "modeId": "mode-light"
+        },
+        {
+          "name": "Dark",
+          "modeId": "mode-dark"
+        }
+      ],
+      "variables": [
+        {
+          "name": "neutral-50",
+          "type": "COLOR",
+          "valuesByMode": {
+            "mode-light": "#faf9f5",
+            "mode-dark": "#141413"
+          }
+        },
+        {
+          "name": "neutral-100",
+          "type": "COLOR",
+          "valuesByMode": {
+            "mode-light": "#f5f3ec",
+            "mode-dark": "#2c2b28"
+          }
+        },
+        {
+          "name": "neutral-200",
+          "type": "COLOR",
+          "valuesByMode": {
+            "mode-light": "#f0eee6",
+            "mode-dark": "#4a4842"
+          }
+        },
+        {
+          "name": "neutral-300",
+          "type": "COLOR",
+          "valuesByMode": {
+            "mode-light": "#e3dfd3",
+            "mode-dark": "#6b6960"
+          }
+        },
+        {
+          "name": "neutral-400",
+          "type": "COLOR",
+          "valuesByMode": {
+            "mode-light": "#b6b1a3",
+            "mode-dark": "#b6b1a3"
+          }
+        },
+        {
+          "name": "neutral-500",
+          "type": "COLOR",
+          "valuesByMode": {
+            "mode-light": "#6b6960",
+            "mode-dark": "#e3dfd3"
+          }
+        },
+        {
+          "name": "neutral-600",
+          "type": "COLOR",
+          "valuesByMode": {
+            "mode-light": "#4a4842",
+            "mode-dark": "#f0eee6"
+          }
+        },
+        {
+          "name": "neutral-800",
+          "type": "COLOR",
+          "valuesByMode": {
+            "mode-light": "#2c2b28",
+            "mode-dark": "#f5f3ec"
+          }
+        },
+        {
+          "name": "neutral-900",
+          "type": "COLOR",
+          "valuesByMode": {
+            "mode-light": "#141413",
+            "mode-dark": "#faf9f5"
+          }
+        },
+        {
+          "name": "accent-500",
+          "type": "COLOR",
+          "valuesByMode": {
+            "mode-light": "#702600",
+            "mode-dark": "#702600"
+          }
+        },
+        {
+          "name": "red-50",
+          "type": "COLOR",
+          "valuesByMode": {
+            "mode-light": "#fef0ee",
+            "mode-dark": "#120e0e"
+          }
+        },
+        {
+          "name": "red-500",
+          "type": "COLOR",
+          "valuesByMode": {
+            "mode-light": "#d4380d",
+            "mode-dark": "#ff9670"
+          }
+        },
+        {
+          "name": "green-50",
+          "type": "COLOR",
+          "valuesByMode": {
+            "mode-light": "#f1fbef",
+            "mode-dark": "#0e100d"
+          }
+        },
+        {
+          "name": "green-500",
+          "type": "COLOR",
+          "valuesByMode": {
+            "mode-light": "#3b8132",
+            "mode-dark": "#97e08d"
+          }
+        },
+        {
+          "name": "amber-50",
+          "type": "COLOR",
+          "valuesByMode": {
+            "mode-light": "#fff5e6",
+            "mode-dark": "#120f0b"
+          }
+        },
+        {
+          "name": "amber-500",
+          "type": "COLOR",
+          "valuesByMode": {
+            "mode-light": "#c0791d",
+            "mode-dark": "#ffbc6a"
+          }
+        },
+        {
+          "name": "blue-50",
+          "type": "COLOR",
+          "valuesByMode": {
+            "mode-light": "#eff6ff",
+            "mode-dark": "#0e1012"
+          }
+        },
+        {
+          "name": "blue-500",
+          "type": "COLOR",
+          "valuesByMode": {
+            "mode-light": "#1f5582",
+            "mode-dark": "#79afe2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Colors",
+      "modes": [
+        {
+          "name": "Light",
+          "modeId": "mode-light"
+        },
+        {
+          "name": "Dark",
+          "modeId": "mode-dark"
+        }
+      ],
+      "variables": [
+        {
+          "name": "bg/canvas",
+          "type": "COLOR",
+          "valuesByMode": {
+            "mode-light": "#faf9f5",
+            "mode-dark": "#141413"
+          }
+        },
+        {
+          "name": "bg/soft",
+          "type": "COLOR",
+          "valuesByMode": {
+            "mode-light": "#f5f3ec",
+            "mode-dark": "#2c2b28"
+          }
+        },
+        {
+          "name": "bg/strong",
+          "type": "COLOR",
+          "valuesByMode": {
+            "mode-light": "#f5f3ec",
+            "mode-dark": "#2c2b28"
+          }
+        },
+        {
+          "name": "bg/card",
+          "type": "COLOR",
+          "valuesByMode": {
+            "mode-light": "#faf9f5",
+            "mode-dark": "#141413"
+          }
+        },
+        {
+          "name": "bg/hairline",
+          "type": "COLOR",
+          "valuesByMode": {
+            "mode-light": "#e3dfd3",
+            "mode-dark": "#6b6960"
+          }
+        },
+        {
+          "name": "text/ink",
+          "type": "COLOR",
+          "valuesByMode": {
+            "mode-light": "#141413",
+            "mode-dark": "#faf9f5"
+          }
+        },
+        {
+          "name": "text/body",
+          "type": "COLOR",
+          "valuesByMode": {
+            "mode-light": "#2c2b28",
+            "mode-dark": "#f5f3ec"
+          }
+        },
+        {
+          "name": "text/body-strong",
+          "type": "COLOR",
+          "valuesByMode": {
+            "mode-light": "#141413",
+            "mode-dark": "#faf9f5"
+          }
+        },
+        {
+          "name": "text/muted",
+          "type": "COLOR",
+          "valuesByMode": {
+            "mode-light": "#6b6960",
+            "mode-dark": "#e3dfd3"
+          }
+        },
+        {
+          "name": "text/muted-soft",
+          "type": "COLOR",
+          "valuesByMode": {
+            "mode-light": "#6b6960",
+            "mode-dark": "#e3dfd3"
+          }
+        },
+        {
+          "name": "text/on-primary",
+          "type": "COLOR",
+          "valuesByMode": {
+            "mode-light": "#faf9f5",
+            "mode-dark": "#141413"
+          }
+        },
+        {
+          "name": "accent/primary",
+          "type": "COLOR",
+          "valuesByMode": {
+            "mode-light": "#702600",
+            "mode-dark": "#702600"
+          }
+        },
+        {
+          "name": "accent/hover",
+          "type": "COLOR",
+          "valuesByMode": {
+            "mode-light": "#702600",
+            "mode-dark": "#702600"
+          }
+        },
+        {
+          "name": "accent/active",
+          "type": "COLOR",
+          "valuesByMode": {
+            "mode-light": "#702600",
+            "mode-dark": "#702600"
+          }
+        },
+        {
+          "name": "accent/strong",
+          "type": "COLOR",
+          "valuesByMode": {
+            "mode-light": "#702600",
+            "mode-dark": "#702600"
+          }
+        },
+        {
+          "name": "status/error-bg",
+          "type": "COLOR",
+          "valuesByMode": {
+            "mode-light": "#fef0ee",
+            "mode-dark": "#120e0e"
+          }
+        },
+        {
+          "name": "status/error-text",
+          "type": "COLOR",
+          "valuesByMode": {
+            "mode-light": "#d4380d",
+            "mode-dark": "#ff9670"
+          }
+        },
+        {
+          "name": "status/success-bg",
+          "type": "COLOR",
+          "valuesByMode": {
+            "mode-light": "#f1fbef",
+            "mode-dark": "#0e100d"
+          }
+        },
+        {
+          "name": "status/success-text",
+          "type": "COLOR",
+          "valuesByMode": {
+            "mode-light": "#3b8132",
+            "mode-dark": "#97e08d"
+          }
+        },
+        {
+          "name": "status/warning-bg",
+          "type": "COLOR",
+          "valuesByMode": {
+            "mode-light": "#fff5e6",
+            "mode-dark": "#120f0b"
+          }
+        },
+        {
+          "name": "status/warning-text",
+          "type": "COLOR",
+          "valuesByMode": {
+            "mode-light": "#c0791d",
+            "mode-dark": "#ffbc6a"
+          }
+        },
+        {
+          "name": "status/info-bg",
+          "type": "COLOR",
+          "valuesByMode": {
+            "mode-light": "#eff6ff",
+            "mode-dark": "#0e1012"
+          }
+        },
+        {
+          "name": "status/info-text",
+          "type": "COLOR",
+          "valuesByMode": {
+            "mode-light": "#1f5582",
+            "mode-dark": "#79afe2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Spacing",
+      "modes": [
+        {
+          "name": "Default",
+          "modeId": "mode-default"
+        }
+      ],
+      "variables": [
+        {
+          "name": "xxs",
+          "type": "FLOAT",
+          "valuesByMode": {
+            "mode-default": 4
+          }
+        },
+        {
+          "name": "xs",
+          "type": "FLOAT",
+          "valuesByMode": {
+            "mode-default": 8
+          }
+        },
+        {
+          "name": "sm",
+          "type": "FLOAT",
+          "valuesByMode": {
+            "mode-default": 12
+          }
+        },
+        {
+          "name": "md",
+          "type": "FLOAT",
+          "valuesByMode": {
+            "mode-default": 16
+          }
+        },
+        {
+          "name": "lg",
+          "type": "FLOAT",
+          "valuesByMode": {
+            "mode-default": 24
+          }
+        },
+        {
+          "name": "xl",
+          "type": "FLOAT",
+          "valuesByMode": {
+            "mode-default": 32
+          }
+        },
+        {
+          "name": "xxl",
+          "type": "FLOAT",
+          "valuesByMode": {
+            "mode-default": 48
+          }
+        },
+        {
+          "name": "section",
+          "type": "FLOAT",
+          "valuesByMode": {
+            "mode-default": 80
+          }
+        }
+      ]
+    },
+    {
+      "name": "Radius Primitives",
+      "modes": [
+        {
+          "name": "Default",
+          "modeId": "mode-default"
+        }
+      ],
+      "variables": [
+        {
+          "name": "none",
+          "type": "FLOAT",
+          "valuesByMode": {
+            "mode-default": 0
+          }
+        },
+        {
+          "name": "xs",
+          "type": "FLOAT",
+          "valuesByMode": {
+            "mode-default": 2
+          }
+        },
+        {
+          "name": "sm",
+          "type": "FLOAT",
+          "valuesByMode": {
+            "mode-default": 4
+          }
+        },
+        {
+          "name": "md",
+          "type": "FLOAT",
+          "valuesByMode": {
+            "mode-default": 8
+          }
+        },
+        {
+          "name": "lg",
+          "type": "FLOAT",
+          "valuesByMode": {
+            "mode-default": 12
+          }
+        },
+        {
+          "name": "xl",
+          "type": "FLOAT",
+          "valuesByMode": {
+            "mode-default": 16
+          }
+        },
+        {
+          "name": "2xl",
+          "type": "FLOAT",
+          "valuesByMode": {
+            "mode-default": 24
+          }
+        },
+        {
+          "name": "pill",
+          "type": "FLOAT",
+          "valuesByMode": {
+            "mode-default": 9999
+          }
+        }
+      ]
+    },
+    {
+      "name": "Border Radius",
+      "modes": [
+        {
+          "name": "Default",
+          "modeId": "mode-default"
+        }
+      ],
+      "variables": [
+        {
+          "name": "none",
+          "type": "FLOAT",
+          "valuesByMode": {
+            "mode-default": 0
+          }
+        },
+        {
+          "name": "subtle",
+          "type": "FLOAT",
+          "valuesByMode": {
+            "mode-default": 4
+          }
+        },
+        {
+          "name": "button",
+          "type": "FLOAT",
+          "valuesByMode": {
+            "mode-default": 12
+          }
+        },
+        {
+          "name": "input",
+          "type": "FLOAT",
+          "valuesByMode": {
+            "mode-default": 8
+          }
+        },
+        {
+          "name": "card",
+          "type": "FLOAT",
+          "valuesByMode": {
+            "mode-default": 16
+          }
+        },
+        {
+          "name": "large",
+          "type": "FLOAT",
+          "valuesByMode": {
+            "mode-default": 24
+          }
+        },
+        {
+          "name": "pill",
+          "type": "FLOAT",
+          "valuesByMode": {
+            "mode-default": 9999
+          }
+        }
+      ]
+    },
+    {
+      "name": "Shadow Primitives",
+      "modes": [
+        {
+          "name": "Default",
+          "modeId": "mode-default"
+        }
+      ],
+      "variables": [
+        {
+          "name": "none",
+          "type": "STRING",
+          "valuesByMode": {
+            "mode-default": "none"
+          }
+        },
+        {
+          "name": "xs",
+          "type": "STRING",
+          "valuesByMode": {
+            "mode-default": "#e3dfd3 0px 0px 0px 1px"
+          }
+        },
+        {
+          "name": "sm",
+          "type": "STRING",
+          "valuesByMode": {
+            "mode-default": "rgba(0,0,0,0.08) 0px 1px 2px, rgba(0,0,0,0.056) 0px 1px 3px"
+          }
+        },
+        {
+          "name": "md",
+          "type": "STRING",
+          "valuesByMode": {
+            "mode-default": "rgba(0,0,0,0.12) 0px 4px 8px, rgba(0,0,0,0.084) 0px 2px 4px"
+          }
+        },
+        {
+          "name": "lg",
+          "type": "STRING",
+          "valuesByMode": {
+            "mode-default": "rgba(0,0,0,0.18) 0px 8px 24px, rgba(0,0,0,0.126) 0px 4px 8px"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Shadows",
+      "modes": [
+        {
+          "name": "Default",
+          "modeId": "mode-default"
+        }
+      ],
+      "variables": [
+        {
+          "name": "hairline",
+          "type": "STRING",
+          "valuesByMode": {
+            "mode-default": "#e3dfd3 0px 0px 0px 1px"
+          }
+        },
+        {
+          "name": "card",
+          "type": "STRING",
+          "valuesByMode": {
+            "mode-default": "rgba(0,0,0,0.08) 0px 1px 2px, rgba(0,0,0,0.056) 0px 1px 3px"
+          }
+        },
+        {
+          "name": "popover",
+          "type": "STRING",
+          "valuesByMode": {
+            "mode-default": "rgba(0,0,0,0.12) 0px 4px 8px, rgba(0,0,0,0.084) 0px 2px 4px"
+          }
+        },
+        {
+          "name": "modal",
+          "type": "STRING",
+          "valuesByMode": {
+            "mode-default": "rgba(0,0,0,0.18) 0px 8px 24px, rgba(0,0,0,0.126) 0px 4px 8px"
+          }
+        }
+      ]
+    }
+  ],
+  "textStyles": [
+    {
+      "name": "Heading Xl",
+      "fontFamily": "Inter, Pretendard, \"Apple SD Gothic Neo\", \"Noto Sans KR\", system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif",
+      "fontSize": 64,
+      "fontWeight": 500,
+      "lineHeight": 1.1,
+      "letterSpacing": -0.02
+    },
+    {
+      "name": "Heading Lg",
+      "fontFamily": "Inter, Pretendard, \"Apple SD Gothic Neo\", \"Noto Sans KR\", system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif",
+      "fontSize": 48,
+      "fontWeight": 500,
+      "lineHeight": 1.1,
+      "letterSpacing": -0.02
+    },
+    {
+      "name": "Heading Md",
+      "fontFamily": "Inter, Pretendard, \"Apple SD Gothic Neo\", \"Noto Sans KR\", system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif",
+      "fontSize": 32,
+      "fontWeight": 600,
+      "lineHeight": 1.2,
+      "letterSpacing": 0
+    },
+    {
+      "name": "Heading Sm",
+      "fontFamily": "Inter, Pretendard, \"Apple SD Gothic Neo\", \"Noto Sans KR\", system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif",
+      "fontSize": 24,
+      "fontWeight": 600,
+      "lineHeight": 1.3,
+      "letterSpacing": 0
+    },
+    {
+      "name": "Heading Xs",
+      "fontFamily": "Inter, Pretendard, \"Apple SD Gothic Neo\", \"Noto Sans KR\", system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif",
+      "fontSize": 18,
+      "fontWeight": 600,
+      "lineHeight": 1.4,
+      "letterSpacing": 0
+    },
+    {
+      "name": "Heading Xxs",
+      "fontFamily": "Inter, Pretendard, \"Apple SD Gothic Neo\", \"Noto Sans KR\", system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif",
+      "fontSize": 16,
+      "fontWeight": 600,
+      "lineHeight": 1.4,
+      "letterSpacing": 0
+    },
+    {
+      "name": "Body Lg",
+      "fontFamily": "Inter, Pretendard, \"Apple SD Gothic Neo\", \"Noto Sans KR\", system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif",
+      "fontSize": 20,
+      "fontWeight": 400,
+      "lineHeight": 1.5,
+      "letterSpacing": 0
+    },
+    {
+      "name": "Body Md",
+      "fontFamily": "Inter, Pretendard, \"Apple SD Gothic Neo\", \"Noto Sans KR\", system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif",
+      "fontSize": 16,
+      "fontWeight": 400,
+      "lineHeight": 1.5,
+      "letterSpacing": 0
+    },
+    {
+      "name": "Body Sm",
+      "fontFamily": "Inter, Pretendard, \"Apple SD Gothic Neo\", \"Noto Sans KR\", system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif",
+      "fontSize": 14,
+      "fontWeight": 400,
+      "lineHeight": 1.5,
+      "letterSpacing": 0
+    },
+    {
+      "name": "Caption Md",
+      "fontFamily": "Inter, Pretendard, \"Apple SD Gothic Neo\", \"Noto Sans KR\", system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif",
+      "fontSize": 14,
+      "fontWeight": 400,
+      "lineHeight": 1.4,
+      "letterSpacing": 0
+    },
+    {
+      "name": "Caption Sm",
+      "fontFamily": "Inter, Pretendard, \"Apple SD Gothic Neo\", \"Noto Sans KR\", system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif",
+      "fontSize": 12,
+      "fontWeight": 400,
+      "lineHeight": 1.4,
+      "letterSpacing": 0
+    },
+    {
+      "name": "Caption Xs",
+      "fontFamily": "Inter, Pretendard, \"Apple SD Gothic Neo\", \"Noto Sans KR\", system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif",
+      "fontSize": 11,
+      "fontWeight": 400,
+      "lineHeight": 1.3,
+      "letterSpacing": 0
+    },
+    {
+      "name": "Caption Xxs",
+      "fontFamily": "Inter, Pretendard, \"Apple SD Gothic Neo\", \"Noto Sans KR\", system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif",
+      "fontSize": 10,
+      "fontWeight": 400,
+      "lineHeight": 1.3,
+      "letterSpacing": 0
+    },
+    {
+      "name": "Code Md",
+      "fontFamily": "\"Geist Mono\", \"IBM Plex Mono\", D2Coding, \"Noto Sans Mono CJK KR\", \"SF Mono\", Consolas, monospace",
+      "fontSize": 14,
+      "fontWeight": 400,
+      "lineHeight": 1.5,
+      "letterSpacing": 0
+    },
+    {
+      "name": "Code Sm",
+      "fontFamily": "\"Geist Mono\", \"IBM Plex Mono\", D2Coding, \"Noto Sans Mono CJK KR\", \"SF Mono\", Consolas, monospace",
+      "fontSize": 12,
+      "fontWeight": 400,
+      "lineHeight": 1.4,
+      "letterSpacing": 0
+    },
+    {
+      "name": "Code Xs",
+      "fontFamily": "\"Geist Mono\", \"IBM Plex Mono\", D2Coding, \"Noto Sans Mono CJK KR\", \"SF Mono\", Consolas, monospace",
+      "fontSize": 10,
+      "fontWeight": 400,
+      "lineHeight": 1.5,
+      "letterSpacing": 0
+    },
+    {
+      "name": "Button Md",
+      "fontFamily": "Inter, Pretendard, \"Apple SD Gothic Neo\", \"Noto Sans KR\", system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif",
+      "fontSize": 16,
+      "fontWeight": 500,
+      "lineHeight": 1.2,
+      "letterSpacing": 0
+    },
+    {
+      "name": "Button Sm",
+      "fontFamily": "Inter, Pretendard, \"Apple SD Gothic Neo\", \"Noto Sans KR\", system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif",
+      "fontSize": 14,
+      "fontWeight": 500,
+      "lineHeight": 1.3,
+      "letterSpacing": 0
+    },
+    {
+      "name": "Card",
+      "fontFamily": "Inter, Pretendard, \"Apple SD Gothic Neo\", \"Noto Sans KR\", system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif",
+      "fontSize": 24,
+      "fontWeight": 600,
+      "lineHeight": 1.3,
+      "letterSpacing": 0
+    },
+    {
+      "name": "Nav",
+      "fontFamily": "Inter, Pretendard, \"Apple SD Gothic Neo\", \"Noto Sans KR\", system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif",
+      "fontSize": 14,
+      "fontWeight": 500,
+      "lineHeight": 1.4,
+      "letterSpacing": 0
+    },
+    {
+      "name": "Link",
+      "fontFamily": "Inter, Pretendard, \"Apple SD Gothic Neo\", \"Noto Sans KR\", system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif",
+      "fontSize": 14,
+      "fontWeight": 400,
+      "lineHeight": 1.5,
+      "letterSpacing": 0
+    },
+    {
+      "name": "Badge",
+      "fontFamily": "Inter, Pretendard, \"Apple SD Gothic Neo\", \"Noto Sans KR\", system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif",
+      "fontSize": 12,
+      "fontWeight": 600,
+      "lineHeight": 1.4,
+      "letterSpacing": 0.05
+    }
+  ],
+  "effectStyles": [
+    {
+      "name": "Xs",
+      "shadows": [
+        {
+          "type": "DROP_SHADOW",
+          "color": {
+            "r": 0.8901960784313725,
+            "g": 0.8745098039215686,
+            "b": 0.8274509803921568,
+            "a": 1
+          },
+          "offset": {
+            "x": 0,
+            "y": 0
+          },
+          "radius": 0,
+          "spread": 1
+        }
+      ]
+    },
+    {
+      "name": "Sm",
+      "shadows": [
+        {
+          "type": "DROP_SHADOW",
+          "color": {
+            "r": 0,
+            "g": 0,
+            "b": 0,
+            "a": 0.08
+          },
+          "offset": {
+            "x": 0,
+            "y": 1
+          },
+          "radius": 2,
+          "spread": 0
+        },
+        {
+          "type": "DROP_SHADOW",
+          "color": {
+            "r": 0,
+            "g": 0,
+            "b": 0,
+            "a": 0.056
+          },
+          "offset": {
+            "x": 0,
+            "y": 1
+          },
+          "radius": 3,
+          "spread": 0
+        }
+      ]
+    },
+    {
+      "name": "Md",
+      "shadows": [
+        {
+          "type": "DROP_SHADOW",
+          "color": {
+            "r": 0,
+            "g": 0,
+            "b": 0,
+            "a": 0.12
+          },
+          "offset": {
+            "x": 0,
+            "y": 4
+          },
+          "radius": 8,
+          "spread": 0
+        },
+        {
+          "type": "DROP_SHADOW",
+          "color": {
+            "r": 0,
+            "g": 0,
+            "b": 0,
+            "a": 0.084
+          },
+          "offset": {
+            "x": 0,
+            "y": 2
+          },
+          "radius": 4,
+          "spread": 0
+        }
+      ]
+    },
+    {
+      "name": "Lg",
+      "shadows": [
+        {
+          "type": "DROP_SHADOW",
+          "color": {
+            "r": 0,
+            "g": 0,
+            "b": 0,
+            "a": 0.18
+          },
+          "offset": {
+            "x": 0,
+            "y": 8
+          },
+          "radius": 24,
+          "spread": 0
+        },
+        {
+          "type": "DROP_SHADOW",
+          "color": {
+            "r": 0,
+            "g": 0,
+            "b": 0,
+            "a": 0.126
+          },
+          "offset": {
+            "x": 0,
+            "y": 4
+          },
+          "radius": 8,
+          "spread": 0
+        }
+      ]
+    }
+  ]
+}

@@ -1,5 +1,12 @@
+/* Token layers — primitives → semantic → elevation/typography/motion/layout → component domains */
 @import "./tokens/primitives.css";
+@import "./tokens/typography.css";
+@import "./tokens/motion.css";
+@import "./tokens/layout.css";
+@import "./tokens/elevation.css";
 @import "./tokens/semantic.css";
+@import "./tokens/components/brewing.css";
+@import "./tokens/components/timeline.css";
 
 @tailwind base;
 @tailwind components;
@@ -17,16 +24,7 @@
 
   body {
     @apply bg-surface text-text-primary antialiased;
-    font-family:
-      "Pretendard Variable",
-      "Pretendard",
-      "Inter",
-      -apple-system,
-      BlinkMacSystemFont,
-      system-ui,
-      "Apple SD Gothic Neo",
-      "Malgun Gothic",
-      sans-serif;
+    font-family: var(--font-sans);
     font-feature-settings: "ss01", "ss02";
   }
 

@@ -1,0 +1,15 @@
+/* Timeline / Pour domain tokens — PourTimelinePreview, PourEditTable, BrewingScreen ring map. */
+
+:root {
+  --color-pour-bloom: var(--accent-300);
+  --color-pour-main: var(--accent-500);
+  --color-timeline-axis: var(--neutral-300);
+  --color-timeline-grid: var(--neutral-100);
+}
+
+[data-theme="dark"] {
+  --color-pour-bloom: var(--accent-200);
+  --color-pour-main: var(--accent-400);
+  --color-timeline-axis: var(--neutral-600);
+  --color-timeline-grid: var(--neutral-800);
+}

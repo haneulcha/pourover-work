@@ -1,0 +1,39 @@
+/* Elevation — radius role aliases + shadow tier (4 levels).
+   spec 명명 정렬, 값은 brand 유지. */
+
+:root {
+  /* Radius primitives (raw scale) */
+  --radius-2: 2px;
+  --radius-4: 4px;
+  --radius-6: 6px;
+  --radius-8: 8px;
+  --radius-10: 10px;
+  --radius-14: 14px;
+  --radius-16: 16px;
+  --radius-20: 20px;
+  --radius-24: 24px;
+  --radius-pill: 9999px;
+
+  /* Radius role aliases (spec 명명: subtle/button/input/card/large/pill) */
+  --radius-subtle: var(--radius-6); /* small interactive: badge, tag */
+  --radius-button: var(--radius-10);
+  --radius-input: var(--radius-6);
+  --radius-card: var(--radius-10);
+  --radius-large: var(--radius-20); /* hero, large containers */
+  /* radius-pill 위에서 정의됨 */
+
+  /* Shadow tier — Light. spec 4-tier (Xs/Sm/Md/Lg = hairline/raised/floating/overlay).
+     값은 brand 정합 (warm modern, 매우 옅게). */
+  --shadow-hairline: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-raised: 0 1px 2px rgba(0, 0, 0, 0.04), 0 2px 6px rgba(0, 0, 0, 0.04);
+  --shadow-floating: 0 2px 8px rgba(0, 0, 0, 0.06), 0 6px 16px rgba(0, 0, 0, 0.06);
+  --shadow-overlay: 0 4px 12px rgba(0, 0, 0, 0.08), 0 12px 28px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="dark"] {
+  /* Dark — 배경이 어두우므로 더 진한 그림자 */
+  --shadow-hairline: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow-raised: 0 1px 2px rgba(0, 0, 0, 0.4), 0 2px 6px rgba(0, 0, 0, 0.4);
+  --shadow-floating: 0 2px 8px rgba(0, 0, 0, 0.5), 0 6px 16px rgba(0, 0, 0, 0.5);
+  --shadow-overlay: 0 4px 12px rgba(0, 0, 0, 0.55), 0 12px 28px rgba(0, 0, 0, 0.55);
+}

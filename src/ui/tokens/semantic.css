@@ -1,144 +1,63 @@
+/* Semantic role tokens — spec 명명 정렬 (bg/, text/, accent/, status/).
+   도메인·컴포넌트 토큰 절대 금지. 그건 components/ 아래 도메인별 파일로. */
+
 :root {
-  /* Surface */
-  --color-surface: var(--neutral-0);
-  --color-surface-subtle: var(--neutral-50);
-  --color-surface-inset: var(--neutral-100);
-  --color-border: var(--neutral-200);
-  --color-border-strong: var(--neutral-300);
-  --color-wall: var(--neutral-100);
+  /* Background */
+  --color-bg-canvas: var(--neutral-0);
+  --color-bg-soft: var(--neutral-50);
+  --color-bg-strong: var(--neutral-100);
+  --color-bg-card: var(--neutral-0);
+  --color-bg-hairline: var(--neutral-200);
 
   /* Text */
-  --color-text-primary: var(--neutral-900);
-  --color-text-secondary: var(--neutral-700);
+  --color-text-ink: var(--neutral-900);
+  --color-text-body: var(--neutral-700);
+  --color-text-body-strong: var(--neutral-900);
   --color-text-muted: var(--neutral-500);
-  --color-text-on-accent: var(--neutral-0);
+  --color-text-on-primary: var(--neutral-0);
 
   /* Accent */
-  --color-accent: var(--accent-500);
+  --color-accent-primary: var(--accent-500);
   --color-accent-hover: var(--accent-600);
   --color-accent-active: var(--accent-700);
   --color-focus-ring: var(--accent-400);
 
-  /* State */
-  --color-danger: var(--red-500);
-  --color-warning: var(--amber-500);
-  --color-success: var(--green-500);
-
-  /* Domain */
-  --color-pour-bloom: var(--accent-300);
-  --color-pour-main: var(--accent-500);
-  --color-timeline-axis: var(--neutral-300);
-  --color-timeline-grid: var(--neutral-100);
-
-  /* Brewing — liquid gradient (coffee amber, red-shifted, 반투명)
-     accent 팔레트와 분리 — 브랜드 ochre는 노란 기, 커피는 red-amber.
-     알파 낮춤 → 크림 컵 배경이 강하게 투과되며 따뜻함과 투명감을 더함. */
-  --color-brewing-liquid-top: rgba(231, 183, 129, 0.45);
-  --color-brewing-liquid-mid: rgba(196, 124, 68, 0.65);
-  --color-brewing-liquid-deep: rgba(138, 70, 32, 0.82);
-  --color-brewing-liquid-bottom: rgba(76, 38, 18, 0.9);
-
-  /* Brewing — rings */
-  --color-ring-future: var(--neutral-400);
-  --color-ring-on-liquid: rgba(251, 247, 239, 0.42);
-
-  /* Brewing — liquid surface */
-  --color-meniscus-highlight: rgba(255, 247, 228, 0.55);
-
-  /* Brewing — ring label on liquid (stronger than ring-on-liquid line) */
-  --color-ring-on-liquid-label: rgba(251, 247, 239, 0.78);
-
-  /* Brewing — text sitting on the liquid surface (drawdown hero). */
-  --color-text-on-liquid: var(--neutral-0);
-
-  /* Brewing — rim */
-  --shadow-rim-inset: inset 0 6px 14px -10px rgba(0, 0, 0, 0.18);
-  --shadow-cup-inset: inset 0 8px 16px -12px rgba(0, 0, 0, 0.12);
-
-  /* Brewing — sizing */
-  --brewing-rim-height: 92px;
-  --brewing-hero-gap: 12px;
-  --font-size-brewing-hero: clamp(32px, 6.5vh, 48px);
-
-  /* Radius — 역할 기반 별칭 */
-  --radius-control-compact: var(--radius-xs);
-  --radius-control: var(--radius-sm);
-  --radius-control-group: var(--radius-md);
-  --radius-button: var(--radius-md);
-  --radius-card: var(--radius-md);
-  --radius-surface: var(--radius-xl);
-
-  /* Shadow — 부상 레이어 전용 */
-  --shadow-control-raised: var(--shadow-hairline);
-  --shadow-popover: var(--shadow-soft);
-  --shadow-dialog: var(--shadow-lift);
-
-  /* Z-index — 부상 레이어 순서 */
-  --z-popover: 20;
-  --z-dialog: 30;
-
-  /* Opacity — 의미 있는 감쇠 값 */
-  --opacity-disabled: 0.4;
-  --opacity-dim: 0.6;
-  --opacity-muted: 0.88;
+  /* Status — bg + text 쌍 (spec 정합) */
+  --color-status-error-bg: var(--red-50);
+  --color-status-error-text: var(--red-500);
+  --color-status-success-bg: var(--green-50);
+  --color-status-success-text: var(--green-500);
+  --color-status-warning-bg: var(--amber-50);
+  --color-status-warning-text: var(--amber-500);
+  --color-status-info-bg: var(--blue-50);
+  --color-status-info-text: var(--blue-500);
 
   /* Overlay */
   --color-overlay-scrim: rgba(44, 40, 35, 0.45);
-
-  /* Size */
-  --size-popover-min: 11rem;
-  --size-progress-rail: 2px;
 }
 
 [data-theme="dark"] {
-  /* 뼈대. 실제 값은 UI 디벨롭 시 확정. */
-  --color-surface: var(--neutral-900);
-  --color-surface-subtle: var(--neutral-800);
-  --color-surface-inset: var(--neutral-700);
-  --color-border: var(--neutral-700);
-  --color-border-strong: var(--neutral-600);
-  --color-wall: var(--neutral-800);
+  --color-bg-canvas: var(--neutral-900);
+  --color-bg-soft: var(--neutral-800);
+  --color-bg-strong: var(--neutral-700);
+  --color-bg-card: var(--neutral-900);
+  --color-bg-hairline: var(--neutral-700);
 
-  --color-text-primary: var(--neutral-50);
-  --color-text-secondary: var(--neutral-200);
+  --color-text-ink: var(--neutral-50);
+  --color-text-body: var(--neutral-200);
+  --color-text-body-strong: var(--neutral-0);
   --color-text-muted: var(--neutral-400);
-  --color-text-on-accent: var(--neutral-900);
+  --color-text-on-primary: var(--neutral-900);
 
-  --color-accent: var(--accent-400);
+  --color-accent-primary: var(--accent-400);
   --color-accent-hover: var(--accent-300);
   --color-accent-active: var(--accent-200);
   --color-focus-ring: var(--accent-300);
 
-  --color-pour-bloom: var(--accent-200);
-  --color-pour-main: var(--accent-400);
-  --color-timeline-axis: var(--neutral-600);
-  --color-timeline-grid: var(--neutral-800);
+  --color-status-error-bg: rgba(196, 90, 77, 0.15);
+  --color-status-success-bg: rgba(107, 147, 96, 0.15);
+  --color-status-warning-bg: rgba(212, 154, 60, 0.15);
+  --color-status-info-bg: rgba(74, 120, 163, 0.15);
 
-  /* dark 테마는 뒷배경이 어두워 cream 투과가 안 일어나므로
-     비교적 높은 알파 유지하되 light 테마와의 시각적 차이를 고려해 살짝 완화. */
-  --color-brewing-liquid-top: rgba(243, 204, 158, 0.78);
-  --color-brewing-liquid-mid: rgba(216, 148, 88, 0.86);
-  --color-brewing-liquid-deep: rgba(158, 88, 48, 0.92);
-  --color-brewing-liquid-bottom: rgba(96, 48, 24, 0.97);
-
-  --color-ring-future: var(--neutral-500);
-  --color-ring-on-liquid: rgba(251, 247, 239, 0.32);
-
-  /* Brewing — liquid surface (dark: slightly more opaque for visibility) */
-  --color-meniscus-highlight: rgba(255, 247, 228, 0.42);
-
-  --color-ring-on-liquid-label: rgba(251, 247, 239, 0.72);
-
-  --color-text-on-liquid: var(--neutral-0);
-
-  --shadow-rim-inset: inset 0 6px 14px -10px rgba(0, 0, 0, 0.5);
-  --shadow-cup-inset: inset 0 8px 16px -12px rgba(0, 0, 0, 0.4);
-
-  /* Shadow — dark는 배경이 어두우므로 더 진한 그림자 */
-  --shadow-control-raised: 0 1px 2px rgba(0, 0, 0, 0.35);
-  --shadow-popover: 0 1px 2px rgba(0, 0, 0, 0.4), 0 2px 6px rgba(0, 0, 0, 0.4);
-  --shadow-dialog: 0 2px 8px rgba(0, 0, 0, 0.5), 0 6px 16px rgba(0, 0, 0, 0.5);
-
-  /* Overlay */
   --color-overlay-scrim: rgba(0, 0, 0, 0.6);
 }

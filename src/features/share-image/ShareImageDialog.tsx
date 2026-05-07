@@ -92,11 +92,11 @@ export function ShareImageDialog({ open, session, onClose }: Props) {
       className="fixed inset-0 z-dialog flex flex-col bg-surface px-6 pb-6 pt-12 text-text-primary"
     >
       <header className="flex items-center justify-between">
-        <h2 className="text-md font-semibold">공유하기</h2>
+        <h2 className="text-body-md font-semibold">공유하기</h2>
         <button
           type="button"
           onClick={onClose}
-          className="text-sm text-text-secondary"
+          className="text-body-sm text-text-secondary"
         >
           닫기
         </button>
@@ -104,20 +104,20 @@ export function ShareImageDialog({ open, session, onClose }: Props) {
 
       {photo.state.kind === "loading" && (
         <div className="mt-10 flex flex-1 items-center justify-center">
-          <p className="text-sm text-text-secondary">사진을 불러오는 중…</p>
+          <p className="text-body-sm text-text-secondary">사진을 불러오는 중…</p>
         </div>
       )}
 
       {photo.state.kind === "empty" && (
         <div className="mt-10 flex flex-1 flex-col justify-center gap-6">
-          <p className="text-center text-sm text-text-secondary">
+          <p className="text-center text-body-sm text-text-secondary">
             방금 내린 커피 사진을 골라주세요.
           </p>
           <PhotoPicker onPick={photo.setFile} />
           <button
             type="button"
             onClick={onClose}
-            className="rounded-button py-3.5 text-sm text-text-muted"
+            className="rounded-button py-3.5 text-body-sm text-text-muted"
           >
             취소
           </button>
@@ -152,16 +152,16 @@ export function ShareImageDialog({ open, session, onClose }: Props) {
           </div>
 
           {phase === "error" && errorMsg != null && (
-            <p className="text-center text-sm text-pour-bloom">{errorMsg}</p>
+            <p className="text-center text-body-sm text-pour-bloom">{errorMsg}</p>
           )}
 
-          <div className="flex flex-col gap-2 text-sm font-medium">
+          <div className="flex flex-col gap-2 text-body-sm font-medium">
             <button
               type="button"
               onClick={handleShare}
               disabled={phase === "exporting"}
               className={cx(
-                "rounded-button border border-text-primary bg-surface-subtle py-3.5 transition-colors hover:bg-surface-inset",
+                "rounded-button border border-text-primary bg-surface-soft py-3.5 transition-colors hover:bg-surface-strong",
                 phase === "exporting" && "opacity-disabled",
               )}
             >
@@ -171,7 +171,7 @@ export function ShareImageDialog({ open, session, onClose }: Props) {
               type="button"
               onClick={photo.clear}
               disabled={phase === "exporting"}
-              className="rounded-button border border-border py-3.5"
+              className="rounded-button border border-surface-hairline py-3.5"
             >
               사진 변경
             </button>

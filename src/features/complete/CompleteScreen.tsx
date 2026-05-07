@@ -39,13 +39,13 @@ export function CompleteScreen({ session, onFeelingChange, onExit }: Props) {
     <div className="mx-auto flex min-h-svh max-w-lg flex-col bg-surface px-6 pb-4 pt-16 text-text-primary">
       {/* quiet header */}
       <header className="flex flex-col items-center gap-1">
-        <span className="text-xs text-text-muted tabular-nums">{dateText}</span>
+        <span className="text-caption-sm text-text-muted tabular-nums">{dateText}</span>
       </header>
 
       {/* hero */}
       <section aria-label="총 시간" className="mt-4 flex flex-col items-center">
-        <span className="text-xs text-text-muted">오늘의 커피</span>
-        <span className="mt-1 text-hero-sm font-medium leading-none tabular-nums">
+        <span className="text-caption-sm text-text-muted">오늘의 커피</span>
+        <span className="mt-1 text-heading-xl font-medium leading-none tabular-nums">
           {formatTime(sessionDurationSec(session))}
         </span>
       </section>
@@ -73,7 +73,7 @@ export function CompleteScreen({ session, onFeelingChange, onExit }: Props) {
         aria-label="감정 기록"
         className="mt-10 flex flex-col items-center gap-3"
       >
-        <p className="text-sm text-text-secondary">
+        <p className="text-body-sm text-text-secondary">
           오늘의 핸드드립 경험은 어땠나요?
         </p>
         <div className="flex w-full gap-2">
@@ -89,12 +89,12 @@ export function CompleteScreen({ session, onFeelingChange, onExit }: Props) {
                 className={cx(
                   "flex h-20 flex-1 flex-col items-center justify-center gap-1.5 rounded-card border transition-colors",
                   isSelected
-                    ? "border-text-primary bg-surface-subtle font-medium text-text-primary"
-                    : "border-border text-text-secondary hover:bg-surface-inset/60",
+                    ? "border-text-primary bg-surface-soft font-medium text-text-primary"
+                    : "border-surface-hairline text-text-secondary hover:bg-surface-strong/60",
                 )}
               >
                 <FeelingGlyph kind={f.id} size={34} />
-                <span className="text-xs">{f.label}</span>
+                <span className="text-caption-sm">{f.label}</span>
               </button>
             );
           })}
@@ -102,19 +102,19 @@ export function CompleteScreen({ session, onFeelingChange, onExit }: Props) {
       </section>
 
       {/* bottom buttons */}
-      <div className="mt-auto flex gap-2 pt-10 text-sm font-medium">
+      <div className="mt-auto flex gap-2 pt-10 text-body-sm font-medium">
         <button
           type="button"
           onClick={() => setShareOpen(true)}
           aria-label="공유"
-          className="w-16 rounded-button border border-text-primary bg-surface-subtle py-3 text-text-primary transition-colors hover:bg-surface-inset"
+          className="w-16 rounded-button border border-text-primary bg-surface-soft py-3 text-text-primary transition-colors hover:bg-surface-strong"
         >
           공유
         </button>
         <button
           type="button"
           onClick={onExit}
-          className="flex-1 rounded-button border border-text-primary bg-surface-subtle py-3 transition-colors hover:bg-surface-inset"
+          className="flex-1 rounded-button border border-text-primary bg-surface-soft py-3 transition-colors hover:bg-surface-strong"
         >
           처음으로
         </button>
@@ -141,13 +141,13 @@ function SummaryCell({
 }) {
   return (
     <div className="flex flex-col gap-0.5">
-      <span className="text-2xs uppercase tracking-wider text-text-muted">
+      <span className="text-caption-xxs uppercase tracking-wider text-text-muted">
         {label}
       </span>
       <span
         className={cx(
           "tabular-nums",
-          small ? "text-sm text-text-secondary" : "text-md",
+          small ? "text-body-sm text-text-secondary" : "text-body-md",
         )}
       >
         {value}

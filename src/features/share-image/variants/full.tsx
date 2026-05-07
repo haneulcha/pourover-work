@@ -60,7 +60,7 @@ export function Full({ session, photoUrl, color }: ShareVariantProps) {
       >
         <span
           className={cx(
-            "text-xs font-semibold uppercase tracking-widest",
+            "text-caption-sm font-semibold uppercase tracking-widest",
             labelColor,
           )}
         >
@@ -98,13 +98,13 @@ export function Full({ session, photoUrl, color }: ShareVariantProps) {
           <div>
             <div className="flex items-center gap-2">
               <FeelingGlyph kind={session.feeling} size={26} />
-              <span className="text-2xl tabular-nums leading-none">
+              <span className="text-heading-sm tabular-nums leading-none">
                 {FEELING_LABEL[session.feeling]}
               </span>
             </div>
             <span
               className={cx(
-                "mt-2 block text-xs uppercase tracking-widest",
+                "mt-2 block text-caption-sm uppercase tracking-widest",
                 labelColor,
               )}
             >
@@ -116,7 +116,7 @@ export function Full({ session, photoUrl, color }: ShareVariantProps) {
 
       <div
         className={cx(
-          "absolute bottom-6 left-6 text-xs tracking-widest",
+          "absolute bottom-6 left-6 text-caption-sm tracking-widest",
           wordmarkColor,
         )}
       >
@@ -139,14 +139,14 @@ function Stat({ value, label, labelColor, big = false }: StatProps) {
       <div
         className={cx(
           "tabular-nums leading-none",
-          big ? "text-7xl font-medium" : "text-2xl",
+          big ? "text-heading-xl font-medium" : "text-heading-sm",
         )}
       >
         {value}
       </div>
       <span
         className={cx(
-          "mt-2 block text-xs uppercase tracking-widest",
+          "mt-2 block text-caption-sm uppercase tracking-widest",
           labelColor,
         )}
       >

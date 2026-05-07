@@ -27,8 +27,8 @@ const RING_COLORS: Record<
     label: "var(--color-ring-on-liquid-label)",
   },
   next: {
-    line: "var(--color-text-primary)",
-    label: "var(--color-text-primary)",
+    line: "var(--color-text-ink)",
+    label: "var(--color-text-ink)",
   },
   future: {
     line: "var(--color-ring-future)",
@@ -178,15 +178,15 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
       >
         <div className="flex items-start gap-4">
           <div>
-            <div className="text-2xs text-text-muted">경과</div>
-            <div className="mt-0.5 text-xl font-medium tabular-nums">
+            <div className="text-caption-xxs text-text-muted">경과</div>
+            <div className="mt-0.5 text-heading-sm font-medium tabular-nums">
               {formatTime(elapsed)}
             </div>
           </div>
           {topRingFallback && visibleRings.length > 0 && (
             <div className="pt-1">
-              <div className="text-2xs text-text-muted">최종</div>
-              <div className="mt-0.5 text-xs tabular-nums text-text-secondary">
+              <div className="text-caption-xxs text-text-muted">최종</div>
+              <div className="mt-0.5 text-caption-sm tabular-nums text-text-secondary">
                 {formatTime(visibleRings.at(-1)!.atSec)}
               </div>
             </div>
@@ -198,7 +198,7 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
               type="button"
               onClick={handleSkip}
               aria-label="다음 스텝으로 건너뛰기"
-              className="flex min-h-11 items-center px-2 text-xs text-text-muted hover:text-text-secondary"
+              className="flex min-h-11 items-center px-2 text-caption-sm text-text-muted hover:text-text-secondary"
             >
               건너뛰기 <span aria-hidden>›</span>
             </button>
@@ -206,7 +206,7 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
           <button
             type="button"
             onClick={handleStopRequest}
-            className="flex min-h-11 items-center px-2 text-xs text-text-muted hover:text-text-secondary"
+            className="flex min-h-11 items-center px-2 text-caption-sm text-text-muted hover:text-text-secondary"
           >
             중단
           </button>
@@ -263,7 +263,7 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
         >
           <div
             className={cx(
-              "text-2xs font-semibold uppercase tracking-widest",
+              "text-caption-xxs font-semibold uppercase tracking-widest",
               isDrawdown ? "text-text-on-liquid" : "text-pour-bloom",
             )}
           >
@@ -279,7 +279,7 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
             <span
               data-testid="hero-weight"
               className={cx(
-                "text-brewing-hero font-medium leading-none tabular-nums",
+                "text-heading-md font-medium leading-none tabular-nums",
                 isDrawdown ? "text-text-on-liquid" : "text-text-primary",
               )}
             >
@@ -287,7 +287,7 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
             </span>
             <span
               className={cx(
-                "text-lg",
+                "text-body-lg",
                 isDrawdown
                   ? "text-text-on-liquid opacity-70"
                   : "text-text-muted",
@@ -297,7 +297,7 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
             </span>
           </div>
           {!isDrawdown && (
-            <div className="mt-1.5 text-sm text-text-secondary">
+            <div className="mt-1.5 text-body-sm text-text-secondary">
               +{active.pourAmount}g 붓기{isLast ? " · 마지막 푸어" : ""}
             </div>
           )}
@@ -321,9 +321,9 @@ function FinishMarker({ totalTimeSec }: { readonly totalTimeSec: number }) {
     <div className="relative h-3 bg-surface" aria-hidden="false">
       <div
         className="pointer-events-none absolute left-3.5 right-24 top-1/2 -translate-y-1/2"
-        style={{ height: "2px", background: "var(--color-border)" }}
+        style={{ height: "2px", background: "var(--color-bg-hairline)" }}
       />
-      <div className="absolute right-4 top-1/2 flex -translate-y-1/2 items-center gap-1.5 text-xs tabular-nums text-text-muted">
+      <div className="absolute right-4 top-1/2 flex -translate-y-1/2 items-center gap-1.5 text-caption-sm tabular-nums text-text-muted">
         <time aria-label={`완료, ${mm}분 ${ss}초`} dateTime={`PT${mm}M${ss}S`}>
           {formatTime(totalTimeSec)}
         </time>
@@ -366,7 +366,7 @@ function RingMarker({
       {!hideLabel && (
         <div
           className={cx(
-            "absolute right-4 -top-1.5 flex items-center gap-1.5 text-xs tabular-nums",
+            "absolute right-4 -top-1.5 flex items-center gap-1.5 text-caption-sm tabular-nums",
             variant === "next" && "font-semibold",
           )}
           style={{ color: colors.label }}

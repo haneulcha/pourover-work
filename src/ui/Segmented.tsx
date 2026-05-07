@@ -25,7 +25,7 @@ export function Segmented<T extends string>({
     <div
       role="radiogroup"
       aria-label={label}
-      className="inline-flex rounded-control-group border border-border bg-surface-inset p-0.5"
+      className="inline-flex rounded-card border border-surface-hairline bg-surface-strong p-0.5"
     >
       {options.map((opt) => {
         const selected = opt.value === value;
@@ -33,9 +33,9 @@ export function Segmented<T extends string>({
           <label
             key={opt.value}
             className={cx(
-              "relative cursor-pointer select-none rounded-control px-3 py-1.5 text-sm font-medium transition-colors",
+              "relative cursor-pointer select-none rounded-button px-3 py-1.5 text-body-sm font-medium transition-colors",
               selected
-                ? "bg-surface text-text-primary shadow-raised"
+                ? "bg-surface text-text-primary shadow-hairline"
                 : "text-text-muted hover:text-text-secondary",
               opt.disabled && "cursor-not-allowed opacity-disabled",
             )}

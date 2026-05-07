@@ -104,13 +104,13 @@ export function RecipeScreen({
             aria-haspopup="dialog"
             aria-expanded={popoverOpen}
             aria-label={`드리퍼 바꾸기, 현재 ${dripperName}`}
-            className="-ml-1 flex items-center gap-3 rounded-control p-1 transition-colors hover:bg-surface-inset/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-focus"
+            className="-ml-1 flex items-center gap-3 rounded-button p-1 transition-colors hover:bg-surface-strong/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-focus"
           >
             <span style={{ viewTransitionName: `dripper-${dripper}` }}>
               <DripperIcon type={dripper} size={56} selected />
             </span>
             <div className="text-left">
-              <div className="flex items-center gap-1 text-lg font-medium">
+              <div className="flex items-center gap-1 text-body-lg font-medium">
                 <span>{dripperName}</span>
                 <svg
                   width={14}
@@ -227,7 +227,7 @@ export function RecipeScreen({
 
         {/* recommended row */}
         <div className="text-center my-1">
-          <span className="flex-1 text-sm text-text-muted">
+          <span className="flex-1 text-body-sm text-text-muted">
             {recommendedLine}
           </span>
         </div>
@@ -237,10 +237,10 @@ export function RecipeScreen({
         {/* pour schedule */}
         <section className="min-h-0" aria-label="푸어 스케줄">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold uppercase tracking-wider text-text-muted">
+            <span className="text-caption-sm font-semibold uppercase tracking-wider text-text-muted">
               미리보기
             </span>
-            <span className="text-xs text-text-muted tabular-nums">
+            <span className="text-caption-sm text-text-muted tabular-nums">
               {[
                 `${recipe.totalWater}g · ${formatTime(recipe.totalTimeSec)} · ${recipe.pours.length}번에 나누어 붓기`,
               ].join(" · ")}
@@ -261,7 +261,7 @@ export function RecipeScreen({
         <button
           type="button"
           onClick={onStart}
-          className="w-full flex items-center justify-center gap-3 rounded-button border border-text-primary bg-surface-subtle py-3 transition-colors hover:bg-surface-inset"
+          className="w-full flex items-center justify-center gap-3 rounded-button border border-text-primary bg-surface-soft py-3 transition-colors hover:bg-surface-strong"
         >
           시작
         </button>
@@ -279,7 +279,7 @@ function Row({
 }) {
   return (
     <div className="grid grid-cols-[3.25rem_1fr] items-center gap-3">
-      <span className="text-xs text-text-secondary">{label}</span>
+      <span className="text-caption-sm text-text-secondary">{label}</span>
       <div>{children}</div>
     </div>
   );
