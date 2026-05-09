@@ -4,7 +4,7 @@
 
 ## 현재 지점
 
-- **v1 계산기 + 브랜드 1·2차 + 4-스크린 리추얼 플로우(Wall → Recipe → Brewing → Complete → Wall) + View Transitions API 전이(A1) 완료.**
+- **계산기 + 브랜드 1·2차 + 4-스크린 리추얼 플로우(Wall → Recipe → Brewing → Complete → Wall) + View Transitions API 전이(A1) 완료.**
 - **테스트 126개 / 15 파일**, `bun run typecheck` / `bun run test:run` / `bun run build` 모두 green.
 - 데스크톱(1200×900) + 모바일(390×844) Playwright 시각 QA로 전 플로우 통과.
 - 브라우저 tab title / index.html `<title>`: `핸드드립 계산기`.
@@ -21,12 +21,11 @@
 | Phase 2 Brewing+Timer | `b76b6b4` 등                               | fix + impl + plan (D1 타이머 본체)                        |
 | Phase 0~1             | `5485c96` 등                               | AppRoot + Recipe 재설계                                   |
 | Brand 2차             | `b897f29`                                  | UI 라벨 한국어 로컬라이즈                                 |
-| Brand 1차 + v1        | `5080a5f`, `198e3e8`                       | 토큰 + 최초 앱                                            |
+| Brand 1차 + 최초 앱   | `5080a5f`, `198e3e8`                       | 토큰 + 최초 앱                                            |
 
 ### 관련 문서
 
 - `CLAUDE.md` — 프로젝트 규약 (domain/UI 분리, branded types, 플러그인 레지스트리, 토큰 단일 출처)
-- `docs/design.md` — 원본 도메인 스펙 (v1/v2 스코프, 메서드별 수식)
 - `docs/brand.md` — 브랜드 원본 문서 (★ "뜸" 네이밍은 드롭되었으나 보이스·톤·비주얼 원칙은 여전히 유효)
 - `docs/design-tokens.md` — 토큰 시스템 설명
 - `docs/design_handoff/README.md` + `reference/wall-flow.jsx` — 4-스크린 핸드오프 (Claude Design 산출물)
@@ -84,7 +83,7 @@
 
 **C6. 디스플레이 mono 폰트 도입 (선택)** — 큰 숫자(Brewing Hero 96px, Complete 총 시간 72px, 타이머 26px)에만 `font-mono` 적용. 후보: **IBM Plex Mono** (warm modern 결) 또는 **JetBrains Mono** (더 기하학적). brand.md가 "한 끗만" 허용한 범위. 작업량 적음.
 
-### D. v2+ 도메인 확장 (design.md § v2 확장 지점)
+### D. 도메인 확장
 
 **D2. Approach B (파라미터 직접 조절)** — 고수용 toggle. RecipeScreen에 `PourEditor` 추가 + 도메인에 직접 빌드 경로 추가. 핸드오프의 `고급 ›` 링크가 진입점.
 

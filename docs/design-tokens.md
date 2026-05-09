@@ -374,6 +374,56 @@ rem 단위 arbitrary는 허용. Stylelint가 CSS raw hex를 금지 — `primitiv
 
 실행: `bun run lint` (ESLint + Stylelint 동시).
 
+## Token Sufficiency Heuristics
+
+새 컴포넌트/화면을 만들다 보면 **"이 값은 토큰으로 빼야 하나, 그냥 마크업에 둬야 하나"** 가 늘 애매. 다음 신호를 기준으로 판단.
+
+### 추가 신호 (= 토큰으로 빼야 함)
+
+1. **같은 hex/spacing/radius/shadow가 컴포넌트 두 곳 이상에서 반복** → semantic 또는 component-domain 토큰 후보. 한 곳에서만 쓰이면 아직 토큰 아님 (premature abstraction).
+2. **light↔dark에서 단순 swap이 아닌 색** → component-domain 레이어 후보. semantic은 단순 swap 가능한 색만 (현재 brewing/timeline이 이 패턴).
+3. **arbitrary `[Npx]` / hex 작성 욕구가 같은 의도로 두 번 이상 발생** → primitive 또는 semantic 토큰 부족 신호. 첫 번째는 그냥 적되 다음 요청 때 토큰화.
+4. **새 디자인 의도가 기존 semantic 슬롯 어느 것과도 안 맞음** → 디자이너와 의도 재확인 후, 정말 새 역할이면 semantic 추가. **Tailwind 클래스만 추가하지 말고 CSS 변수부터.**
+5. **scope·z-index·opacity 등 Tailwind 기본을 비활성화한 영역에서 새 값 필요** → primitive 추가 (예: `--z-*`에 `--z-toast` 추가).
+
+### 비추가 신호 (= 토큰으로 빼지 말 것)
+
+1. **레이아웃 순간값** (`mt-1.5`, `gap-3` 등 Tailwind 기본 spacing): 그대로. spec spacing scale(`xxs..section`)은 반복되는 의미적 간격에만.
+2. **컴포넌트 내부 미세 조정** (`-translate-y-1/2`, `inset-x-0` 등): 토큰 X.
+3. **브랜드 의도 없는 일회성 그라데이션·rgba**: 한 번뿐이면 마크업에 둠. 두 번째 등장 시 component-domain 토큰화.
+4. **Named text style 새 변형이 필요한 듯한 느낌**: 거의 항상 잘못된 신호. 3계열(heading/body/caption) + `font-*`/`tracking-*`/`font-mono` 조합으로 풀어볼 것. 진짜 안 풀리면 디자인 의도 자체가 어긋난 것 — 디자이너에 회신.
+
+### 어디 레이어에 둘지 (결정 트리)
+
+```
+새 토큰이 필요하다 →
+  ├─ raw 색상 스케일이 부족? → primitives.css에 새 값 추가
+  ├─ 역할 기반 (bg/text/accent/status/border)? → semantic.css
+  ├─ 깊이/모양 (shadow/radius)? → elevation.css
+  ├─ 폰트/모션/간격/사이즈? → typography/motion/layout.css
+  └─ 한 도메인(brewing, timeline 등)에서만 의미? → components/{domain}.css 신설 또는 추가
+```
+
+규칙: **semantic은 도메인 토큰 절대 안 받음.** brewing-only 색을 `--color-brewing-*`로 semantic.css에 두면 안 되고, `components/brewing.css`로 분리.
+
+### 추가 절차
+
+1. 위 신호 확인 → "추가 가치 있음" 판단
+2. CSS 변수부터 정의 (semantic 또는 component-domain)
+3. Tailwind config의 해당 키 추가 (필요시)
+4. `docs/design-tokens.md` 표에 1줄 반영
+5. Figma 토큰과 명명·역할 일치 확인 (figma-system.json 갱신은 별도 작업)
+6. 신규 토큰 사용처가 1개뿐이면 **commit 메시지에 "다음 사용처에서 회수 예정"** 명시 — 두 번째 사용처 등장 안 하면 reverse 후보.
+
+### Anti-pattern 체크리스트
+
+- [ ] semantic.css에 `--color-{도메인}-*` 추가하려 함 → STOP, components/{domain}.css로
+- [ ] `text-{새이름}` named style 추가하려 함 → 거의 항상 STOP, 조합으로 표현
+- [ ] arbitrary `[Npx]`를 막으려고 spacing scale 외 정수 spacing(`spacing.13` 등) 추가 → STOP, 진짜 의미적 spacing이면 `xxs..section` 안에서 재사용, 아니면 마크업 그대로
+- [ ] Light/Dark가 단순 swap 아닌 색을 semantic에 두려 함 → STOP, component-domain
+- [ ] 토큰 한 번 쓰일 거면서 미리 추가 → STOP, 사용처 두 번 될 때까지 기다림
+- [ ] 기존 토큰과 의미 거의 같은 토큰 추가 → STOP, 기존 토큰 재사용 또는 기존 토큰 의미 확장
+
 ## Migration Notes (이전 명명 → 현재)
 
 | 이전 | 현재 |
