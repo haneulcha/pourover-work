@@ -29,7 +29,7 @@ const filenameFor = (session: BrewSession): string => {
   const y = d.getFullYear();
   const m = String(d.getMonth() + 1).padStart(2, "0");
   const day = String(d.getDate()).padStart(2, "0");
-  return `bloom-coffee-${y}-${m}-${day}.png`;
+  return `pourover-${y}-${m}-${day}.png`;
 };
 
 export function ShareImageDialog({ open, session, onClose }: Props) {
