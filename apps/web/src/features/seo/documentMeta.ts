@@ -1,5 +1,5 @@
 import { drippers } from "@pourover/domain/drippers";
-import { brewMethods } from "@pourover/domain/methods";
+import { getMethodName } from "@pourover/domain/methods";
 import type {
   Recipe,
   RoastLevel,
@@ -53,7 +53,7 @@ export function buildMeta(state: AppState, recipe: Recipe): DocumentMeta {
   if (state.screen === "wall") return DEFAULT_META;
 
   const dripperName = drippers[state.dripper].name;
-  const methodName = brewMethods[state.method].name;
+  const methodName = getMethodName(state.method);
   const coffee = Math.round(recipe.coffee as number);
   const water = Math.round(recipe.totalWater as number);
   const ratioValue = Math.round(recipe.ratio as number);

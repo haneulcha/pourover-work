@@ -1,4 +1,4 @@
-import { brewMethods } from "@pourover/domain/methods";
+import { getMethodName } from "@pourover/domain/methods";
 import { drippers } from "@pourover/domain/drippers";
 import { sessionDurationSec, type Feeling } from "@pourover/domain/session";
 import { cx } from "@/ui/cx";
@@ -22,7 +22,7 @@ const formatShareDate = (epochMs: number): string => {
 
 export function Full({ session, photoUrl, color }: ShareVariantProps) {
   const { recipe } = session;
-  const methodName = brewMethods[recipe.method].name;
+  const methodName = getMethodName(recipe.method);
   const dripperName = drippers[recipe.dripper].name;
   const isNegative = color === "negative";
 

@@ -9,7 +9,7 @@ import { kurasuKyoto } from "./kurasu-kyoto";
 import { scottRao } from "./scott-rao";
 import { standard3Stage } from "./standard-3-stage";
 
-export const brewMethods: Record<BrewMethodId, BrewMethod> = {
+export const brewMethods: Record<Exclude<BrewMethodId, "custom">, BrewMethod> = {
   kasuya_4_6: kasuya46,
   hoffmann_v60: hoffmannV60,
   scott_rao: scottRao,
@@ -25,3 +25,6 @@ export const methodList: readonly BrewMethod[] = Object.values(brewMethods);
 
 export const methodsForDripper = (dripper: DripperId): readonly BrewMethod[] =>
   methodList.filter((m) => m.supportedDrippers.includes(dripper));
+
+export const getMethodName = (id: BrewMethodId): string =>
+  id === "custom" ? "Custom" : brewMethods[id].name;

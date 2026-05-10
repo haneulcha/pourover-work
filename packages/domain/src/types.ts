@@ -13,7 +13,8 @@ export type BrewMethodId =
   | "frothy_monkey"
   | "standard_3_stage"
   | "caffe_luxxe"
-  | "fuglen_tokyo";
+  | "fuglen_tokyo"
+  | "custom";
 export type RoastLevel = "light" | "medium" | "dark";
 
 export type GrindHint =

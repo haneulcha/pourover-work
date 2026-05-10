@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { dripperList } from "@pourover/domain/drippers";
-import { brewMethods, methodsForDripper } from "@pourover/domain/methods";
+import { brewMethods, getMethodName, methodsForDripper } from "@pourover/domain/methods";
 import type {
   BrewMethodId,
   DripperId,
@@ -36,6 +36,7 @@ type Props = {
   readonly onTasteChange: (taste: TasteProfile) => void;
   readonly onStart: () => void;
   readonly onBack: () => void;
+  readonly onCustomize: () => void;
 };
 
 export function RecipeScreen({
@@ -52,10 +53,13 @@ export function RecipeScreen({
   onTasteChange,
   onStart,
   onBack,
+  onCustomize,
 }: Props) {
   const [popoverOpen, setPopoverOpen] = useState(false);
+  const isCustom = method === "custom";
   const compatMethods = methodsForDripper(dripper);
-  const methodMeta = brewMethods[method];
+  const methodMeta = method === "custom" ? null : brewMethods[method];
+  const methodLabel = methodMeta?.name ?? getMethodName(method);
 
   const ratioDisplay = `1:${Math.round(recipe.ratio)}`;
   const recommendedLine = `${recipe.temperature}° · ${ratioDisplay} 비율 · 총 ${formatTime(recipe.totalTimeSec)} 소요 · ${formatGrindHint(recipe.grindHint)}`;
@@ -132,7 +136,7 @@ export function RecipeScreen({
                   />
                 </svg>
               </div>
-              <div className="text-xs text-text-muted">{methodMeta.name}</div>
+              <div className="text-xs text-text-muted">{methodLabel}</div>
             </div>
           </button>
 
@@ -195,20 +199,26 @@ export function RecipeScreen({
 
         <div>
           <Row label="방식">
-            <Segmented<BrewMethodId>
-              name="method"
-              label="방식"
-              value={method}
-              onChange={onMethodChange}
-              options={compatMethods.map((m) => ({
-                value: m.id,
-                label: m.shortName ?? m.name,
-              }))}
-            />
+            {isCustom ? (
+              <span className="text-body-sm text-text-primary">Custom</span>
+            ) : (
+              <Segmented<BrewMethodId>
+                name="method"
+                label="방식"
+                value={method}
+                onChange={onMethodChange}
+                options={compatMethods.map((m) => ({
+                  value: m.id,
+                  label: m.shortName ?? m.name,
+                }))}
+              />
+            )}
           </Row>
-          <p className="pl-16 mt-1 text-xs text-text-muted">
-            {methodMeta.description}
-          </p>
+          {methodMeta && (
+            <p className="pl-16 mt-1 text-xs text-text-muted">
+              {methodMeta.description}
+            </p>
+          )}
         </div>
 
         <Row label="로스팅">
@@ -257,13 +267,20 @@ export function RecipeScreen({
       </main>
 
       {/* start button */}
-      <div className="px-5 pb-6 mt-4">
+      <div className="px-5 pb-6 mt-4 space-y-2">
         <button
           type="button"
           onClick={onStart}
           className="w-full flex items-center justify-center gap-3 rounded-button border border-text-primary bg-surface-soft py-3 transition-colors hover:bg-surface-strong"
         >
           시작
+        </button>
+        <button
+          type="button"
+          onClick={onCustomize}
+          className="w-full flex items-center justify-center gap-3 rounded-button border border-surface-hairline py-2 text-body-sm text-text-secondary transition-colors hover:bg-surface-strong"
+        >
+          {isCustom ? "Edit custom recipe" : "Customize this recipe"}
         </button>
       </div>
     </div>

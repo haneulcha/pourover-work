@@ -3,12 +3,13 @@ import type {
   BrewMethodId,
   DripperId,
   Grams,
+  Recipe,
   RoastLevel,
   TasteProfile,
 } from "@pourover/domain/types";
 import { g } from "@pourover/domain/units";
 
-export type Screen = "wall" | "recipe" | "brewing" | "complete";
+export type Screen = "wall" | "recipe" | "brewing" | "complete" | "custom";
 
 export type AppState = {
   readonly screen: Screen;
@@ -17,6 +18,7 @@ export type AppState = {
   readonly method: BrewMethodId;
   readonly roast: RoastLevel;
   readonly taste: TasteProfile;
+  readonly customRecipe?: Recipe;
 };
 
 export const DEFAULT_STATE: AppState = {
@@ -33,6 +35,7 @@ export const mergeState = (
   patch: Partial<AppState>,
 ): AppState => {
   const merged = { ...base, ...patch };
+  if (merged.method === "custom") return merged;
   const compat = methodsForDripper(merged.dripper);
   if (!compat.some((m) => m.id === merged.method)) {
     return { ...merged, method: compat[0]!.id };

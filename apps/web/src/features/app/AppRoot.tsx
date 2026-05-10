@@ -3,6 +3,7 @@ import { brewMethods } from "@pourover/domain/methods";
 import type {
   BrewMethodId,
   DripperId,
+  Recipe,
   RecipeInput,
   RoastLevel,
   TasteProfile,
@@ -11,6 +12,7 @@ import type { BrewSession, Feeling } from "@pourover/domain/session";
 import { g } from "@pourover/domain/units";
 import { BrewingScreen } from "@/features/brewing/BrewingScreen";
 import { CompleteScreen } from "@/features/complete/CompleteScreen";
+import { CustomRecipeScreen } from "@/features/custom/CustomRecipeScreen";
 import { RecipeScreen } from "@/features/recipe/RecipeScreen";
 import { WallScreen } from "@/features/wall/WallScreen";
 import { loadParams, saveParams, saveSession } from "@/features/share/storage";
@@ -33,7 +35,8 @@ export function AppRoot() {
   const [state, setState] = useState<AppState>(loadInitialState);
   const [session, setSession] = useState<BrewSession | null>(null);
 
-  const recipe = useMemo(() => {
+  const recipe = useMemo<Recipe | null>(() => {
+    if (state.method === "custom") return state.customRecipe ?? null;
     const input: RecipeInput = {
       method: state.method,
       dripper: state.dripper,
@@ -42,7 +45,14 @@ export function AppRoot() {
       taste: state.taste,
     };
     return brewMethods[state.method].compute(input);
-  }, [state.method, state.dripper, state.coffee, state.roast, state.taste]);
+  }, [
+    state.method,
+    state.dripper,
+    state.coffee,
+    state.roast,
+    state.taste,
+    state.customRecipe,
+  ]);
 
   useEffect(() => {
     const params = encodeState(state);
@@ -56,7 +66,7 @@ export function AppRoot() {
       );
     }
     saveParams(params);
-    applyMeta(buildMeta(state, recipe));
+    if (recipe) applyMeta(buildMeta(state, recipe));
   }, [state, recipe]);
 
   const patch = (p: Partial<AppState>): void =>
@@ -70,6 +80,7 @@ export function AppRoot() {
     patch({ coffee: g(coffee) });
 
   const handleStart = (): void => {
+    if (!recipe) return;
     withViewTransition(() => {
       setSession({ recipe, startedAt: Date.now() });
       setState((prev) => mergeState(prev, { screen: "brewing" }));
@@ -112,6 +123,32 @@ export function AppRoot() {
     });
   };
 
+  const handleCustomize = useCallback((): void => {
+    withViewTransition(() =>
+      setState((prev) => mergeState(prev, { screen: "custom" })),
+    );
+  }, []);
+
+  const handleUseCustom = useCallback((customRecipe: Recipe): void => {
+    withViewTransition(() => {
+      setState((prev) =>
+        mergeState(prev, {
+          method: "custom",
+          screen: "recipe",
+          customRecipe,
+          dripper: customRecipe.dripper,
+          coffee: customRecipe.coffee,
+        }),
+      );
+    });
+  }, []);
+
+  const handleCancelCustom = useCallback((): void => {
+    withViewTransition(() =>
+      setState((prev) => mergeState(prev, { screen: "recipe" })),
+    );
+  }, []);
+
   if (state.screen === "wall") {
     return (
       <WallScreen
@@ -141,6 +178,16 @@ export function AppRoot() {
     );
   }
 
+  if (state.screen === "custom") {
+    return (
+      <CustomRecipeScreen
+        prefillFrom={recipe ?? undefined}
+        onUseRecipe={handleUseCustom}
+        onCancel={handleCancelCustom}
+      />
+    );
+  }
+
   return (
     <RecipeScreen
       coffee={state.coffee}
@@ -148,7 +195,9 @@ export function AppRoot() {
       method={state.method}
       roast={state.roast}
       taste={state.taste}
-      recipe={recipe}
+      // recipe can be null when method === "custom" with no customRecipe yet;
+      // RecipeScreen will be made null-aware in a follow-up task.
+      recipe={recipe!}
       onCoffeeChange={handleCoffeeChange}
       onDripperChange={handleDripperChange}
       onMethodChange={handleMethodChange}
@@ -156,6 +205,7 @@ export function AppRoot() {
       onTasteChange={handleTasteChange}
       onStart={handleStart}
       onBack={handleBackToWall}
+      onCustomize={handleCustomize}
     />
   );
 }

@@ -1,0 +1,48 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`buildCustomRecipe > 권장 케이스 스냅샷 1`] = `
+{
+  "coffee": 15,
+  "dripper": "v60",
+  "grindHint": "medium",
+  "method": "custom",
+  "notes": [],
+  "pours": [
+    {
+      "atSec": 0,
+      "cumulativeWater": 30,
+      "index": 0,
+      "label": "bloom",
+      "pourAmount": 30,
+    },
+    {
+      "atSec": 45,
+      "cumulativeWater": 80,
+      "index": 1,
+      "pourAmount": 50,
+    },
+    {
+      "atSec": 90,
+      "cumulativeWater": 140,
+      "index": 2,
+      "pourAmount": 60,
+    },
+    {
+      "atSec": 140,
+      "cumulativeWater": 190,
+      "index": 3,
+      "pourAmount": 50,
+    },
+    {
+      "atSec": 170,
+      "cumulativeWater": 225,
+      "index": 4,
+      "pourAmount": 35,
+    },
+  ],
+  "ratio": 15,
+  "temperature": 92,
+  "totalTimeSec": 170,
+  "totalWater": 225,
+}
+`;

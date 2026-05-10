@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { brewMethods } from "@pourover/domain/methods";
+import { brewMethods, getMethodName } from "@pourover/domain/methods";
 import type { Recipe } from "@pourover/domain/types";
 import { c, g, ratio, s } from "@pourover/domain/units";
 import { DEFAULT_STATE } from "@/features/app/state";
@@ -75,7 +75,7 @@ describe("buildMeta", () => {
         method: id as AppState["method"],
       };
       const meta = buildMeta(state, makeRecipe());
-      expect(meta.title).toContain(brewMethods[id as AppState["method"]].name);
+      expect(meta.title).toContain(getMethodName(id as AppState["method"]));
       expect(meta.title.endsWith("| 핸드드립 계산기")).toBe(true);
     }
   });

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { brewMethods } from "@pourover/domain/methods";
+import { getMethodName } from "@pourover/domain/methods";
 import { drippers } from "@pourover/domain/drippers";
 import {
   sessionDurationSec,
@@ -27,7 +27,7 @@ const FEELINGS: readonly { id: Feeling; label: string }[] = [
 export function CompleteScreen({ session, onFeelingChange, onExit }: Props) {
   const { recipe } = session;
   const dripperName = drippers[recipe.dripper].name;
-  const methodName = brewMethods[recipe.method].name;
+  const methodName = getMethodName(recipe.method);
   const dateText = formatBrewedAt(session.startedAt);
   const [shareOpen, setShareOpen] = useState(false);
 
