@@ -50,7 +50,7 @@ describe("April", () => {
             "pourAmount": 50,
           },
         ],
-        "ratio": 15.4,
+        "ratio": 15.384615384615385,
         "temperature": 91,
         "totalTimeSec": 150,
         "totalWater": 200,

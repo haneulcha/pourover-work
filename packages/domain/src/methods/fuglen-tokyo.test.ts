@@ -45,7 +45,7 @@ describe("Fuglen Tokyo", () => {
             "pourAmount": 170,
           },
         ],
-        "ratio": 15.6,
+        "ratio": 15.625,
         "temperature": 92,
         "totalTimeSec": 115,
         "totalWater": 250,

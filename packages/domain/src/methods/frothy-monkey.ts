@@ -77,7 +77,7 @@ const compute = (input: RecipeInput): Recipe => {
     dripper: "kalita_wave",
     coffee,
     totalWater: g(totalWater),
-    ratio: ratio(METHOD_RATIO),
+    ratio: ratio(totalWater / (coffee as number)),
     temperature: c(temperatureByRoast[roast]),
     pours,
     totalTimeSec: s(lastAtSec + DRAWDOWN_SEC),

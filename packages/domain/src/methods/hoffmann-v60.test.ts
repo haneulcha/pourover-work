@@ -59,7 +59,7 @@ describe("Hoffmann V60", () => {
               "pourAmount": 100,
             },
           ],
-          "ratio": 16.67,
+          "ratio": 16.666666666666668,
           "temperature": 93,
           "totalTimeSec": 210,
           "totalWater": 250,

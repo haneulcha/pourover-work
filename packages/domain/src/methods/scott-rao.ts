@@ -60,7 +60,7 @@ const compute = (input: RecipeInput): Recipe => {
     dripper: "v60",
     coffee,
     totalWater: g(totalWater),
-    ratio: ratio(METHOD_RATIO),
+    ratio: ratio(totalWater / (coffee as number)),
     temperature: c(temperatureByRoast[roast]),
     pours,
     totalTimeSec: s(bloomSec + DRAWDOWN_SEC),

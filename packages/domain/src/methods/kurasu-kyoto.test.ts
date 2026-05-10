@@ -45,7 +45,7 @@ describe("Kurasu Kyoto", () => {
             "pourAmount": 140,
           },
         ],
-        "ratio": 14.3,
+        "ratio": 14.285714285714286,
         "temperature": 90,
         "totalTimeSec": 130,
         "totalWater": 200,
