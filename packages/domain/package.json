@@ -1,0 +1,23 @@
+{
+  "name": "@pourover/domain",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "exports": {
+    "./units": "./src/units.ts",
+    "./types": "./src/types.ts",
+    "./session": "./src/session.ts",
+    "./drippers": "./src/drippers.ts",
+    "./methods": "./src/methods/index.ts",
+    "./methods/*": "./src/methods/*.ts"
+  },
+  "scripts": {
+    "test": "vitest",
+    "test:run": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}
