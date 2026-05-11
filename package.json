@@ -3,45 +3,20 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "workspaces": ["apps/*", "packages/*"],
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "preview": "vite preview",
-    "test": "vitest",
-    "test:run": "vitest run",
-    "typecheck": "tsc -b --noEmit",
+    "dev": "bun run --filter @pourover/web dev",
+    "build": "bun run --filter @pourover/web build",
+    "preview": "bun run --filter @pourover/web preview",
+    "test": "bun run --filter '*' test",
+    "test:run": "bun run --filter '*' test:run",
+    "typecheck": "bun run --filter '*' typecheck",
+    "lint": "bun run --filter '*' lint",
+    "lint:fix": "bun run --filter '*' lint:fix",
     "format": "prettier --write .",
-    "format:check": "prettier --check .",
-    "lint": "eslint \"src/**/*.{ts,tsx}\" && stylelint \"src/**/*.css\"",
-    "lint:fix": "eslint \"src/**/*.{ts,tsx}\" --fix && stylelint \"src/**/*.css\" --fix"
-  },
-  "dependencies": {
-    "html-to-image": "^1.11.13",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "format:check": "prettier --check ."
   },
   "devDependencies": {
-    "@eslint/js": "^9",
-    "@testing-library/jest-dom": "^6.6.3",
-    "@testing-library/react": "^16.1.0",
-    "@types/node": "^22.10.0",
-    "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
-    "@vitejs/plugin-react": "^4.3.4",
-    "autoprefixer": "^10.4.20",
-    "eslint": "^9",
-    "eslint-plugin-react": "^7",
-    "eslint-plugin-react-hooks": "^5",
-    "jsdom": "^25.0.1",
-    "postcss": "^8.4.49",
-    "prettier": "^3.8.3",
-    "stylelint": "^16",
-    "stylelint-config-standard": "^36",
-    "tailwindcss": "^3.4.17",
-    "typescript": "^5.7.2",
-    "typescript-eslint": "^8",
-    "vite": "^6.0.3",
-    "vitest": "^2.1.8"
-  },
-  "packageManager": "pnpm@10.28.0+sha512.05df71d1421f21399e053fde567cea34d446fa02c76571441bfc1c7956e98e363088982d940465fd34480d4d90a0668bc12362f8aa88000a64e83d0b0e47be48"
+    "prettier": "^3.8.3"
+  }
 }
