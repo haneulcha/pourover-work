@@ -15,7 +15,7 @@ export function WallScreen({ selectedDripper, onPickDripper }: Props) {
       {/* 타이틀 zone */}
       <header className="text-center w-full px-5 pt-16">
         <h1 className="text-heading-sm font-medium leading-none tracking-tight">
-          핸드 드립 계산기
+          핸드드립 계산기
         </h1>
         <p className="text-body-md text-text-secondary mt-2">저만 믿고 따라오세요</p>
       </header>
