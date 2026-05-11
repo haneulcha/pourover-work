@@ -58,7 +58,7 @@ export function CompleteScreen({ session, onFeelingChange, onExit }: Props) {
           <SummaryCell label="레시피" value={methodName} />
           <SummaryCell
             label="원두 · 물"
-            value={`${recipe.coffee} g · ${recipe.totalWater} g`}
+            value={`${recipe.coffee} · ${recipe.totalWater} g`}
           />
           <SummaryCell
             label="온도 · 분쇄"
