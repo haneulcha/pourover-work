@@ -174,6 +174,7 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
       {/* RIM */}
       <header
         data-region="rim"
+        // eslint-disable-next-line no-restricted-syntax -- RIM은 브루잉 시각화 위에 떠 있는 헤더지만 popover/dialog 의미는 아님. 도메인 전용 z 토큰(z-rim 등) 도입 필요. TODO.
         className="relative z-10 flex h-brewing-rim items-start justify-between bg-surface px-5 pt-4"
       >
         <div className="flex items-start gap-4">
@@ -353,6 +354,7 @@ function RingMarker({
       data-testid={variant === "next" ? "ring-next" : undefined}
       data-ring-variant={variant}
       data-at-sec={pour.atSec}
+      // eslint-disable-next-line no-restricted-syntax -- 브루잉 링 레이어링용 z (popover/dialog 아님). 도메인 전용 z 토큰 도입 필요. TODO.
       className="pointer-events-none absolute inset-x-0 z-[3] h-px"
       style={{ bottom: positionPct }}
     >

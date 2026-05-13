@@ -136,7 +136,7 @@ export function RecipeScreen({
                   />
                 </svg>
               </div>
-              <div className="text-xs text-text-muted">{methodLabel}</div>
+              <div className="text-caption-sm text-text-muted">{methodLabel}</div>
             </div>
           </button>
 
@@ -215,7 +215,7 @@ export function RecipeScreen({
             )}
           </Row>
           {methodMeta && (
-            <p className="pl-16 mt-1 text-xs text-text-muted">
+            <p className="pl-16 mt-1 text-caption-sm text-text-muted">
               {methodMeta.description}
             </p>
           )}

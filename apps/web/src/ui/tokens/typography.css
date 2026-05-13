@@ -3,11 +3,11 @@
 
 :root {
   --font-sans:
-    "Pretendard Variable", "Pretendard", "Inter", -apple-system, BlinkMacSystemFont,
+    "Pretendard Variable", "Pretendard", "Inter", -apple-system, blinkmacsystemfont,
     system-ui, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
   --font-mono:
     "Geist Mono", "IBM Plex Mono", "D2Coding", "Noto Sans Mono CJK KR", "SF Mono",
-    Consolas, monospace;
+    consolas, monospace;
 
   /* Font-size raw scale (px). named text style 정의에서 참조 또는 임의 사용 금지. */
   --font-size-10: 10px;

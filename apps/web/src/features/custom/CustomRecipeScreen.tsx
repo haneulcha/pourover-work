@@ -99,7 +99,7 @@ export function CustomRecipeScreen({
         onSelect={(i) => dispatch({ type: "selectPour", index: i })}
       />
 
-      <div className="grid gap-4 lg:grid-cols-[1fr_280px]">
+      <div className="grid gap-4 lg:grid-cols-[1fr_17.5rem]">
         <PourEditTable
           state={state}
           mobile={mobile}
