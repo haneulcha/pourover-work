@@ -46,7 +46,7 @@ const baseSession: BrewSession = {
 };
 
 describe("CompleteScreen", () => {
-  it("renders 완료 header and formatted date", () => {
+  it("renders formatted date in quiet header", () => {
     render(
       <CompleteScreen
         session={baseSession}
@@ -54,7 +54,6 @@ describe("CompleteScreen", () => {
         onExit={vi.fn()}
       />,
     );
-    expect(screen.getByText("완료")).toBeInTheDocument();
     expect(screen.getByText("2026 · 03 · 14 · 오전 7:42")).toBeInTheDocument();
   });
 
@@ -70,7 +69,6 @@ describe("CompleteScreen", () => {
     // Actual 180s, not planned 208s.
     expect(screen.getByText("3:00")).toBeInTheDocument();
     expect(screen.queryByText("3:28")).not.toBeInTheDocument();
-    expect(screen.getByText("이제 음미해보세요.")).toBeInTheDocument();
   });
 
   it("renders recipe summary fields", () => {

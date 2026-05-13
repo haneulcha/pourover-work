@@ -20,6 +20,7 @@
   --radius-input: var(--radius-6);
   --radius-card: var(--radius-10);
   --radius-large: var(--radius-20); /* hero, large containers */
+
   /* radius-pill 위에서 정의됨 */
 
   /* Shadow tier — Light. spec 4-tier (Xs/Sm/Md/Lg = hairline/raised/floating/overlay).
