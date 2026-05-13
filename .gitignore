@@ -15,7 +15,9 @@ dist-ssr
 .DS_Store
 
 # Claude Code (프로젝트 로컬 메타데이터)
-.claude/
+# commands/는 공유 — 그 외(settings.local.json, scheduled_tasks.lock 등)는 개인 로컬
+.claude/*
+!.claude/commands/
 
 # Logs
 *.log
