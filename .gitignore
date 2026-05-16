@@ -34,3 +34,6 @@ coverage
 .playwright-mcp/
 /*.png
 .superpowers/
+
+# Cloudflare Wrangler local state
+.wrangler/
