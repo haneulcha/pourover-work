@@ -3,11 +3,16 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "workspaces": ["apps/*", "packages/*"],
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
     "dev": "bun run --filter @pourover/web dev",
+    "dev:api": "bun run --filter @pourover/api dev",
     "build": "bun run --filter @pourover/web build",
     "preview": "bun run --filter @pourover/web preview",
+    "deploy:api": "bun run --filter @pourover/api deploy",
     "test": "bun run --filter '*' test",
     "test:run": "bun run --filter '*' test:run",
     "typecheck": "bun run --filter '*' typecheck",
