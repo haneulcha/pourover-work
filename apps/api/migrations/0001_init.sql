@@ -1,7 +1,7 @@
--- Initial schema for @pourover/api.
--- better-auth v1.4.21 표준 4개 테이블 + 도메인 테이블 brewLogEntry.
+-- Initial schema for @pourover/api — better-auth v1.4.21 표준 4개 테이블.
 -- camelCase 컬럼 + lowercase 단수 테이블명 (better-auth 컨벤션).
 -- 모든 식별자 quoted — SQLite에서 case-sensitive 보존.
+-- 도메인 테이블(brewLogEntry 등)은 별도 후속 마이그레이션에서 추가.
 
 CREATE TABLE "user" (
   "id" TEXT NOT NULL PRIMARY KEY,
@@ -52,20 +52,3 @@ CREATE TABLE "verification" (
 CREATE INDEX "session_userId_idx" ON "session"("userId");
 CREATE INDEX "account_userId_idx" ON "account"("userId");
 CREATE INDEX "verification_identifier_idx" ON "verification"("identifier");
-
--- 도메인 테이블: 브루 로그 엔트리 (#14의 데이터 형상).
--- sessionJson은 BrewSession JSON-stringified.
-CREATE TABLE "brewLogEntry" (
-  "id" TEXT NOT NULL PRIMARY KEY,
-  "userId" TEXT NOT NULL REFERENCES "user"("id") ON DELETE CASCADE,
-  "sessionJson" TEXT NOT NULL,
-  "beanVariety" TEXT,
-  "beanRoaster" TEXT,
-  "beanRoastDate" TEXT,
-  "note" TEXT,
-  "photoKey" TEXT,
-  "createdAt" TEXT NOT NULL
-);
-
-CREATE INDEX "brewLogEntry_userId_createdAt_idx"
-  ON "brewLogEntry"("userId", "createdAt" DESC);

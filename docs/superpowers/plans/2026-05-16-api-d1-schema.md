@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** ADR 0001 후속 2/6 — `apps/api`에 Cloudflare D1 바인딩 추가, `wrangler d1 migrations` 파이프라인 셋업, 첫 마이그레이션(`0001_init.sql`)으로 better-auth 4개 표준 테이블(`user`/`session`/`account`/`verification`)과 도메인 테이블 `brewLogEntry`를 생성한다. 헬스체크가 D1을 한 번 touch하도록 확장.
+**Goal:** ADR 0001 후속 2/6 — `apps/api`에 Cloudflare D1 바인딩 추가, `wrangler d1 migrations` 파이프라인 셋업, 첫 마이그레이션(`0001_init.sql`)으로 better-auth 4개 표준 테이블(`user`/`session`/`account`/`verification`)을 생성한다. 헬스체크가 D1을 한 번 touch하도록 확장. 도메인 테이블은 별도 후속 마이그레이션으로 분리.
 
 **Architecture:** 마이그레이션은 forward-only(ADR D7), `wrangler d1 migrations apply <name> --local|--remote` 표준 명령으로 적용. better-auth는 본 PR에서 *설치하지 않는다* — v1.4.21 CLI dump 출력을 그대로 SQL 파일에 박아 #21에서 라이브러리 도입 시 schema 호환되도록 한다. 테이블/컬럼은 better-auth가 강제하는 camelCase + lowercase 단수 컨벤션을 따른다(D1 SQLite quoted identifier).
 
@@ -19,7 +19,7 @@
 - `apps/api/README.md` — D1 셋업/마이그레이션 섹션 추가
 
 **Create:**
-- `apps/api/migrations/0001_init.sql` — 5개 테이블 + 인덱스. better-auth CLI v1.4.21 dump 그대로 + brewLogEntry 추가.
+- `apps/api/migrations/0001_init.sql` — 4개 테이블 + 인덱스. better-auth CLI v1.4.21 dump 그대로.
 
 각 파일 책임:
 - `wrangler.jsonc` — Worker 매니페스트(바인딩 선언)
@@ -84,7 +84,7 @@ Run: `mkdir -p apps/api/migrations`
 
 ```sql
 -- Initial schema for @pourover/api.
--- better-auth v1.4.21 표준 4개 테이블 + 도메인 테이블 brewLogEntry.
+-- better-auth v1.4.21 표준 4개 테이블 전용. 도메인 테이블은 후속 마이그레이션에서.
 -- camelCase 컬럼 + lowercase 단수 테이블명 (better-auth 컨벤션).
 -- 모든 식별자 quoted — SQLite에서 case-sensitive 보존.
 
@@ -137,23 +137,6 @@ CREATE TABLE "verification" (
 CREATE INDEX "session_userId_idx" ON "session"("userId");
 CREATE INDEX "account_userId_idx" ON "account"("userId");
 CREATE INDEX "verification_identifier_idx" ON "verification"("identifier");
-
--- 도메인 테이블: 브루 로그 엔트리 (#14의 데이터 형상).
--- sessionJson은 BrewSession JSON-stringified.
-CREATE TABLE "brewLogEntry" (
-  "id" TEXT NOT NULL PRIMARY KEY,
-  "userId" TEXT NOT NULL REFERENCES "user"("id") ON DELETE CASCADE,
-  "sessionJson" TEXT NOT NULL,
-  "beanVariety" TEXT,
-  "beanRoaster" TEXT,
-  "beanRoastDate" TEXT,
-  "note" TEXT,
-  "photoKey" TEXT,
-  "createdAt" TEXT NOT NULL
-);
-
-CREATE INDEX "brewLogEntry_userId_createdAt_idx"
-  ON "brewLogEntry"("userId", "createdAt" DESC);
 ```
 
 **중요한 컨벤션 결정** (subagent가 임의로 바꾸지 말 것):
@@ -161,7 +144,7 @@ CREATE INDEX "brewLogEntry_userId_createdAt_idx"
 - `createdAt`/`updatedAt`/`expiresAt`은 TEXT(ISO 8601 string)로 저장. SQLite에는 진짜 datetime 타입이 없고, better-auth가 ISO string으로 직렬화.
 - `emailVerified`는 INTEGER(0/1). SQLite boolean은 INTEGER로 표현.
 - 외래키는 모두 `ON DELETE CASCADE` — 사용자 삭제 시 모든 종속 데이터 함께 제거.
-- `brewLogEntry`에 `(userId, createdAt DESC)` 복합 인덱스 — 일기 목록 쿼리(`GET /log` from #14/#23)의 핵심 access pattern.
+- 도메인 테이블(`brewLogEntry` 등)은 본 PR에 포함하지 않는다 — 후속 마이그레이션으로 분리(#23). "쓰지 않는 스키마는 만들지 않는다" 원칙.
 
 - [ ] **Step 2: 로컬 마이그레이션 적용**
 
@@ -178,7 +161,7 @@ Expected: "No migrations to apply!" 또는 동등한 메시지. 같은 마이그
 - [ ] **Step 4: 테이블 존재 확인**
 
 Run: `cd apps/api && bunx wrangler d1 execute pourover-api --local --command "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;"`
-Expected: 출력에 `account`, `brewLogEntry`, `d1_migrations`, `session`, `user`, `verification` 6개 이름이 보임 (`d1_migrations`는 wrangler가 자동 생성).
+Expected: 출력에 `account`, `d1_migrations`, `session`, `user`, `verification` 5개 이름이 보임 (`d1_migrations`는 wrangler가 자동 생성).
 
 ---
 
@@ -475,7 +458,7 @@ apps/api/
     index.ts        Hono 진입점 (/healthz, D1 touch)
     index.test.ts   handler 테스트 (stub D1)
   migrations/
-    0001_init.sql   user/session/account/verification + brewLogEntry
+    0001_init.sql   user/session/account/verification (better-auth 표준)
   package.json
   tsconfig.json
   vitest.config.ts
@@ -528,7 +511,7 @@ git commit -m "$(cat <<'EOF'
 feat(api): D1 binding + 초기 마이그레이션
 
 #20. ADR 0001 후속 2/6. better-auth v1.4.21 표준 4개 테이블
-(user/session/account/verification) + 도메인 테이블 brewLogEntry를
+(user/session/account/verification)을
 0001_init.sql로 생성. wrangler.jsonc에 D1 바인딩 추가, healthz가
 SELECT 1로 D1을 한 번 touch. 실패 시 503 + db: "fail".
 
@@ -565,7 +548,7 @@ Expected: working tree clean, 새 커밋 SHA 출력.
 
 **Type consistency:**
 - `Env` 타입: Task 4에서 `{ readonly DB: D1Database }`로 정의, Task 3 테스트가 `Env["DB"]`로 참조. 일관.
-- 테이블/컬럼명: SQL 파일(Task 2) — quoted camelCase 컬럼, lowercase 단수 테이블 (`brewLogEntry`만 camelCase 단수, better-auth 컨벤션 따름). 본 PR 안에서 다른 곳에서 컬럼명을 참조하지 않으므로 drift 없음.
+- 테이블/컬럼명: SQL 파일(Task 2) — quoted camelCase 컬럼, lowercase 단수 테이블 (better-auth 컨벤션 따름). 본 PR 안에서 다른 곳에서 컬럼명을 참조하지 않으므로 drift 없음.
 - 마이그레이션 파일명 패턴: README와 Task 2 모두 `NNNN_<slug>.sql` 일치.
 
 **한 가지 짚을 것:** wrangler 3.114.17이 compat date 2026-05-16에 대해 경고를 내지만(workerd 번들 max가 2025-07-18) D1 binding 자체는 정상 동작. 본 PR에서 wrangler upgrade는 별도 작업이라 다루지 않음.

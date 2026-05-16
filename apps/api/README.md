@@ -96,7 +96,7 @@ apps/api/
     index.ts        Hono 진입점 (/healthz, D1 touch)
     index.test.ts   handler 테스트 (stub D1)
   migrations/
-    0001_init.sql   user/session/account/verification + brewLogEntry
+    0001_init.sql   user/session/account/verification (better-auth 표준)
   package.json
   tsconfig.json
   vitest.config.ts
