@@ -8,8 +8,18 @@
     {
       "binding": "DB",
       "database_name": "pourover-api",
-      "database_id": "local-only-replace-before-deploy",
+      "database_id": "493add1e-f5ab-4000-919d-8719095485b8",
       "migrations_dir": "migrations",
     },
   ],
+  "kv_namespaces": [
+    {
+      "binding": "AUTH_KV",
+      "id": "8af305161bb542ceae5688abbd3ad4e6",
+    },
+  ],
+  "vars": {
+    "WEB_ORIGIN": "http://localhost:5173",
+    "API_BASE_URL": "http://localhost:8787",
+  },
 }
