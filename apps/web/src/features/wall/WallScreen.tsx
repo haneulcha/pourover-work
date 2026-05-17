@@ -1,5 +1,6 @@
 import { dripperList } from "@pourover/domain/drippers";
 import type { DripperId } from "@pourover/domain/types";
+import { LoginPill } from "@/features/auth/LoginPill";
 import { cx } from "@/ui/cx";
 import { DripperIcon } from "@/ui/DripperIcon";
 import { Footer } from "@/ui/Footer";
@@ -12,6 +13,9 @@ type Props = {
 export function WallScreen({ selectedDripper, onPickDripper }: Props) {
   return (
     <div className="mx-auto flex min-h-svh max-w-lg flex-col bg-surface-strong text-text-primary">
+      <div className="flex justify-end px-5 pt-4">
+        <LoginPill />
+      </div>
       {/* 타이틀 zone */}
       <header className="text-center w-full px-5 pt-16">
         <h1 className="text-heading-sm font-medium leading-none tracking-tight">

@@ -4,7 +4,7 @@
 동작. 본 워크스페이스는 [ADR 0001](../../docs/adr/0001-backend-infrastructure.md)의
 결정을 구현한다.
 
-현재 상태: **D1 스키마 + 헬스체크**. 인증·도메인 엔드포인트는 후속 이슈에서 붙는다.
+현재 상태: **D1 + better-auth(Google OAuth) + 헬스체크**. 도메인 엔드포인트는 후속 이슈.
 
 ## 로컬 개발
 
@@ -26,6 +26,70 @@ bun run test:run     # 전체 워크스페이스 테스트
 → `{"ok":true,"name":"@pourover/api","version":"0.0.0","db":"ok"}`
 
 D1 연결 실패 시 503 + `db: "fail"`.
+
+## 인증 셋업 (better-auth + Google OAuth)
+
+### 1. Google Cloud OAuth client
+
+1. https://console.cloud.google.com/apis/credentials 접속
+2. "Create Credentials" → "OAuth client ID" → Application type: "Web application"
+3. Authorized redirect URIs에 추가:
+   - `http://localhost:8787/api/auth/callback/google` (개발)
+   - 프로덕션 URL은 배포 후 추가 (`https://<your-api-domain>/api/auth/callback/google`)
+4. 발급된 `client_id`, `client_secret` 메모
+
+### 2. KV namespace 생성
+
+```bash
+cd apps/api
+bunx wrangler kv namespace create pourover-auth-cache
+```
+
+출력의 `id` UUID를 받아 `wrangler.jsonc`의 `kv_namespaces[0].id`
+값(`"local-only-replace-before-deploy"`)을 그 UUID로 교체.
+
+### 3. AUTH_SECRET 생성
+
+```bash
+openssl rand -hex 32
+```
+
+### 4. wrangler secret 등록 (프로덕션)
+
+```bash
+cd apps/api
+bunx wrangler secret put GOOGLE_CLIENT_ID
+bunx wrangler secret put GOOGLE_CLIENT_SECRET
+bunx wrangler secret put AUTH_SECRET
+```
+
+### 5. 로컬 개발용 `.dev.vars`
+
+`apps/api/.dev.vars` 파일 생성 (gitignored):
+
+```
+GOOGLE_CLIENT_ID=...
+GOOGLE_CLIENT_SECRET=...
+AUTH_SECRET=...
+```
+
+### 6. (선택) 다른 origin 사용 시
+
+기본은 web=localhost:5173, api=localhost:8787. 변경하려면 `wrangler.jsonc`의
+`vars.WEB_ORIGIN`을 조정 + Google Cloud redirect URI도 같이 업데이트.
+
+프로덕션은 `wrangler.jsonc`에 `env.production.vars`로 override:
+
+```jsonc
+"env": {
+  "production": {
+    "vars": {
+      "WEB_ORIGIN": "https://pourover.example.com",
+      "API_BASE_URL": "https://pourover-api.example.com"
+    }
+  }
+}
+```
 
 ## D1 셋업
 
@@ -83,7 +147,6 @@ bun run deploy:api
 
 ## 후속 작업
 
-- `better-auth` + Google OAuth — issue #21
 - R2 presigned PUT + CF Images Transformations — issue #22
 - `POST /log`, `GET /log` 엔드포인트 — issue #23
 - CLAUDE.md 업데이트 — issue #24

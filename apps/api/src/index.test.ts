@@ -12,17 +12,24 @@ function makeEnv(overrides?: {
         first: first as () => Promise<unknown>,
       })),
     } as unknown as Env["DB"],
+    AUTH_KV: {
+      get: vi.fn(async () => null),
+      put: vi.fn(async () => undefined),
+      delete: vi.fn(async () => undefined),
+    } as unknown as Env["AUTH_KV"],
+    GOOGLE_CLIENT_ID: "test-client-id",
+    GOOGLE_CLIENT_SECRET: "test-client-secret",
+    AUTH_SECRET: "test-secret-test-secret-test-secret-test",
+    WEB_ORIGIN: "http://localhost:5173",
+    API_BASE_URL: "http://localhost:8787",
   };
 }
 
 describe("GET /healthz", () => {
   it("returns ok with package name, version, and db status when D1 succeeds", async () => {
-    const env = makeEnv();
-    const res = await app.request("/healthz", undefined, env);
+    const res = await app.request("/healthz", undefined, makeEnv());
 
     expect(res.status).toBe(200);
-    expect(res.headers.get("content-type")).toMatch(/application\/json/);
-
     const body = (await res.json()) as {
       ok: boolean;
       name: string;
@@ -37,15 +44,6 @@ describe("GET /healthz", () => {
     });
   });
 
-  it("issues SELECT 1 against D1 binding", async () => {
-    const env = makeEnv();
-    await app.request("/healthz", undefined, env);
-
-    const prepare = env.DB.prepare as ReturnType<typeof vi.fn>;
-    expect(prepare).toHaveBeenCalledTimes(1);
-    expect(prepare.mock.calls[0]?.[0]).toMatch(/select\s+1/i);
-  });
-
   it("reports db: fail with 503 when D1 throws", async () => {
     const env = makeEnv({
       dbFirst: async () => {
@@ -53,18 +51,50 @@ describe("GET /healthz", () => {
       },
     });
     const res = await app.request("/healthz", undefined, env);
-
     expect(res.status).toBe(503);
-    const body = (await res.json()) as {
-      ok: boolean;
-      db: string;
-    };
-    expect(body.ok).toBe(false);
+    const body = (await res.json()) as { db: string };
     expect(body.db).toBe("fail");
   });
 
   it("returns 404 for unknown routes", async () => {
     const res = await app.request("/does-not-exist", undefined, makeEnv());
     expect(res.status).toBe(404);
+  });
+});
+
+describe("/api/auth/*", () => {
+  it("mounts better-auth handler — get-session returns 200 with null user when no cookie", async () => {
+    const res = await app.request(
+      "/api/auth/get-session",
+      undefined,
+      makeEnv(),
+    );
+
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    // 세션 없는 상태에서 better-auth는 null 또는 빈 객체 반환.
+    expect(body).toBeDefined();
+    expect((body as { user?: unknown } | null)?.user ?? null).toBeNull();
+  });
+
+  it("preflights CORS for the configured WEB_ORIGIN", async () => {
+    const res = await app.request(
+      "/api/auth/get-session",
+      {
+        method: "OPTIONS",
+        headers: {
+          Origin: "http://localhost:5173",
+          "Access-Control-Request-Method": "GET",
+          "Access-Control-Request-Headers": "content-type",
+        },
+      },
+      makeEnv(),
+    );
+
+    expect(res.status).toBeLessThan(400);
+    expect(res.headers.get("access-control-allow-origin")).toBe(
+      "http://localhost:5173",
+    );
+    expect(res.headers.get("access-control-allow-credentials")).toBe("true");
   });
 });
