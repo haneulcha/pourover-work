@@ -3,9 +3,20 @@
 // - 세션 조회: GET /api/auth/get-session (credentials: include)
 // - 로그아웃: POST /api/auth/sign-out
 //
-// API_BASE는 빌드 시 Vite env로 주입.
+// API_BASE는 빌드 시 Vite env로 주입. 프로덕션에서 VITE_API_BASE_URL이
+// 누락되면 localhost로 폴백하지 않고 빌드를 의도적으로 깨뜨려서, 잘못된
+// 빌드가 사용자에게 도달하지 않도록 한다.
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8787";
+const API_BASE: string = (() => {
+  const explicit = import.meta.env.VITE_API_BASE_URL;
+  if (explicit) return explicit;
+  if (import.meta.env.PROD) {
+    throw new Error(
+      "VITE_API_BASE_URL must be set at build time for production",
+    );
+  }
+  return "http://localhost:8787";
+})();
 
 export type Session = {
   readonly user: {

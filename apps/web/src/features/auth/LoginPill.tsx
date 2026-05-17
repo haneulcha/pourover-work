@@ -24,7 +24,7 @@ function SignInButton() {
   return (
     <a
       href={googleSignInUrl(callbackUrl)}
-      className="inline-flex items-center gap-2 rounded-full bg-surface-strong px-4 py-2 text-body-sm text-text-primary shadow-sm hover:bg-surface focus:outline-none focus-visible:ring-2 focus-visible:ring-focus"
+      className="inline-flex items-center gap-2 rounded-pill bg-surface-strong px-4 py-2 text-body-sm text-text-primary shadow-hairline hover:bg-surface focus:outline-none focus-visible:ring-2 focus-visible:ring-focus"
     >
       Google 계정으로 로그인
     </a>
