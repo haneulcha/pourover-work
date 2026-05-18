@@ -125,12 +125,25 @@ describe("signInWithGoogle", () => {
 });
 
 describe("signOut", () => {
-  it("POSTs with credentials: include", async () => {
-    fetchMock.mockResolvedValueOnce(new Response("", { status: 200 }));
+  it("POSTs JSON body with Content-Type and credentials: include", async () => {
+    fetchMock.mockResolvedValueOnce(
+      new Response(JSON.stringify({ success: true }), { status: 200 }),
+    );
     await signOut();
-    expect(fetchMock.mock.calls[0]?.[1]).toMatchObject({
+
+    const [, init] = fetchMock.mock.calls[0] ?? [];
+    expect(init).toMatchObject({
       method: "POST",
       credentials: "include",
+      body: "{}",
     });
+    expect((init as RequestInit | undefined)?.headers).toMatchObject({
+      "Content-Type": "application/json",
+    });
+  });
+
+  it("throws when API responds non-ok (so caller knows session is still alive)", async () => {
+    fetchMock.mockResolvedValueOnce(new Response("nope", { status: 415 }));
+    await expect(signOut()).rejects.toThrow(/415/);
   });
 });
