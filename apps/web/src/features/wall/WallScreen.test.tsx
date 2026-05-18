@@ -2,6 +2,10 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { WallScreen } from "./WallScreen";
 
+vi.mock("@/features/auth/LoginPill", () => ({
+  LoginPill: () => null,
+}));
+
 describe("WallScreen", () => {
   it("renders title and subtitle", () => {
     render(<WallScreen selectedDripper="v60" onPickDripper={vi.fn()} />);
