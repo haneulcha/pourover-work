@@ -1,4 +1,5 @@
-import { googleSignInUrl, signOut, type Session } from "./api";
+import { useState } from "react";
+import { signInWithGoogle, signOut, type Session } from "./api";
 import { useSession } from "./useSession";
 
 export function LoginPill() {
@@ -20,14 +21,26 @@ export function LoginPill() {
 }
 
 function SignInButton() {
-  const callbackUrl = window.location.href;
+  const [pending, setPending] = useState(false);
+  const handleClick = async () => {
+    setPending(true);
+    try {
+      await signInWithGoogle(window.location.href);
+      // 성공 시 signInWithGoogle 내부에서 navigate — 여기 도달 안 함.
+    } catch (err) {
+      console.error("sign-in failed:", err);
+      setPending(false);
+    }
+  };
   return (
-    <a
-      href={googleSignInUrl(callbackUrl)}
-      className="inline-flex items-center gap-2 rounded-pill bg-surface-strong px-4 py-2 text-body-sm text-text-primary shadow-hairline hover:bg-surface focus:outline-none focus-visible:ring-2 focus-visible:ring-focus"
+    <button
+      type="button"
+      onClick={handleClick}
+      disabled={pending}
+      className="inline-flex items-center gap-2 rounded-pill bg-surface-strong px-4 py-2 text-body-sm text-text-primary shadow-hairline hover:bg-surface focus:outline-none focus-visible:ring-2 focus-visible:ring-focus disabled:opacity-60"
     >
-      Google 계정으로 로그인
-    </a>
+      {pending ? "이동 중…" : "Google 계정으로 로그인"}
+    </button>
   );
 }
 

@@ -41,12 +41,24 @@ export async function getSession(): Promise<Session> {
   return body as Session;
 }
 
-export function googleSignInUrl(callbackUrl: string): string {
-  const params = new URLSearchParams({
-    provider: "google",
-    callbackURL: callbackUrl,
+// better-auth의 social sign-in은 POST 엔드포인트라 단순 navigation으론
+// 못 시작한다. POST로 흐름을 개시해서 Google authorize URL을 받은 뒤
+// 그쪽으로 window.location 이동.
+export async function signInWithGoogle(callbackUrl: string): Promise<void> {
+  const res = await fetch(`${API_BASE}/api/auth/sign-in/social`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ provider: "google", callbackURL: callbackUrl }),
   });
-  return `${API_BASE}/api/auth/sign-in/social?${params.toString()}`;
+  if (!res.ok) {
+    throw new Error(`sign-in failed: ${res.status}`);
+  }
+  const body = (await res.json()) as { url?: string };
+  if (!body.url) {
+    throw new Error("sign-in response missing url");
+  }
+  window.location.href = body.url;
 }
 
 export async function signOut(): Promise<void> {

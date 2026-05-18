@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { getSession, googleSignInUrl, signOut } from "./api";
+import { getSession, signInWithGoogle, signOut } from "./api";
 
 const fetchMock = vi.fn();
 let originalFetch: typeof fetch;
@@ -50,13 +50,76 @@ describe("getSession", () => {
   });
 });
 
-describe("googleSignInUrl", () => {
-  it("builds the correct URL with provider and encoded callbackURL", () => {
-    const url = googleSignInUrl("http://localhost:5173/?logged-in=1");
-    expect(url).toContain("/api/auth/sign-in/social");
-    expect(url).toContain("provider=google");
-    expect(url).toContain(
-      `callbackURL=${encodeURIComponent("http://localhost:5173/?logged-in=1")}`,
+describe("signInWithGoogle", () => {
+  const originalLocation = window.location;
+
+  beforeEach(() => {
+    Object.defineProperty(window, "location", {
+      configurable: true,
+      writable: true,
+      value: { href: "http://localhost:5173/" },
+    });
+  });
+
+  afterEach(() => {
+    Object.defineProperty(window, "location", {
+      configurable: true,
+      writable: true,
+      value: originalLocation,
+    });
+  });
+
+  it("POSTs JSON with provider/callbackURL and credentials: include", async () => {
+    fetchMock.mockResolvedValueOnce(
+      new Response(
+        JSON.stringify({ url: "https://accounts.google.com/o/oauth2/v2/auth" }),
+        { status: 200 },
+      ),
+    );
+
+    await signInWithGoogle("http://localhost:5173/?logged-in=1");
+
+    const [url, init] = fetchMock.mock.calls[0] ?? [];
+    expect(String(url)).toContain("/api/auth/sign-in/social");
+    expect(init).toMatchObject({
+      method: "POST",
+      credentials: "include",
+    });
+    expect((init as RequestInit | undefined)?.headers).toMatchObject({
+      "Content-Type": "application/json",
+    });
+    const body = JSON.parse(String((init as RequestInit).body));
+    expect(body).toEqual({
+      provider: "google",
+      callbackURL: "http://localhost:5173/?logged-in=1",
+    });
+  });
+
+  it("navigates to the URL returned by the API", async () => {
+    fetchMock.mockResolvedValueOnce(
+      new Response(JSON.stringify({ url: "https://google.example/auth" }), {
+        status: 200,
+      }),
+    );
+
+    await signInWithGoogle("http://localhost:5173/");
+
+    expect(window.location.href).toBe("https://google.example/auth");
+  });
+
+  it("throws when API responds non-ok", async () => {
+    fetchMock.mockResolvedValueOnce(new Response("nope", { status: 500 }));
+    await expect(signInWithGoogle("http://localhost:5173/")).rejects.toThrow(
+      /500/,
+    );
+  });
+
+  it("throws when response body has no url", async () => {
+    fetchMock.mockResolvedValueOnce(
+      new Response(JSON.stringify({}), { status: 200 }),
+    );
+    await expect(signInWithGoogle("http://localhost:5173/")).rejects.toThrow(
+      /missing url/,
     );
   });
 });
