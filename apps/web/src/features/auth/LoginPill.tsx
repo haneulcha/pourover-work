@@ -46,8 +46,12 @@ function SignInButton() {
 
 function SignedIn({ session }: { readonly session: NonNullable<Session> }) {
   const handleLogout = async () => {
-    await signOut();
-    window.location.reload();
+    try {
+      await signOut();
+      window.location.reload();
+    } catch (err) {
+      console.error("sign-out failed:", err);
+    }
   };
 
   return (

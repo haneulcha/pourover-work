@@ -61,9 +61,16 @@ export async function signInWithGoogle(callbackUrl: string): Promise<void> {
   window.location.href = body.url;
 }
 
+// better-auth는 빈 body라도 Content-Type: application/json + JSON body를
+// 요구한다. 헤더/바디 빠지면 415로 거부되고 세션은 그대로 살아 있다.
 export async function signOut(): Promise<void> {
-  await fetch(`${API_BASE}/api/auth/sign-out`, {
+  const res = await fetch(`${API_BASE}/api/auth/sign-out`, {
     method: "POST",
+    headers: { "Content-Type": "application/json" },
     credentials: "include",
+    body: "{}",
   });
+  if (!res.ok) {
+    throw new Error(`sign-out failed: ${res.status}`);
+  }
 }
