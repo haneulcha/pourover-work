@@ -18,8 +18,9 @@
       "id": "8af305161bb542ceae5688abbd3ad4e6",
     },
   ],
+  // 프로덕션 값. 로컬은 .dev.vars로 override (wrangler dev 자동 로드).
   "vars": {
-    "WEB_ORIGIN": "http://localhost:5173",
-    "API_BASE_URL": "http://localhost:8787",
+    "WEB_ORIGIN": "https://pourover.work",
+    "API_BASE_URL": "https://api.pourover.work",
   },
 }
