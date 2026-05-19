@@ -2,6 +2,8 @@
 
 Hand Drip Calculator — 핸드드립 레시피 계산기. 토큰 시스템은 **`docs/design-tokens.md`** 참조. 이 문서는 작업 시 어기면 안 되는 규약만 기록.
 
+> **학습 모드**: `apps/api` 등 백엔드 트랙 작업은 사용자가 백엔드 fundamentals 학습과 묶어 진행 중. 새 개념을 만나면 한 문단 정도로 풀어 설명한다. 자세한 톤·진행 상태는 메모리(`user-learning-context`, `feedback-explanation-style`, `learning-track`) 참조.
+
 ## Stack
 
 - **Runtime / PM**: Bun (workspaces)
