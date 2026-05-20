@@ -9,7 +9,8 @@ import { domToBlob } from "./domToBlob";
 
 const mockedToBlob = vi.mocked(toBlob);
 
-const makeBlob = (): Blob => new Blob([new Uint8Array([0])], { type: "image/png" });
+const makeBlob = (): Blob =>
+  new Blob([new Uint8Array([0])], { type: "image/png" });
 
 describe("domToBlob", () => {
   beforeEach(() => {
@@ -25,6 +26,16 @@ describe("domToBlob", () => {
       node,
       expect.objectContaining({ width: 320, height: 480, pixelRatio: 2 }),
     );
+  });
+
+  it("does not pass cacheBust to html-to-image", async () => {
+    await domToBlob(document.createElement("div"), {
+      width: 100,
+      height: 200,
+    });
+    const opts = mockedToBlob.mock.calls[0]?.[1] as Record<string, unknown>;
+    expect(opts).toBeDefined();
+    expect("cacheBust" in opts).toBe(false);
   });
 
   it("awaits img.decode() before calling toBlob — single image", async () => {
@@ -79,9 +90,9 @@ describe("domToBlob", () => {
     });
     node.appendChild(img);
 
-    await expect(domToBlob(node, { width: 10, height: 10 })).resolves.toBeInstanceOf(
-      Blob,
-    );
+    await expect(
+      domToBlob(node, { width: 10, height: 10 }),
+    ).resolves.toBeInstanceOf(Blob);
     expect(mockedToBlob).toHaveBeenCalledOnce();
   });
 
