@@ -1,9 +1,19 @@
 import { act, renderHook, waitFor } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { usePhoto } from "./usePhoto";
 
 const mkFile = (name: string, bytes: number[] = [1, 2, 3]): File =>
   new File([new Uint8Array(bytes)], name, { type: "image/jpeg" });
+
+const STUB_DOWNSCALED_URL = "data:image/jpeg;base64,STUB";
+
+beforeEach(() => {
+  globalThis.__testImageDims = { width: 0, height: 0 };
+});
+
+afterEach(() => {
+  globalThis.__testImageDims = { width: 0, height: 0 };
+});
 
 describe("usePhoto", () => {
   it("starts in 'empty' state", () => {
@@ -53,5 +63,48 @@ describe("usePhoto", () => {
     const firstState = result.current.state;
     act(() => result.current.clear());
     expect(result.current.state).toBe(firstState);
+  });
+
+  it("downscales sources whose long edge exceeds 1600px to a JPEG", async () => {
+    globalThis.__testImageDims = { width: 4000, height: 3000 };
+    const { result } = renderHook(() => usePhoto());
+
+    act(() => result.current.setFile(mkFile("big.jpg")));
+    await waitFor(() => expect(result.current.state.kind).toBe("loaded"));
+    if (result.current.state.kind !== "loaded") throw new Error("unreachable");
+    expect(result.current.state.url).toBe(STUB_DOWNSCALED_URL);
+  });
+
+  it("downscales when the long edge is vertical", async () => {
+    globalThis.__testImageDims = { width: 1200, height: 3200 };
+    const { result } = renderHook(() => usePhoto());
+
+    act(() => result.current.setFile(mkFile("tall.jpg")));
+    await waitFor(() => expect(result.current.state.kind).toBe("loaded"));
+    if (result.current.state.kind !== "loaded") throw new Error("unreachable");
+    expect(result.current.state.url).toBe(STUB_DOWNSCALED_URL);
+  });
+
+  it("leaves sources within 1600px untouched", async () => {
+    globalThis.__testImageDims = { width: 800, height: 600 };
+    const { result } = renderHook(() => usePhoto());
+
+    act(() => result.current.setFile(mkFile("small.jpg")));
+    await waitFor(() => expect(result.current.state.kind).toBe("loaded"));
+    if (result.current.state.kind !== "loaded") throw new Error("unreachable");
+    expect(result.current.state.url).not.toBe(STUB_DOWNSCALED_URL);
+    expect(result.current.state.url.startsWith("data:image/jpeg;base64,")).toBe(
+      true,
+    );
+  });
+
+  it("leaves sources exactly at the 1600px threshold untouched", async () => {
+    globalThis.__testImageDims = { width: 1600, height: 1200 };
+    const { result } = renderHook(() => usePhoto());
+
+    act(() => result.current.setFile(mkFile("edge.jpg")));
+    await waitFor(() => expect(result.current.state.kind).toBe("loaded"));
+    if (result.current.state.kind !== "loaded") throw new Error("unreachable");
+    expect(result.current.state.url).not.toBe(STUB_DOWNSCALED_URL);
   });
 });

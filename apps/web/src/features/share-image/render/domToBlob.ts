@@ -27,11 +27,14 @@ export const domToBlob = async (
   },
 ): Promise<Blob> => {
   await awaitImageDecodes(node);
+  // Do NOT enable `cacheBust`. The photo is inlined as a `data:` URL by
+  // `usePhoto`; cacheBust appends `?date=...` to every img src, which iOS
+  // Safari treats as a different (invalid) resource when cloning the node
+  // into the foreignObject, leaving the photo cell blank in the exported PNG.
   const blob = await toBlob(node, {
     width: opts.width,
     height: opts.height,
     pixelRatio: opts.pixelRatio ?? 2,
-    cacheBust: true,
   });
   if (blob == null) {
     throw new Error("domToBlob: html-to-image returned null");
