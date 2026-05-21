@@ -6,6 +6,7 @@ import { cx } from "@/ui/cx";
 import { StopConfirmDialog } from "./StopConfirmDialog";
 import { useElapsed } from "./useElapsed";
 import { useFillRatio } from "./useFillRatio";
+import { useScreenWakeLock } from "./useScreenWakeLock";
 
 type Props = {
   readonly session: BrewSession;
@@ -37,6 +38,7 @@ const RING_COLORS: Record<
 };
 
 export function BrewingScreen({ session, onExit, onComplete }: Props) {
+  useScreenWakeLock();
   const [stopDialogOpen, setStopDialogOpen] = useState(false);
   const [pausedAt, setPausedAt] = useState<number | null>(null);
   const [pauseOffsetMs, setPauseOffsetMs] = useState(0);
