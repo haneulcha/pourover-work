@@ -5,8 +5,8 @@ import type { BrewSession } from "@pourover/domain/session";
 import { c, g, ratio, s } from "@pourover/domain/units";
 import { ShareImageDialog } from "./ShareImageDialog";
 
-vi.mock("./render/domToBlob", () => ({
-  domToBlob: vi
+vi.mock("./render/canvasToBlob", () => ({
+  canvasToBlob: vi
     .fn()
     .mockResolvedValue(new Blob([new Uint8Array([1])], { type: "image/png" })),
 }));

@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import type { BrewSession } from "@pourover/domain/session";
 import { cx } from "@/ui/cx";
 import { PhotoPicker } from "./PhotoPicker";
-import { ShareComposer } from "./ShareComposer";
+import { ShareCanvas } from "./ShareCanvas";
 import { usePhoto } from "./usePhoto";
-import { domToBlob } from "./render/domToBlob";
+import { canvasToBlob } from "./render/canvasToBlob";
 import {
   canNativeShareImage,
   shareOrDownload,
@@ -36,7 +36,7 @@ export function ShareImageDialog({ open, session, onClose }: Props) {
   const photo = usePhoto();
   const [phase, setPhase] = useState<Phase>("preview");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const composerRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const layout = DEFAULT_LAYOUT;
   const color = DEFAULT_COLOR;
   const variant = getVariant(layout);
@@ -54,11 +54,11 @@ export function ShareImageDialog({ open, session, onClose }: Props) {
   const shareLabel = canNativeShareImage() ? "공유하기" : "이미지 저장";
 
   const handleShare = async (): Promise<void> => {
-    if (composerRef.current == null || photo.state.kind !== "loaded") return;
+    if (canvasRef.current == null || photo.state.kind !== "loaded") return;
     setPhase("exporting");
     setErrorMsg(null);
     try {
-      const blob = await domToBlob(composerRef.current, variant.exportSize);
+      const blob = await canvasToBlob(canvasRef.current, "image/png");
       const outcome: ShareOutcome = await shareOrDownload(
         blob,
         filenameFor(session),
@@ -140,8 +140,8 @@ export function ShareImageDialog({ open, session, onClose }: Props) {
                   transformOrigin: "top left",
                 }}
               >
-                <ShareComposer
-                  ref={composerRef}
+                <ShareCanvas
+                  ref={canvasRef}
                   session={session}
                   photoUrl={photo.state.url}
                   layout={layout}
