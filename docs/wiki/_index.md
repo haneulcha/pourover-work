@@ -18,5 +18,8 @@ last_verified: 2026-06-21
 - **theory/** — 추출 이론 (확산/부식, TDS, 수율, 비율)
 - **bean/** — 산지·가공·로스팅·품종·향미
 - **glossary/** — 용어 (블룸, 스월, 채널링)
+  - [[bloom]] · [[channeling]] · [[pre-infusion]]
+- **theory/** 진행 중: [[degassing]]
+- **method/** 진행 중: [[scott-rao]]
 
 > 노트가 쌓이면 각 카테고리 대표 노트를 여기서 링크한다.
