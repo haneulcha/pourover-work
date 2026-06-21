@@ -25,7 +25,7 @@ sources:
     url: https://counterculturecoffee.com/blogs/counter-culture-coffee/coffee-basics-brewing-ratios
     kind: authority
     stance: supports
-related: ["[[extraction-yield]]", "[[tds]]", "[[percolation]]"]
+related: ["[[extraction-yield]]", "[[tds]]", "[[percolation]]", "[[hoffmann-v60]]", "[[kasuya-4-6]]", "[[april]]", "[[immersion]]"]
 ---
 
 ## 핵심
