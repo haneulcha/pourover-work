@@ -5,7 +5,12 @@
 
 ## 대기
 
-- [ ] (시딩) brewing-research.md → theory/equipment/method/glossary 노트로 분해 — Task 5에서 처리
+시딩 원본: `_meta/sources/brewing-research-2026.md` (아카이브됨). 남은 분해:
+- [x] theory 토대: percolation, contact-time, extraction-yield, brew-ratio (2026-06-21 완료)
+- [ ] equipment: v60-dripper, kalita-wave, flat-bottom-vs-conical
+- [ ] method: hoffmann-v60, kasuya-4-6, april
+- [ ] glossary: swirl (bloom·channeling 완료)
+- [ ] stub 채우기: degassing, immersion, tds, grind-size, pre-infusion, scott-rao
 
 ## 재검증 (audit 출력)
 
