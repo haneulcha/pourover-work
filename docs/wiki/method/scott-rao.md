@@ -23,7 +23,7 @@ sources:
     url: https://www.baristahustle.com/the-rao-spin/
     kind: practitioner
     stance: disputes
-related: ["[[bloom]]", "[[swirl]]", "[[hoffmann-v60]]"]
+related: ["[[bloom]]", "[[swirl]]", "[[hoffmann-v60]]", "[[roast-level]]"]
 code: packages/domain/src/methods/scott-rao.ts
 ---
 
