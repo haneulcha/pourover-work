@@ -8,7 +8,7 @@
 시딩 원본: `_meta/sources/brewing-research-2026.md` (아카이브됨). 남은 분해:
 - [x] theory 토대: percolation, contact-time, extraction-yield, brew-ratio (2026-06-21 완료)
 - [ ] equipment: v60-dripper, kalita-wave, flat-bottom-vs-conical
-- [ ] method: hoffmann-v60, kasuya-4-6, april
+- [ ] method: kasuya-4-6, april (hoffmann-v60 완료 2026-06-21)
 - [ ] glossary: swirl (bloom·channeling 완료)
 - [ ] stub 채우기: degassing, immersion, tds, grind-size, pre-infusion, scott-rao
 

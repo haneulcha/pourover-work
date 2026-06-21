@@ -42,7 +42,7 @@ sources:
     url: https://www.breville.com/us/en/blog/coffee-and-espresso/bloom-time-coffee.html
     kind: authority
     stance: mixed
-related: ["[[degassing]]", "[[channeling]]", "[[pre-infusion]]", "[[scott-rao]]"]
+related: ["[[degassing]]", "[[channeling]]", "[[pre-infusion]]", "[[scott-rao]]", "[[hoffmann-v60]]", "[[swirl]]"]
 ---
 
 ## 핵심

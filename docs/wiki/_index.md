@@ -14,12 +14,13 @@ last_verified: 2026-06-21
 ## 카테고리 (MOC)
 
 - **method/** — 메서드/레시피 (코드 `packages/domain/src/methods/`와 대응)
+  - [[hoffmann-v60]] · _stub_: [[scott-rao]]
 - **equipment/** — 드리퍼·필터·그라인더·물
+  - _stub_: [[v60-dripper]]
 - **theory/** — 추출 이론 (확산/부식, TDS, 수율, 비율)
+  - [[percolation]] · [[contact-time]] · [[extraction-yield]] · [[brew-ratio]] · _stub_: [[degassing]] · [[immersion]] · [[tds]] · [[grind-size]]
 - **bean/** — 산지·가공·로스팅·품종·향미
 - **glossary/** — 용어 (블룸, 스월, 채널링)
-  - [[bloom]] · [[channeling]] · [[pre-infusion]]
-- **theory/** — [[percolation]] · [[contact-time]] · [[extraction-yield]] · [[brew-ratio]] (진행 중: [[degassing]] · [[immersion]] · [[tds]] · [[grind-size]])
-- **method/** 진행 중: [[scott-rao]]
+  - [[bloom]] · [[channeling]] · _stub_: [[pre-infusion]] · [[swirl]]
 
-> 노트가 쌓이면 각 카테고리 대표 노트를 여기서 링크한다.
+> 굵은 링크 = 작성된 노트, _stub_ = 링크만 있는 확장 지점.
