@@ -24,7 +24,7 @@ sources:
     url: https://hackmd.io/@-FmOJnmnS_ymDzHvWu-yEA/HyR5g-9WL
     kind: practitioner
     stance: supports
-related: ["[[v60-dripper]]", "[[bloom]]", "[[swirl]]", "[[brew-ratio]]", "[[kasuya-4-6]]"]
+related: ["[[v60-dripper]]", "[[bloom]]", "[[swirl]]", "[[brew-ratio]]", "[[kasuya-4-6]]", "[[scott-rao]]"]
 code: packages/domain/src/methods/hoffmann-v60.ts
 ---
 
