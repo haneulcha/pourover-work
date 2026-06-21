@@ -14,9 +14,9 @@ last_verified: 2026-06-21
 ## 카테고리 (MOC)
 
 - **method/** — 메서드/레시피 (코드 `packages/domain/src/methods/`와 대응)
-  - [[hoffmann-v60]] · [[kasuya-4-6]] · _stub_: [[scott-rao]]
+  - [[hoffmann-v60]] · [[kasuya-4-6]] · _stub_: [[scott-rao]] · [[april]]
 - **equipment/** — 드리퍼·필터·그라인더·물
-  - _stub_: [[v60-dripper]]
+  - [[v60-dripper]] · [[kalita-wave]] · [[flat-bottom-vs-conical]]
 - **theory/** — 추출 이론 (확산/부식, TDS, 수율, 비율)
   - [[percolation]] · [[contact-time]] · [[extraction-yield]] · [[brew-ratio]] · _stub_: [[degassing]] · [[immersion]] · [[tds]] · [[grind-size]]
 - **bean/** — 산지·가공·로스팅·품종·향미
