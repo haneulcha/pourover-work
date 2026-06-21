@@ -10,7 +10,8 @@
 - [x] equipment: v60-dripper, kalita-wave, flat-bottom-vs-conical (2026-06-21 완료)
 - [x] method: hoffmann-v60, kasuya-4-6, april (완료 2026-06-21)
 - [ ] glossary: swirl (bloom·channeling 완료)
-- [ ] stub 채우기: degassing, immersion, tds, grind-size, pre-infusion, scott-rao
+- [x] theory stub: degassing, immersion, tds, grind-size (완료 2026-06-21)
+- [ ] stub 채우기: pre-infusion, scott-rao, swirl, channeling
 
 ## 재검증 (audit 출력)
 
