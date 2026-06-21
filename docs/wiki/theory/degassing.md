@@ -21,7 +21,7 @@ sources:
     url: https://www.scottrao.com/blog/restingbeans
     kind: authority
     stance: disputes
-related: ["[[bloom]]"]
+related: ["[[bloom]]", "[[pre-infusion]]"]
 ---
 
 ## 핵심
