@@ -24,7 +24,7 @@ sources:
     url: https://www.tandfonline.com/doi/full/10.1080/10408398.2021.1957767
     kind: peer-reviewed
     stance: supports
-related: ["[[degassing]]", "[[extraction-yield]]", "[[grind-size]]", "[[scott-rao]]", "[[terroir]]"]
+related: ["[[degassing]]", "[[extraction-yield]]", "[[grind-size]]", "[[scott-rao]]", "[[terroir]]", "[[acidity]]"]
 ---
 
 ## 핵심
