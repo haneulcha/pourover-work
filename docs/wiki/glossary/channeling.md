@@ -19,7 +19,7 @@ sources:
     url: https://www.scottrao.com/blog/happymediumfines
     kind: authority
     stance: mixed
-related: ["[[bloom]]", "[[flat-bottom-vs-conical]]", "[[grind-size]]", "[[swirl]]"]
+related: ["[[bloom]]", "[[flat-bottom-vs-conical]]", "[[grind-size]]", "[[swirl]]", "[[grinder]]"]
 ---
 
 ## 핵심
