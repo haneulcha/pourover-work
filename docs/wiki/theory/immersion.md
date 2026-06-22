@@ -20,7 +20,7 @@ sources:
     url: https://perfectdailygrind.com/2019/03/drip-pour-over-vs-immersion-the-battle-of-the-coffee-brew-methods/
     kind: practitioner
     stance: mixed
-related: ["[[percolation]]", "[[contact-time]]", "[[tds]]", "[[brew-ratio]]"]
+related: ["[[percolation]]", "[[contact-time]]", "[[tds]]", "[[brew-ratio]]", "[[cupping]]"]
 ---
 
 ## 핵심
