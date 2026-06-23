@@ -24,7 +24,7 @@ sources:
     url: https://sca.coffee/sca-news/25/issue-13/towards-a-new-brewing-chart
     kind: authority
     stance: mixed
-related: ["[[extraction-yield]]", "[[brew-ratio]]", "[[april]]", "[[immersion]]", "[[water-chemistry]]"]
+related: ["[[extraction-yield]]", "[[brew-ratio]]", "[[april]]", "[[immersion]]", "[[water-chemistry]]", "[[water-hardness]]"]
 ---
 
 ## 핵심
