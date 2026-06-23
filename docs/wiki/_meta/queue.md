@@ -18,3 +18,13 @@
 ## 재검증 (audit 출력)
 
 <!-- /wiki-audit가 review_after 지난 노트를 여기에 채운다 -->
+
+### 2026-06-23 audit
+신선도 만료 0 · 무결성 위반 0 · 깨진 링크 0 · stub은 `_index`(MOC)만. 전반적으로 green.
+유일한 발견 — **단방향 `related` 링크 6건**(A→B인데 B에 역링크 없음). **즉시 청산 완료**(2026-06-23, 같은 날 link-symmetry 수정):
+- [x] `extraction-yield` ← water-chemistry
+- [x] `acidity` ← water-chemistry
+- [x] `tds` ← water-hardness
+- [x] `grind-size` ← filter
+- [x] `channeling` ← filter
+- [x] `v60-dripper` ← grinder

@@ -24,7 +24,7 @@ sources:
     url: https://thegoldenlamb.com/brewing-guides/why-18-22-extraction-matters/
     kind: practitioner
     stance: supports
-related: ["[[brew-ratio]]", "[[tds]]", "[[percolation]]", "[[contact-time]]", "[[grind-size]]", "[[roast-level]]", "[[water-hardness]]", "[[acidity]]"]
+related: ["[[brew-ratio]]", "[[tds]]", "[[percolation]]", "[[contact-time]]", "[[grind-size]]", "[[roast-level]]", "[[water-hardness]]", "[[acidity]]", "[[water-chemistry]]"]
 ---
 
 ## 핵심
