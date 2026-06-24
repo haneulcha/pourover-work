@@ -28,7 +28,7 @@ sources:
     url: https://www.drinktrade.com/blogs/education/is-rinsing-paper-filters-necessary
     kind: practitioner
     stance: disputes
-related: ["[[v60-dripper]]", "[[grind-size]]", "[[channeling]]"]
+related: ["[[v60-dripper]]", "[[grind-size]]", "[[channeling]]", "[[french-press]]", "[[aeropress]]", "[[clever-dripper]]"]
 ---
 
 ## 핵심
