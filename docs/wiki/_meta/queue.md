@@ -28,3 +28,6 @@
 - [x] `grind-size` ← filter
 - [x] `channeling` ← filter
 - [x] `v60-dripper` ← grinder
+
+### 2026-06-25 audit
+37노트(established 18·contested 18·stub 1). **전 항목 green** — 신선도 만료 0 · stub은 `_index`(MOC)만 · established/sources·contested/쟁점 무결성 0위반 · 깨진 링크 0 · 단방향 0. 재검증 큐 추가 없음.
