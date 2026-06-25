@@ -23,7 +23,7 @@ sources:
     url: https://andytownsf.com/blogs/news/glass-ceramic-or-plastic-how-do-different-v60-drippers-affect-coffee-flavor
     kind: practitioner
     stance: mixed
-related: ["[[hoffmann-v60]]", "[[kasuya-4-6]]", "[[flat-bottom-vs-conical]]", "[[kalita-wave]]", "[[filter]]", "[[grinder]]"]
+related: ["[[hoffmann-v60]]", "[[kasuya-4-6]]", "[[flat-bottom-vs-conical]]", "[[kalita-wave]]", "[[filter]]", "[[grinder]]", "[[chemex]]"]
 ---
 
 ## 핵심
