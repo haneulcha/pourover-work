@@ -24,7 +24,7 @@ sources:
     url: https://www.baristahustle.com/lesson/concentration-gradient-and-diffusion/
     kind: authority
     stance: supports
-related: ["[[contact-time]]", "[[extraction-yield]]", "[[brew-ratio]]", "[[immersion]]", "[[flat-bottom-vs-conical]]"]
+related: ["[[contact-time]]", "[[extraction-yield]]", "[[brew-ratio]]", "[[immersion]]", "[[flat-bottom-vs-conical]]", "[[chemex]]"]
 ---
 
 ## 핵심

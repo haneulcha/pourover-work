@@ -17,7 +17,7 @@ last_verified: 2026-06-21
   - 푸어오버: [[hoffmann-v60]] · [[kasuya-4-6]] · [[april]] · [[scott-rao]]
   - 침지: [[french-press]] · [[aeropress]] · [[clever-dripper]] · [[cold-brew]]
 - **equipment/** — 드리퍼·필터·그라인더
-  - [[v60-dripper]] · [[kalita-wave]] · [[flat-bottom-vs-conical]] · [[filter]] · [[grinder]]
+  - [[v60-dripper]] · [[kalita-wave]] · [[flat-bottom-vs-conical]] · [[chemex]] · [[filter]] · [[grinder]]
 - **theory/** — 추출 이론 (확산/부식, TDS, 수율, 비율, 물)
   - [[percolation]] · [[contact-time]] · [[extraction-yield]] · [[brew-ratio]] · [[grind-size]] · [[tds]] · [[degassing]] · [[immersion]] · [[water-chemistry]] · [[water-hardness]] · [[water-temperature]]
 - **bean/** — 산지·가공·로스팅·품종·향미
