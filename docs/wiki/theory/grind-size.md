@@ -20,7 +20,7 @@ sources:
     url: https://perfectdailygrind.com/2020/08/using-the-right-grind-size-for-your-brewing-method-an-experiment/
     kind: practitioner
     stance: supports
-related: ["[[contact-time]]", "[[kasuya-4-6]]", "[[flat-bottom-vs-conical]]", "[[channeling]]", "[[extraction-yield]]", "[[roast-level]]", "[[grinder]]", "[[filter]]", "[[french-press]]", "[[aeropress]]", "[[clever-dripper]]"]
+related: ["[[contact-time]]", "[[kasuya-4-6]]", "[[flat-bottom-vs-conical]]", "[[channeling]]", "[[extraction-yield]]", "[[roast-level]]", "[[grinder]]", "[[filter]]", "[[french-press]]", "[[aeropress]]", "[[clever-dripper]]", "[[water-temperature]]"]
 ---
 
 ## 핵심
