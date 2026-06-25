@@ -24,7 +24,7 @@ sources:
     url: https://pmc.ncbi.nlm.nih.gov/articles/PMC11640416/
     kind: peer-reviewed
     stance: disputes
-related: ["[[cupping]]", "[[roast-level]]", "[[water-hardness]]", "[[extraction-yield]]", "[[flavor-wheel]]", "[[water-chemistry]]"]
+related: ["[[cupping]]", "[[roast-level]]", "[[water-hardness]]", "[[extraction-yield]]", "[[flavor-wheel]]", "[[water-chemistry]]", "[[cold-brew]]"]
 ---
 
 ## 핵심
