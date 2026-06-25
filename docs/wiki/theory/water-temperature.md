@@ -26,7 +26,7 @@ sources:
     url: https://www.baristahustle.com/blog/coffee-water-temperature/
     kind: practitioner
     stance: supports
-related: ["[[extraction-yield]]", "[[grind-size]]", "[[immersion]]", "[[roast-level]]", "[[degassing]]", "[[brew-ratio]]"]
+related: ["[[extraction-yield]]", "[[grind-size]]", "[[immersion]]", "[[roast-level]]", "[[degassing]]", "[[brew-ratio]]", "[[cold-brew]]"]
 ---
 
 ## 핵심

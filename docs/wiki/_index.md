@@ -15,7 +15,7 @@ last_verified: 2026-06-21
 
 - **method/** — 메서드/레시피 (코드 `packages/domain/src/methods/`와 대응)
   - 푸어오버: [[hoffmann-v60]] · [[kasuya-4-6]] · [[april]] · [[scott-rao]]
-  - 침지: [[french-press]] · [[aeropress]] · [[clever-dripper]]
+  - 침지: [[french-press]] · [[aeropress]] · [[clever-dripper]] · [[cold-brew]]
 - **equipment/** — 드리퍼·필터·그라인더
   - [[v60-dripper]] · [[kalita-wave]] · [[flat-bottom-vs-conical]] · [[filter]] · [[grinder]]
 - **theory/** — 추출 이론 (확산/부식, TDS, 수율, 비율, 물)

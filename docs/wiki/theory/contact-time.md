@@ -26,7 +26,7 @@ sources:
     url: https://perfectdailygrind.com/2022/12/the-relationship-between-grind-size-and-coffee-extraction/
     kind: authority
     stance: supports
-related: ["[[percolation]]", "[[extraction-yield]]", "[[immersion]]", "[[grind-size]]", "[[clever-dripper]]"]
+related: ["[[percolation]]", "[[extraction-yield]]", "[[immersion]]", "[[grind-size]]", "[[clever-dripper]]", "[[cold-brew]]"]
 ---
 
 ## 핵심
