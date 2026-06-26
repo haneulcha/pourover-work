@@ -24,7 +24,7 @@ sources:
     url: https://www.tandfonline.com/doi/full/10.1080/10408398.2021.1957767
     kind: peer-reviewed
     stance: supports
-related: ["[[degassing]]", "[[extraction-yield]]", "[[grind-size]]", "[[scott-rao]]", "[[terroir]]", "[[acidity]]", "[[water-temperature]]"]
+related: ["[[degassing]]", "[[extraction-yield]]", "[[grind-size]]", "[[scott-rao]]", "[[terroir]]", "[[acidity]]", "[[water-temperature]]", "[[roasting-process]]"]
 ---
 
 ## 핵심
@@ -33,7 +33,7 @@ related: ["[[degassing]]", "[[extraction-yield]]", "[[grind-size]]", "[[scott-ra
 
 ## 물리 변화 (established)
 
-진행될수록 원두는 더 다공성(생두 ~9.8% → 로스팅 후 ~34.2%)이 되고 부서지기 쉬워지며, 밀도가 낮아지고, CO2가 더 많이 생성된다(클로로겐산 분해 유래). 수분은 줄어든다.
+진행될수록 원두는 더 다공성(생두 ~9.8% → 로스팅 후 ~34.2%)이 되고 부서지기 쉬워지며, 밀도가 낮아지고, CO2가 더 많이 생성된다(주로 Maillard 반응, 부차적으로 클로로겐산 분해). 수분은 줄어든다.
 
 ## 향미 경향 (지각 vs 측정 구분)
 
