@@ -19,7 +19,7 @@ sources:
     url: https://perfectdailygrind.com/2025/09/swirl-or-stir-coffee-bloom-best-practices/
     kind: authority
     stance: supports
-related: ["[[hoffmann-v60]]", "[[bloom]]", "[[channeling]]", "[[scott-rao]]"]
+related: ["[[hoffmann-v60]]", "[[bloom]]", "[[channeling]]", "[[scott-rao]]", "[[agitation]]"]
 ---
 
 ## 핵심
