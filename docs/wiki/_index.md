@@ -22,7 +22,7 @@ last_verified: 2026-06-21
   - [[percolation]] · [[contact-time]] · [[extraction-yield]] · [[brew-ratio]] · [[grind-size]] · [[tds]] · [[degassing]] · [[immersion]] · [[water-chemistry]] · [[water-hardness]] · [[water-temperature]]
 - **bean/** — 산지·가공·로스팅·품종·향미
   - [[washed-process]] · [[natural-process]] · [[honey-process]] · [[roast-level]] · [[roasting-process]] · [[terroir]] · [[variety]] · [[cupping]] · [[flavor-wheel]] · [[acidity]] · [[arabica-robusta]]
-- **glossary/** — 용어 (블룸, 스월, 채널링)
-  - [[bloom]] · [[channeling]] · [[swirl]] · [[pre-infusion]]
+- **glossary/** — 용어 (블룸, 스월, 채널링, 교반, 바이패스)
+  - [[bloom]] · [[channeling]] · [[swirl]] · [[pre-infusion]] · [[agitation]] · [[bypass]]
 
 > 굵은 링크 = 작성된 노트, _stub_ = 링크만 있는 확장 지점.
