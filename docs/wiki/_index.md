@@ -21,7 +21,7 @@ last_verified: 2026-06-21
 - **theory/** — 추출 이론 (확산/부식, TDS, 수율, 비율, 물)
   - [[percolation]] · [[contact-time]] · [[extraction-yield]] · [[brew-ratio]] · [[grind-size]] · [[tds]] · [[degassing]] · [[immersion]] · [[water-chemistry]] · [[water-hardness]] · [[water-temperature]]
 - **bean/** — 산지·가공·로스팅·품종·향미
-  - [[washed-process]] · [[natural-process]] · [[honey-process]] · [[roast-level]] · [[terroir]] · [[variety]] · [[cupping]] · [[flavor-wheel]] · _stub_: [[arabica-robusta]] · [[acidity]]
+  - [[washed-process]] · [[natural-process]] · [[honey-process]] · [[roast-level]] · [[roasting-process]] · [[terroir]] · [[variety]] · [[cupping]] · [[flavor-wheel]] · [[acidity]] · [[arabica-robusta]]
 - **glossary/** — 용어 (블룸, 스월, 채널링)
   - [[bloom]] · [[channeling]] · [[swirl]] · [[pre-infusion]]
 

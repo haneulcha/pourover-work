@@ -19,7 +19,7 @@ sources:
     url: https://perfectdailygrind.com/2021/05/the-evolution-of-the-coffee-tasters-flavor-wheel/
     kind: practitioner
     stance: supports
-related: ["[[cupping]]", "[[acidity]]", "[[arabica-robusta]]"]
+related: ["[[cupping]]", "[[acidity]]", "[[arabica-robusta]]", "[[roasting-process]]"]
 ---
 
 ## 핵심

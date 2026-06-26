@@ -21,7 +21,7 @@ sources:
     url: https://www.scottrao.com/blog/restingbeans
     kind: authority
     stance: disputes
-related: ["[[bloom]]", "[[pre-infusion]]", "[[roast-level]]", "[[water-temperature]]"]
+related: ["[[bloom]]", "[[pre-infusion]]", "[[roast-level]]", "[[water-temperature]]", "[[roasting-process]]"]
 ---
 
 ## 핵심
