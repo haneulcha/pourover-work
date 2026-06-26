@@ -31,3 +31,7 @@
 
 ### 2026-06-25 audit
 37노트(established 18·contested 18·stub 1). **전 항목 green** — 신선도 만료 0 · stub은 `_index`(MOC)만 · established/sources·contested/쟁점 무결성 0위반 · 깨진 링크 0 · 단방향 0. 재검증 큐 추가 없음.
+
+### 2026-06-26 audit
+41노트(established 19·contested 21·stub 1). **전 항목 green** — 신선도 만료 0 · stub `_index`만 · 무결성 0 · 깨진 링크 0 · 단방향 0. 추가 없음.
+⏳ **다가오는 재검증 파도**: `review_after` 분포상 **2026-12-21에 27노트**(초기 시딩 다발)가 동시 만기. 12월에 대량 재검증 예정 — 그때 `/wiki-grow`로 한 묶음씩 갱신하거나, 만기를 분산하는 방안 고려.
