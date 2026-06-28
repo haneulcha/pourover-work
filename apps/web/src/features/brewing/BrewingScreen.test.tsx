@@ -1,5 +1,6 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import * as cuePlayerModule from "./cuePlayer";
 import type { Pour, Recipe } from "@pourover/domain/types";
 import { c, g, ratio, s } from "@pourover/domain/units";
 import type { BrewSession } from "@pourover/domain/session";
@@ -286,5 +287,88 @@ describe("BrewingScreen", () => {
     );
     const skip = screen.getByRole("button", { name: "다음 스텝으로 건너뛰기" });
     expect(skip.closest('[data-region="rim"]')).not.toBeNull();
+  });
+});
+
+describe("BrewingScreen — 큐 음소거 토글", () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+  afterEach(() => {
+    vi.useRealTimers();
+    localStorage.clear();
+  });
+
+  it("RIM 에 음소거 토글이 있고 클릭하면 aria-pressed 가 바뀐다", () => {
+    vi.setSystemTime(new Date(1_000_000_000_000));
+    const session = makeSession(1_000_000_000_000);
+    render(
+      <BrewingScreen session={session} onExit={vi.fn()} onComplete={vi.fn()} />,
+    );
+    const toggle = screen.getByRole("button", { name: /큐 소리/ });
+    expect(toggle).toHaveAttribute("aria-pressed", "false");
+    fireEvent.click(toggle);
+    expect(toggle).toHaveAttribute("aria-pressed", "true");
+  });
+});
+
+describe("BrewingScreen — lead-in 카운트다운", () => {
+  const BASE = 1_000_000_000_000;
+
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it("lead-in 창 밖(시작 직후)에는 카운트다운이 없다", () => {
+    vi.setSystemTime(new Date(BASE));
+    render(
+      <BrewingScreen session={makeSession(BASE)} onExit={vi.fn()} onComplete={vi.fn()} />,
+    );
+    expect(screen.queryByTestId("lead-in-countdown")).toBeNull();
+  });
+
+  it("푸어 5초 전 창에 들어가면 남은 초를 표시 (45초 푸어, elapsed 41 → 4)", () => {
+    vi.setSystemTime(new Date(BASE));
+    render(
+      <BrewingScreen session={makeSession(BASE)} onExit={vi.fn()} onComplete={vi.fn()} />,
+    );
+    act(() => {
+      vi.setSystemTime(new Date(BASE + 41_000));
+      vi.advanceTimersByTime(250); // useElapsed 틱
+    });
+    expect(screen.getByTestId("lead-in-countdown")).toHaveTextContent("4");
+  });
+});
+
+describe("BrewingScreen — 큐 발화 배선", () => {
+  const BASE = 1_000_000_000_000;
+
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it("시간이 푸어 경계를 넘으면 주입된 player.play 가 호출된다", () => {
+    const play = vi.fn();
+    vi.spyOn(cuePlayerModule, "createCuePlayer").mockReturnValue({
+      unlock: vi.fn(),
+      play,
+    });
+    vi.setSystemTime(new Date(BASE));
+    render(
+      <BrewingScreen session={makeSession(BASE)} onExit={vi.fn()} onComplete={vi.fn()} />,
+    );
+    act(() => {
+      vi.setSystemTime(new Date(BASE + 46_000)); // lead-in@40 + pour@45 통과
+      vi.advanceTimersByTime(250);
+    });
+    const kinds = play.mock.calls.map((c) => c[0]);
+    expect(kinds).toContain("lead-in");
+    expect(kinds).toContain("pour");
   });
 });

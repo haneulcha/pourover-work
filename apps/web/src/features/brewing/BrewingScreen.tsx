@@ -1,5 +1,8 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { activeStepIdx, pourLabel, type BrewSession } from "@pourover/domain/session";
+import { activeStepIdx, leadInCountdown, LEAD_IN_SEC, pourLabel, type BrewSession } from "@pourover/domain/session";
+import { createCuePlayer } from "./cuePlayer";
+import { useBrewCues } from "./useBrewCues";
+import { useCueMuted } from "./useCueMuted";
 import type { Pour } from "@pourover/domain/types";
 import { formatTime } from "@/ui/format";
 import { cx } from "@/ui/cx";
@@ -39,6 +42,11 @@ const RING_COLORS: Record<
 
 export function BrewingScreen({ session, onExit, onComplete }: Props) {
   useScreenWakeLock();
+  const player = useMemo(() => createCuePlayer(), []);
+  const [muted, toggleMuted] = useCueMuted();
+  useEffect(() => {
+    player.unlock(); // 브루잉 진입 = 시작 탭 제스처 직후 → iOS 오디오 잠금 해제
+  }, [player]);
   const [stopDialogOpen, setStopDialogOpen] = useState(false);
   const [pausedAt, setPausedAt] = useState<number | null>(null);
   const [pauseOffsetMs, setPauseOffsetMs] = useState(0);
@@ -65,6 +73,17 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
   const active = pours[activeIdx]!;
   const isLast = activeIdx === pours.length - 1;
   const done = elapsed >= totalTimeSec || manualStepFloor >= pours.length;
+
+  const cueActive = pausedAt === null && !done;
+  useBrewCues({
+    elapsed,
+    pours,
+    totalTimeSec,
+    player,
+    muted,
+    active: cueActive,
+  });
+  const countdown = leadInCountdown(elapsed, pours, LEAD_IN_SEC);
 
   const visibleRings = useMemo(() => pours.filter((p) => p.atSec > 0), [pours]);
   const nextRingIdx = visibleRings.findIndex((p) => p.atSec > elapsed);
@@ -196,6 +215,15 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
           )}
         </div>
         <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={toggleMuted}
+            aria-pressed={muted}
+            aria-label={muted ? "큐 소리 켜기" : "큐 소리 끄기"}
+            className="flex min-h-11 items-center px-2 text-caption-sm text-text-muted hover:text-text-secondary"
+          >
+            {muted ? "소리 꺼짐" : "소리"} <span aria-hidden>{muted ? "🔇" : "🔔"}</span>
+          </button>
           {!done && (
             <button
               type="button"
@@ -302,6 +330,14 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
           {!isDrawdown && (
             <div className="mt-1.5 text-body-sm text-text-secondary">
               +{active.pourAmount}g 붓기{isLast ? " · 마지막 푸어" : ""}
+            </div>
+          )}
+          {!isDrawdown && countdown !== null && (
+            <div
+              data-testid="lead-in-countdown"
+              className="mt-1 text-caption-sm font-semibold tabular-nums text-pour-bloom"
+            >
+              곧 붓기 · {countdown}
             </div>
           )}
         </div>
