@@ -29,6 +29,7 @@ export function createCuePlayer(): CuePlayer {
   const playTone = (spec: ToneSpec): void => {
     const ac = ensureCtx();
     if (!ac) return;
+    if (spec.toneMs <= 0) return; // 비양수 길이 → Web Audio ramp 미정의 동작 방지
     let t = ac.currentTime;
     const dur = spec.toneMs / 1000;
     for (const freq of spec.freqHz) {
