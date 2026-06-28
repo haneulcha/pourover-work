@@ -192,11 +192,24 @@ describe("cuesBetween", () => {
     ]); // 윈도 (45,48]: lead-in@43 억제됨, pour@45는 prev 경계라 제외, pour@48만
   });
 
+  it("간격<5초여도 모든 비-블룸 pour는 발화 — lead-in만 억제", () => {
+    const tight = [
+      mkPour(0, 0, 30, 30, true),
+      mkPour(1, 45, 120, 150),
+      mkPour(2, 48, 100, 250), // 45와 3초 간격 → @48 의 lead-in(@43)은 직전경계(45)보다 앞 → 억제
+    ];
+    // 윈도 (42,48]: pour@45·pour@48 둘 다 발화, lead-in@43 만 억제
+    expect(cuesBetween(42, 48, tight, s(210), 5)).toEqual([
+      { kind: "pour", stepIdx: 1 },
+      { kind: "pour", stepIdx: 2 },
+    ]);
+  });
+
   it("전 구간 1초 스위프: 큐 누락·중복 없이 lead-in/pour/complete 정확히 한 번씩", () => {
     const kinds: string[] = [];
     for (let t = 1; t <= 210; t++) {
-      for (const c of cuesBetween(t - 1, t, pours, T, 5)) {
-        kinds.push(c.kind === "complete" ? "complete" : `${c.kind}:${c.stepIdx}`);
+      for (const cue of cuesBetween(t - 1, t, pours, T, 5)) {
+        kinds.push(cue.kind === "complete" ? "complete" : `${cue.kind}:${cue.stepIdx}`);
       }
     }
     expect(kinds).toEqual([
@@ -236,5 +249,20 @@ describe("leadInCountdown", () => {
   });
   it("LEAD_IN_SEC 은 5", () => {
     expect(LEAD_IN_SEC).toBe(5);
+  });
+});
+
+describe("cuesBetween — lead-in 경계 케이스", () => {
+  it("lead-in 트리거가 직전 푸어 경계와 정확히 같으면(leadAt===prevAt) lead-in 발화", () => {
+    const pours = [
+      mkPour(0, 0, 30, 30, true),
+      mkPour(1, 40, 120, 150),
+      mkPour(2, 45, 100, 250), // leadAt = 45-5 = 40 = 직전경계(40) → 발화
+    ];
+    // 윈도 (39,40]: pour@40(stepIdx1) + lead-in@40(stepIdx2) 둘 다 t=40
+    expect(cuesBetween(39, 40, pours, s(210), 5)).toContainEqual({
+      kind: "lead-in",
+      stepIdx: 2,
+    });
   });
 });
