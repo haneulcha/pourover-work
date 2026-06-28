@@ -63,3 +63,55 @@ export const elapsedRatio = (
 // Centralized so UI surfaces (hero, rings, aria-live) share a single format.
 export const pourLabel = (pour: Pour, idx: number): string =>
   pour.label === "bloom" ? "bloom" : `${idx}차`;
+
+export const LEAD_IN_SEC = 5;
+
+export type BrewCue =
+  | { readonly kind: "lead-in"; readonly stepIdx: number }
+  | { readonly kind: "pour"; readonly stepIdx: number }
+  | { readonly kind: "complete" };
+
+// 트리거 시각이 반열림 구간 (prev, cur] 안에 든 큐들을 시간순으로 반환.
+// 블룸(atSec<=0)은 큐 없음. lead-in은 시작 후(>0)이고 직전 푸어 경계보다
+// 앞서지 않을 때만(간격<leadInSec면 생략). pour 큐는 항상 발화.
+export const cuesBetween = (
+  prev: number,
+  cur: number,
+  pours: readonly Pour[],
+  totalTimeSec: number,
+  leadInSec: number,
+): BrewCue[] => {
+  const out: { at: number; cue: BrewCue }[] = [];
+  const inWindow = (t: number) => t > prev && t <= cur;
+
+  for (let i = 0; i < pours.length; i++) {
+    const at = pours[i]!.atSec;
+    if (at <= 0) continue; // 블룸 / 시작 푸어
+    const leadAt = at - leadInSec;
+    const prevAt = i > 0 ? pours[i - 1]!.atSec : 0;
+    if (leadAt > 0 && leadAt >= prevAt && inWindow(leadAt)) {
+      out.push({ at: leadAt, cue: { kind: "lead-in", stepIdx: i } });
+    }
+    if (inWindow(at)) {
+      out.push({ at, cue: { kind: "pour", stepIdx: i } });
+    }
+  }
+  if (inWindow(totalTimeSec)) {
+    out.push({ at: totalTimeSec, cue: { kind: "complete" } });
+  }
+  out.sort((a, b) => a.at - b.at);
+  return out.map((o) => o.cue);
+};
+
+// 다음 푸어까지 남은 정수 초 — 단 lead-in 창(1..leadInSec) 안일 때만, 아니면 null.
+// 히어로의 3·2·1 시각 카운트다운용.
+export const leadInCountdown = (
+  elapsed: number,
+  pours: readonly Pour[],
+  leadInSec: number,
+): number | null => {
+  const next = nextStepIdx(pours, elapsed);
+  if (next === null) return null;
+  const remaining = pours[next]!.atSec - elapsed;
+  return remaining >= 1 && remaining <= leadInSec ? remaining : null;
+};
