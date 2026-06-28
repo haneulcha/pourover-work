@@ -187,9 +187,9 @@ describe("cuesBetween", () => {
       mkPour(1, 45, 120, 150),
       mkPour(2, 48, 100, 250), // 45와 3초 간격 → lead-in@43 은 45(직전경계)보다 앞 → 생략
     ];
-    expect(cuesBetween(42, 48, tight, s(210), 5)).toEqual([
+    expect(cuesBetween(45, 48, tight, s(210), 5)).toEqual([
       { kind: "pour", stepIdx: 2 },
-    ]); // 43 lead-in 없음, 48 pour만
+    ]); // 윈도 (45,48]: lead-in@43 억제됨, pour@45는 prev 경계라 제외, pour@48만
   });
 
   it("전 구간 1초 스위프: 큐 누락·중복 없이 lead-in/pour/complete 정확히 한 번씩", () => {

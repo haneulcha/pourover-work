@@ -73,7 +73,7 @@ export type BrewCue =
 
 // 트리거 시각이 반열림 구간 (prev, cur] 안에 든 큐들을 시간순으로 반환.
 // 블룸(atSec<=0)은 큐 없음. lead-in은 시작 후(>0)이고 직전 푸어 경계보다
-// 앞서지 않을 때만(간격<leadInSec면 생략, pour 큐는 유지).
+// 앞서지 않을 때만(간격<leadInSec면 생략). pour 큐는 항상 발화.
 export const cuesBetween = (
   prev: number,
   cur: number,
@@ -92,11 +92,7 @@ export const cuesBetween = (
     if (leadAt > 0 && leadAt >= prevAt && inWindow(leadAt)) {
       out.push({ at: leadAt, cue: { kind: "lead-in", stepIdx: i } });
     }
-    // pour 큐: 다음 푸어와의 간격이 leadInSec 미만이면(step i가 step i+1의 lead-in 구간 안에 위치)
-    // 이미 lead-in 없이 바로 pour해야 하는 상황 — step i pour 생략, step i+1 pour는 유지.
-    const nextAt = i + 1 < pours.length ? pours[i + 1]!.atSec : null;
-    const tooCloseToNext = nextAt !== null && nextAt - at < leadInSec;
-    if (!tooCloseToNext && inWindow(at)) {
+    if (inWindow(at)) {
       out.push({ at, cue: { kind: "pour", stepIdx: i } });
     }
   }
