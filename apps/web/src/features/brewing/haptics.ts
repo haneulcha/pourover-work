@@ -2,6 +2,14 @@
 // 프로그램적으로 토글하면 단일 햅틱 틱이 발생하는 트릭으로 폴백한다.
 let switchLabel: HTMLLabelElement | null = null;
 
+/** @internal 테스트 전용 — 싱글톤 switch label 을 제거하고 리셋한다. */
+export function _resetHapticsForTest(): void {
+  if (switchLabel) {
+    switchLabel.remove();
+    switchLabel = null;
+  }
+}
+
 function ensureSwitch(): HTMLLabelElement | null {
   if (typeof document === "undefined" || !document.body) return null;
   if (switchLabel) return switchLabel;
@@ -32,7 +40,7 @@ export function vibrate(pattern: readonly number[]): void {
       : undefined;
   if (nav && typeof nav.vibrate === "function") {
     try {
-      nav.vibrate([...pattern]);
+      nav.vibrate([...pattern]); // readonly → mutable 복사 (vibrate API 는 number[] 요구)
       return;
     } catch {
       // 폴백으로
