@@ -139,7 +139,7 @@ export const useBrewCues: (args: {
 ### 3. 데이터 흐름 & 기존 코드 접점
 
 1. **시작 탭에서 unlock**: 플레이어 인스턴스는 `BrewingScreen` 마운트 시 `useMemo(createCuePlayer)`로 생성하고, mount effect에서 `player.unlock()`을 호출한다. 브루잉 진입 자체가 "브루잉 시작" 탭 제스처 직후라 iOS 오디오 잠금 해제가 유효하다. `AppRoot`는 건드리지 않는다.
-2. `BrewingScreen`이 `useBrewCues({ elapsed, pours, totalTimeSec, player, muted, active })` 호출. `active = pausedAt === null && !done`.
+2. `BrewingScreen`이 `useBrewCues({ elapsed, pours, totalTimeSec, player, muted, active })` 호출. `active = pausedAt === null`. **`done`으로 게이팅하면 `complete` 큐 트리거 틱(`elapsed === totalTimeSec`)이 `done` 켜지는 틱과 동일해 `complete` 큐가 영구 미발화됨 — 절대 `&& !done` 추가 금지.** 완료 후엔 `cuesBetween`이 반환할 큐가 없으므로 게이팅 불필요.
 3. **시각 카운트다운**: 히어로에 lead-in 창(`다음 푸어.atSec - elapsed <= LEAD_IN_SEC && > 0`) 동안 남은 정수 초(`3·2·1`)를 작게 표시. 소리 꺼도 눈으로 보이는 백업. `nextStepIdx`/링 데이터에서 다음 푸어 atSec 파생.
 4. **음소거 토글**: RIM(건너뛰기·중단이 있는 줄)에 작은 토글 버튼. `useCueMuted` 값으로 아이콘 토글, `aria-pressed`/`aria-label` 부여. 소리만 끄고 진동 유지.
 5. **일시정지/건너뛰기**: 일시정지(`pausedAt !== null`)면 `elapsed` 동결 → 새 크로싱 없음(+ `active=false`로 이중 차단). 건너뛰기(`manualStepFloor`)는 *시각만* 앞당기고 큐 타임라인(atSec)은 불변 — 큐 로직을 skip과 결합하지 않아 순수성 유지.

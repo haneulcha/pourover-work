@@ -372,4 +372,22 @@ describe("BrewingScreen — 큐 발화 배선", () => {
     expect(kinds).toContain("lead-in");
     expect(kinds).toContain("pour");
   });
+
+  it("시간이 totalTimeSec 에 도달하면 complete 큐가 발화한다", () => {
+    const play = vi.fn();
+    vi.spyOn(cuePlayerModule, "createCuePlayer").mockReturnValue({
+      unlock: vi.fn(),
+      play,
+    });
+    vi.setSystemTime(new Date(BASE));
+    render(
+      <BrewingScreen session={makeSession(BASE)} onExit={vi.fn()} onComplete={vi.fn()} />,
+    );
+    act(() => {
+      vi.setSystemTime(new Date(BASE + 210_000)); // totalTimeSec = 210
+      vi.advanceTimersByTime(250);
+    });
+    const kinds = play.mock.calls.map((c) => c[0]);
+    expect(kinds).toContain("complete");
+  });
 });

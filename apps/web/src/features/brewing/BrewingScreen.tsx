@@ -74,7 +74,7 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
   const isLast = activeIdx === pours.length - 1;
   const done = elapsed >= totalTimeSec || manualStepFloor >= pours.length;
 
-  const cueActive = pausedAt === null && !done;
+  const cueActive = pausedAt === null;
   useBrewCues({
     elapsed,
     pours,
