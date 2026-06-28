@@ -46,6 +46,7 @@ describe("BrewingScreen", () => {
   });
   afterEach(() => {
     vi.useRealTimers();
+    vi.restoreAllMocks();
   });
 
   it("shows hero weight of active step (bloom at elapsed=0)", () => {
