@@ -112,6 +112,22 @@ describe("cuesBetween", () => {
       "complete", // @210
     ]);
   });
+
+  it("구간 분할 무결성: 어떤 분할이든 이어붙이면 통짜 (0, T] 호출과 동일", () => {
+    // 250ms 틱이 정수 초 elapsed 를 만들지만, 함수는 임의 분할에 견고해야 한다.
+    const whole = cuesBetween(0, 210, pours, T, 5);
+    // 1초 분할
+    const byOne: typeof whole = [];
+    for (let t = 1; t <= 210; t++) byOne.push(...cuesBetween(t - 1, t, pours, T, 5));
+    expect(byOne).toEqual(whole);
+    // 불규칙 분할 (7,13,1,…)
+    const cuts = [0, 7, 20, 41, 42, 70, 71, 130, 209, 210];
+    const byCut: typeof whole = [];
+    for (let i = 1; i < cuts.length; i++) {
+      byCut.push(...cuesBetween(cuts[i - 1]!, cuts[i]!, pours, T, 5));
+    }
+    expect(byCut).toEqual(whole);
+  });
 });
 
 describe("leadInCountdown", () => {
@@ -192,16 +208,70 @@ export const leadInCountdown = (
 };
 ```
 
-- [ ] **Step 4: 통과 확인**
+- [ ] **Step 4: 메서드 전체 cue invariant 스위프 추가** — `packages/domain/src/methods/invariants.test.ts` 끝(마지막 `});` 뒤)에 추가. 픽스처 하나가 아니라 *모든 실제 메서드 × 입력*에 대해 큐 스케줄이 건전한지 검증:
+
+```ts
+// invariants.test.ts 상단 import 에 추가:
+//   import { cuesBetween, leadInCountdown, LEAD_IN_SEC } from "../session";
+
+describe("cue invariants (sweep)", () => {
+  for (const method of methodList) {
+    for (const coffee of sampleCoffees) {
+      for (const roast of sampleRoasts) {
+        for (const taste of sampleTastes) {
+          const label = `${method.name} coffee=${coffee}g roast=${roast} ${taste.sweetness}/${taste.strength}`;
+          const r = method.compute({
+            method: method.id,
+            dripper: method.supportedDrippers[0]!,
+            coffee: g(coffee),
+            roast,
+            taste,
+          });
+          const T = r.totalTimeSec;
+
+          it(`pour 큐는 비-블룸 푸어마다 정확히 1회, complete 1회 — ${label}`, () => {
+            const cues: ReturnType<typeof cuesBetween> = [];
+            for (let t = 1; t <= T; t++) cues.push(...cuesBetween(t - 1, t, r.pours, T, LEAD_IN_SEC));
+
+            const pourIdx = cues.filter((c) => c.kind === "pour").map((c) => (c as { stepIdx: number }).stepIdx);
+            const expectedPourIdx = r.pours
+              .map((p, i) => ({ i, at: p.atSec }))
+              .filter((x) => x.at > 0)
+              .map((x) => x.i);
+            expect(pourIdx).toEqual(expectedPourIdx);
+
+            expect(cues.filter((c) => c.kind === "complete")).toHaveLength(1);
+
+            const leadIns = cues.filter((c) => c.kind === "lead-in").length;
+            expect(leadIns).toBeLessThanOrEqual(pourIdx.length); // 간격<5초면 생략될 수 있음
+          });
+
+          it(`leadInCountdown 은 항상 null 또는 1..${LEAD_IN_SEC} — ${label}`, () => {
+            for (let t = 0; t <= T; t++) {
+              const v = leadInCountdown(t, r.pours, LEAD_IN_SEC);
+              if (v !== null) {
+                expect(v).toBeGreaterThanOrEqual(1);
+                expect(v).toBeLessThanOrEqual(LEAD_IN_SEC);
+              }
+            }
+          });
+        }
+      }
+    }
+  }
+});
+```
+
+- [ ] **Step 5: 통과 확인**
 
 Run: `bun run --filter @pourover/domain test:run`
-Expected: PASS (모든 신규 + 기존 테스트).
+Expected: PASS (신규 cuesBetween/leadInCountdown + 메서드 스위프 + 기존 테스트 전부).
 
-- [ ] **Step 5: 커밋**
+- [ ] **Step 6: 커밋**
 
 ```bash
-git add packages/domain/src/session.ts packages/domain/src/session.test.ts
-git commit -m "feat(domain): 브루잉 큐 스케줄 cuesBetween/leadInCountdown
+git add packages/domain/src/session.ts packages/domain/src/session.test.ts packages/domain/src/methods/invariants.test.ts
+git commit -m "feat(domain): 브루잉 큐 스케줄 cuesBetween/leadInCountdown + 메서드 invariant 스위프
 
 Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>"
 ```
@@ -390,7 +460,68 @@ describe("createCuePlayer (jsdom: AudioContext 없음)", () => {
     expect(() => player.unlock()).not.toThrow();
   });
 });
+
+// 가짜 AudioContext 를 주입해 *오디오 경로 자체* 가 올바로 배선되는지 검증.
+// (위 jsdom 테스트는 "안 터진다"만 보장 — 실제 음 생성은 이 블록에서.)
+describe("createCuePlayer (오디오 경로 주입 검증)", () => {
+  function installFakeAudio() {
+    const oscillators: { freq: number; started: boolean; stopped: boolean }[] = [];
+    class FakeParam {
+      value = 0;
+      setValueAtTime() {}
+      linearRampToValueAtTime() {}
+      exponentialRampToValueAtTime() {}
+    }
+    class FakeAudioContext {
+      currentTime = 0;
+      state = "running";
+      destination = {};
+      resume() { return Promise.resolve(); }
+      createGain() {
+        return { gain: new FakeParam(), connect: () => ({ connect: () => {} }) };
+      }
+      createOscillator() {
+        const rec = { freq: 0, started: false, stopped: false };
+        oscillators.push(rec);
+        return {
+          type: "sine",
+          frequency: { set value(v: number) { rec.freq = v; }, get value() { return rec.freq; } },
+          connect: () => ({ connect: () => {} }),
+          start: () => { rec.started = true; },
+          stop: () => { rec.stopped = true; },
+        };
+      }
+    }
+    (window as unknown as { AudioContext: unknown }).AudioContext = FakeAudioContext;
+    return oscillators;
+  }
+
+  afterEach(() => {
+    // @ts-expect-error 테스트 정리
+    delete (window as { AudioContext?: unknown }).AudioContext;
+    vi.restoreAllMocks();
+  });
+
+  it("pour 큐는 freqHz 길이만큼 oscillator 를 만들고 start/stop 한다", () => {
+    vi.spyOn(haptics, "vibrate").mockImplementation(() => {});
+    const oscillators = installFakeAudio();
+    const player = createCuePlayer();
+    player.play("pour", false); // freqHz [660, 880]
+    expect(oscillators.map((o) => o.freq)).toEqual([660, 880]);
+    expect(oscillators.every((o) => o.started && o.stopped)).toBe(true);
+  });
+
+  it("muted=true 면 oscillator 를 만들지 않는다 (소리 없음)", () => {
+    vi.spyOn(haptics, "vibrate").mockImplementation(() => {});
+    const oscillators = installFakeAudio();
+    const player = createCuePlayer();
+    player.play("pour", true);
+    expect(oscillators).toHaveLength(0);
+  });
+});
 ```
+
+> `cuePlayer.test.ts` 상단 import 에 `afterEach` 추가 필요: `import { afterEach, describe, expect, it, vi } from "vitest";`
 
 - [ ] **Step 3: 실패 확인**
 
@@ -645,6 +776,38 @@ describe("useBrewCues", () => {
     rerender({ elapsed: 45 });
     expect(player.play).toHaveBeenCalledWith("pour", true);
   });
+
+  it("큰 점프(백그라운드→복귀): 지나친 모든 큐를 시간순 1회씩", () => {
+    // pours [bloom@0, @45], totalTimeSec 210. elapsed 39 → 210 으로 점프.
+    const player = mkPlayer();
+    const { rerender } = renderHook(
+      ({ elapsed }) =>
+        useBrewCues({ elapsed, pours, totalTimeSec: 210, player, muted: false, active: true }),
+      { initialProps: { elapsed: 39 } },
+    );
+    rerender({ elapsed: 210 });
+    expect(player.play.mock.calls).toEqual([
+      ["lead-in", false], // @40
+      ["pour", false], // @45
+      ["complete", false], // @210
+    ]);
+  });
+
+  it("브루 도중 muted 토글: 이후 큐에 최신 muted 반영, 과거 큐 재발화 없음", () => {
+    const player = mkPlayer();
+    const { rerender } = renderHook(
+      ({ elapsed, muted }) =>
+        useBrewCues({ elapsed, pours, totalTimeSec: 210, player, muted, active: true }),
+      { initialProps: { elapsed: 39, muted: false } },
+    );
+    rerender({ elapsed: 40, muted: false }); // lead-in, 소리 ON
+    rerender({ elapsed: 40, muted: true }); // 같은 elapsed 로 음소거 토글 — 재발화 없어야
+    rerender({ elapsed: 45, muted: true }); // pour, 음소거 반영
+    expect(player.play.mock.calls).toEqual([
+      ["lead-in", false],
+      ["pour", true],
+    ]);
+  });
 });
 ```
 
@@ -727,6 +890,9 @@ Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>"
 - [ ] **Step 1: 실패하는 테스트 작성** — `BrewingScreen.test.tsx` 끝(마지막 `})` 직전)에 추가. 기존 파일은 이미 `render/screen/fireEvent`, `makeSession`, fake timers 를 갖고 있으므로 그대로 재사용한다. 단 토글 영속 격리를 위해 `localStorage.clear()` 를 더한다:
 
 ```tsx
+// 파일 상단에 cuePlayer 모듈 spy 용 import 추가:
+//   import * as cuePlayerModule from "./cuePlayer";
+
 describe("BrewingScreen — 큐 음소거 토글", () => {
   afterEach(() => localStorage.clear());
 
@@ -742,9 +908,56 @@ describe("BrewingScreen — 큐 음소거 토글", () => {
     expect(toggle).toHaveAttribute("aria-pressed", "true");
   });
 });
+
+describe("BrewingScreen — lead-in 카운트다운", () => {
+  const BASE = 1_000_000_000_000;
+
+  it("lead-in 창 밖(시작 직후)에는 카운트다운이 없다", () => {
+    vi.setSystemTime(new Date(BASE));
+    render(
+      <BrewingScreen session={makeSession(BASE)} onExit={vi.fn()} onComplete={vi.fn()} />,
+    );
+    expect(screen.queryByTestId("lead-in-countdown")).toBeNull();
+  });
+
+  it("푸어 5초 전 창에 들어가면 남은 초를 표시 (45초 푸어, elapsed 41 → 4)", () => {
+    vi.setSystemTime(new Date(BASE));
+    render(
+      <BrewingScreen session={makeSession(BASE)} onExit={vi.fn()} onComplete={vi.fn()} />,
+    );
+    act(() => {
+      vi.setSystemTime(new Date(BASE + 41_000));
+      vi.advanceTimersByTime(250); // useElapsed 틱
+    });
+    expect(screen.getByTestId("lead-in-countdown")).toHaveTextContent("4");
+  });
+});
+
+describe("BrewingScreen — 큐 발화 배선", () => {
+  const BASE = 1_000_000_000_000;
+
+  it("시간이 푸어 경계를 넘으면 주입된 player.play 가 호출된다", () => {
+    const play = vi.fn();
+    vi.spyOn(cuePlayerModule, "createCuePlayer").mockReturnValue({
+      unlock: vi.fn(),
+      play,
+    });
+    vi.setSystemTime(new Date(BASE));
+    render(
+      <BrewingScreen session={makeSession(BASE)} onExit={vi.fn()} onComplete={vi.fn()} />,
+    );
+    act(() => {
+      vi.setSystemTime(new Date(BASE + 46_000)); // lead-in@40 + pour@45 통과
+      vi.advanceTimersByTime(250);
+    });
+    const kinds = play.mock.calls.map((c) => c[0]);
+    expect(kinds).toContain("lead-in");
+    expect(kinds).toContain("pour");
+  });
+});
 ```
 
-> 참고: 카운트다운/오디오 자체는 jsdom 타이머·AudioContext 제약으로 여기서 단위 검증하지 않는다 — 큐 발화는 Task 5(`useBrewCues`), 스케줄은 Task 1, 카운트다운 계산은 Task 1(`leadInCountdown`)에서 이미 커버. 여기선 토글의 접근성·동작만 검증한다. `aria-label`은 Task 6 Step 4에서 `muted ? "큐 소리 켜기" : "큐 소리 끄기"` 이므로 `/큐 소리/` 로 매칭된다.
+> 참고: 카운트다운(`leadInCountdown`)·큐 스케줄(`cuesBetween`)의 순수 로직은 Task 1, 배선은 Task 5 에서 단위 커버됨. 여기 세 블록은 *실제 화면 통합* — fake timer 로 `useElapsed` 를 전진시켜 카운트다운 렌더와 큐 발화가 실제로 일어나는지 검증한다. `aria-label`은 Task 6 Step 4의 `muted ? "큐 소리 켜기" : "큐 소리 끄기"` 라 `/큐 소리/` 로 매칭. 큐 발화 테스트는 `createCuePlayer` 모듈을 spy 해 mock player 를 주입한다.
 
 - [ ] **Step 2: 실패 확인**
 
@@ -812,13 +1025,16 @@ import { useCueMuted } from "./useCueMuted";
           )}
 ```
 
-- [ ] **Step 6: 통과 확인 + 타입체크**
+- [ ] **Step 6: 통과 확인 + 타입체크 + lint**
 
 Run: `bun run --filter @pourover/web test:run`
-Expected: PASS (신규 토글 테스트 + 기존 BrewingScreen 테스트).
+Expected: PASS (신규 토글·카운트다운·큐 발화 테스트 + 기존 BrewingScreen 테스트).
 
 Run: `bun run typecheck`
 Expected: 에러 0.
+
+Run: `bun run --filter @pourover/web lint`
+Expected: 에러 0 (하드코딩 스타일·브랜디드 캐스팅 규약 위반 없음 — 토글/카운트다운은 토큰 클래스만 사용).
 
 - [ ] **Step 7: 커밋**
 
@@ -840,9 +1056,12 @@ Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>"
 Run: `bun run test:run`
 Expected: 모든 워크스페이스 PASS.
 
-- [ ] **Step 2: 타입체크**
+- [ ] **Step 2: 타입체크 + lint**
 
 Run: `bun run typecheck`
+Expected: 에러 0.
+
+Run: `bun run lint`
 Expected: 에러 0.
 
 - [ ] **Step 3: 빌드**
@@ -850,9 +1069,16 @@ Expected: 에러 0.
 Run: `bun run build`
 Expected: 성공 (출력 `apps/web/dist`).
 
-- [ ] **Step 4: 수동 확인 (dev 서버)**
+- [ ] **Step 4: 수동 확인 (dev 서버, 데스크톱)**
 
 Run: `bun run dev` → http://localhost:5173 → recipe(원두량 작게)에서 브루잉 시작.
-확인: ① RIM 음소거 토글 보이고 눌리는지 ② 푸어 5초 전 히어로에 `곧 붓기 · 5…1` ③ 소리/진동 큐 ④ 음소거 시 소리만 꺼지고 카운트다운/진동 유지 ⑤ 중단(일시정지) 중 큐 침묵 ⑥ 완료 큐.
+확인: ① RIM 음소거 토글 보이고 눌리는지 ② 푸어 5초 전 히어로에 `곧 붓기 · 5…1` ③ 소리 큐(예고/본/완료가 서로 구분되는지) ④ 음소거 시 소리만 꺼지고 카운트다운 유지 ⑤ 중단(일시정지) 중 큐 침묵, 재개 후 정상 ⑥ 완료 큐.
 
-- [ ] **Step 5: (마무리)** superpowers:finishing-a-development-branch 로 PR/머지 처리.
+- [ ] **Step 5: 수동 확인 (실기기 — 진동/오디오 unlock)**
+
+자동화 불가 영역이므로 실기기 점검:
+- **iOS Safari**: 시작 탭 후 첫 큐부터 소리가 나는지(오디오 unlock 성공), `<input switch>` 햅틱이 실제로 진동하는지(약하거나 무반응이면 Open Risk대로 degrade — 소리는 정상이어야 함).
+- **안드로이드 Chrome**: `navigator.vibrate` 패턴 진동 확인.
+- 음소거 ON 상태로 둔 뒤 앱 재진입 시 음소거가 유지되는지(localStorage 영속).
+
+- [ ] **Step 6: (마무리)** superpowers:finishing-a-development-branch 로 PR/머지 처리.
