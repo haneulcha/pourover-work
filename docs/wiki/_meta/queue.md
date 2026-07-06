@@ -15,6 +15,13 @@
 
 남은 것: bean 카테고리(산지·가공·로스팅·품종·향미)는 원본 보고서 범위 밖 — 새 리서치 필요. 멜리타/칼리타102/블루보틀/오리가미 등 추가 드리퍼는 선택.
 
+코드↔위키 갭 (2026-07-06, `_index`의 "method/는 코드와 대응" 선언 기준) — 도메인에 추가된 메서드 5종의 노트 부재:
+- [ ] method: caffe-luxxe
+- [ ] method: frothy-monkey
+- [ ] method: fuglen-tokyo
+- [ ] method: kurasu-kyoto
+- [ ] method: standard-3-stage (Kalita 계열 3-stage 펄스)
+
 ## 재검증 (audit 출력)
 
 <!-- /wiki-audit가 review_after 지난 노트를 여기에 채운다 -->
