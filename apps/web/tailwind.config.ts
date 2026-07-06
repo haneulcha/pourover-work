@@ -7,6 +7,7 @@ export default {
       transitionDuration: {
         DEFAULT: "var(--motion-duration-base)",
         long: "var(--motion-duration-long)",
+        leadin: "var(--motion-duration-leadin)",
       },
       transitionTimingFunction: {
         DEFAULT: "var(--motion-easing)",
@@ -27,6 +28,8 @@ export default {
       // raw size utility(text-2xs..2xl)도 폐지. 모든 텍스트는 named style 사용.
       // [size, { lineHeight, letterSpacing?, fontWeight? }]
       fontSize: {
+        // 글랜서블 디스플레이 — 브루잉 큰 숫자 전용. 뷰포트 반응, tabular-nums 전제.
+        "display-xl": ["clamp(88px, 26vw, 150px)", { lineHeight: "1", letterSpacing: "-0.03em", fontWeight: "500" }],
         "heading-xl": ["64px", { lineHeight: "1.1", letterSpacing: "-0.02em", fontWeight: "500" }],
         "heading-lg": ["48px", { lineHeight: "1.1", letterSpacing: "-0.02em", fontWeight: "500" }],
         "heading-md": ["32px", { lineHeight: "1.2", fontWeight: "600" }],
@@ -135,6 +138,12 @@ export default {
           "liquid-deep": "var(--color-brewing-liquid-deep)",
           "liquid-bottom": "var(--color-brewing-liquid-bottom)",
           meniscus: "var(--color-meniscus-highlight)",
+          "pour-bg": "var(--color-brewing-state-pour-bg)",
+          "pour-fg": "var(--color-brewing-state-pour-fg)",
+          "pour-fg-muted": "var(--color-brewing-state-pour-fg-muted)",
+          "wait-bg": "var(--color-brewing-state-wait-bg)",
+          "wait-fg": "var(--color-brewing-state-wait-fg)",
+          "wait-fg-muted": "var(--color-brewing-state-wait-fg-muted)",
         },
         pour: {
           bloom: "var(--color-pour-bloom)",
