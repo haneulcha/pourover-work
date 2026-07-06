@@ -1,23 +1,6 @@
 # Design System: Untitled
 
-## 1. Theme & Atmosphere
-
-Untitled operates in the register of precision engineering — every decision deliberate, every pixel justified. Light weight (400 headings, 300 body) is the primary signal: here, restraint communicates confidence rather than boldness. The canvas is cool and calm, with #702600 deployed surgically as the single chromatic statement. This is the Stripe and IBM register, where institutional trust is built through structural exactitude.
-
-Inter at weight 400 with −0.7px letter-spacing on headings achieves the taut, considered tension of infrastructure design. Where other systems shout with weight, this one whispers with exactitude. Sharp corners (4px buttons, 6px cards) signal that nothing here is accidental — every edge is intentional.
-
-Structured spacing — 16px component grid, 80px section intervals — creates a layout that reads like a well-organized data table. The medium shadow system anchors surfaces with confident depth, lifting them into a clear hierarchy without theatricality. Untitled built on this archetype communicates: we have thought about everything so you don't have to.
-
-**Key Characteristics:**
-- Light weight (400/300) as the primary confidence signal — precision over boldness
-- Cool-tinted neutrals: slate and cool gray throughout, never warm
-- Sharp corners (4px buttons, 6px cards) signaling engineering exactitude
-- Tight negative letter-spacing (−0.7px) on headings for editorial tension
-- Dense component spacing (16px) for information-rich, structured layouts
-- Medium shadow system: surfaces are anchored with confident, hierarchical depth
-- #702600 deployed surgically — active states, primary CTAs, key data highlights
-- Compact body line-height (1.45) for a crisp, document-like reading experience
-- Structural whitespace: 80px section breaks that read as intentional breath
+> **명명 레퍼런스 전용.** 이 문서는 `figma-system.json`과 짝을 이루는 토큰 **명명·구조** 스펙이다. 여기 적힌 색·수치·무드는 이 프로젝트의 브랜드 값이 아니다 — 무드·원칙은 `docs/brand.md`, 코드의 실제 값은 `docs/design-tokens.md`가 단일 출처. brand와 정면 충돌하던 무드 서술(§ Theme & Atmosphere)과 Dos/Don'ts 섹션은 오염 방지를 위해 삭제됨 (git history 참조).
 
 ## 2. Color System
 
@@ -291,31 +274,6 @@ Structured, purposeful spacing. Every margin serves information hierarchy. Dense
 | Overlay (4) | `rgba(0,0,0,0.18) 0px 8px 24px, rgba(0,0,0,0.126) 0px 4px 8px` | Modals, dialogs, command palettes |
 
 **Shadow Philosophy:** Drop shadows render every elevation tier — depth is a primary design tool. Multi-layer shadows give surfaces tactile, physical presence. Balanced shadow system providing clear depth hierarchy.
-
-## 7. Dos and Don'ts
-
-### Do
-
-- Use weight 400 for headings and weight 300 for body — restraint is the statement
-- Apply −0.7px letter-spacing on all display headings for editorial tautness
-- Maintain cool-tinted neutrals throughout — no warm grays or parchment tones
-- Keep border-radius conservative: 4px for interactive elements, 6px for cards
-- Use medium shadows that anchor surfaces with confident depth: rgba(15,23,42,0.10–0.14) range
-- Deploy #702600 sparingly — active states, primary CTAs, and data highlights only
-- Tighten component spacing to 16px for information-dense, structured interfaces
-- Choose Inter or another optical-size-aware grotesque for precision neutrality
-- Let the type scale and spatial rhythm carry all hierarchy — no decorative additions
-
-### Don't
-
-- Don't use bold (600+) headings — light weight is the intentional luxury differentiator
-- Don't use warm-tinted neutrals or parchment backgrounds
-- Don't apply generous rounded corners (12px+) — they undermine the precision signal
-- Don't use whisper or dramatic shadows — medium depth is the correct, anchored register
-- Don't over-apply the accent color — restraint signals confidence here
-- Don't use decorative typefaces or italic display fonts
-- Don't increase component spacing beyond 20px — density conveys structural competence
-- Don't add decorative illustrations or gradient overlays
 
 ## 8. Responsive Design
 
