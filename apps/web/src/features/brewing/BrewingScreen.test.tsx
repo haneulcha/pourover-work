@@ -139,6 +139,12 @@ describe("BrewingScreen — 탭 전진", () => {
     fireEvent.click(tapArea());
     expect(tapArea()).toHaveAttribute("aria-label", "다음 푸어로 건너뛰기");
   });
+
+  it("drawdown에서 탭 영역 aria-label은 '브루잉 완료'", () => {
+    renderScreen(BASE - 80_000); // elapsed=80 → pour(2, 마지막)
+    fireEvent.click(tapArea()); // → drawdown
+    expect(tapArea()).toHaveAttribute("aria-label", "브루잉 완료");
+  });
 });
 
 describe("BrewingScreen — 리드인", () => {

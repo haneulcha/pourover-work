@@ -259,13 +259,12 @@ function AriaLiveStep({
   readonly activeIdx: number;
 }) {
   const [announced, setAnnounced] = useState<string>("");
-  const isFirst = useRef(true);
+  // 초기 마운트 발화 생략 — 스크린리더는 화면을 직접 읽음. aria-live는 변화만 고지.
+  // (ref 초기값 = 현재 idx 비교라 StrictMode의 effect 재실행에도 안전)
+  const prevIdx = useRef(activeIdx);
   useEffect(() => {
-    // 초기 마운트 시 발화 생략 — 스크린리더는 화면을 직접 읽음. aria-live는 변화만 고지.
-    if (isFirst.current) {
-      isFirst.current = false;
-      return;
-    }
+    if (prevIdx.current === activeIdx) return;
+    prevIdx.current = activeIdx;
     const pour = session.recipe.pours[activeIdx];
     if (!pour) return;
     setAnnounced(
