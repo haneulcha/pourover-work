@@ -3,7 +3,6 @@ import type { Pour, Recipe } from "./types";
 import { c, g, ratio, s } from "./units";
 import {
   activeStepIdx,
-  brewPhase,
   cuesBetween,
   elapsedSec,
   isComplete,
@@ -264,76 +263,6 @@ describe("cuesBetween — lead-in 경계 케이스", () => {
     expect(cuesBetween(39, 40, pours, s(210), 5)).toContainEqual({
       kind: "lead-in",
       stepIdx: 2,
-    });
-  });
-});
-
-describe("brewPhase", () => {
-  const pours = recipe.pours;
-  const total = recipe.totalTimeSec;
-
-  it("시작(elapsed=0, 탭 없음)은 pour(0)", () => {
-    expect(brewPhase(pours, total, 0, 0)).toEqual({ kind: "pour", stepIdx: 0 });
-  });
-
-  it("탭 없이 경계를 넘으면 시계가 pour를 전진시킨다", () => {
-    expect(brewPhase(pours, total, 44, 0)).toEqual({ kind: "pour", stepIdx: 0 });
-    expect(brewPhase(pours, total, 45, 0)).toEqual({ kind: "pour", stepIdx: 1 });
-    expect(brewPhase(pours, total, 75, 0)).toEqual({ kind: "pour", stepIdx: 2 });
-  });
-
-  it("pour 중 탭(홀수 pos)이면 wait — 다음 푸어까지 남은 초", () => {
-    // pour(0)에서 탭 → tapPos=1 → wait, 다음은 1차(atSec=45)
-    expect(brewPhase(pours, total, 10, 1)).toEqual({
-      kind: "wait",
-      nextIdx: 1,
-      remainingSec: 35,
-    });
-  });
-
-  it("wait 중 탭이면 다음 pour를 미리 당긴다", () => {
-    // tapPos=2 → pour(1), 시계(elapsed=10, clockPos=0)보다 앞섬
-    expect(brewPhase(pours, total, 10, 2)).toEqual({ kind: "pour", stepIdx: 1 });
-  });
-
-  it("시계가 탭을 추월하면 시계를 따른다 (자가 치유)", () => {
-    // tapPos=1(wait)이지만 elapsed=45로 경계 도달 → clockPos=2 → pour(1)
-    expect(brewPhase(pours, total, 45, 1)).toEqual({ kind: "pour", stepIdx: 1 });
-  });
-
-  it("탭이 시계보다 앞서 있으면 탭을 따른다", () => {
-    // elapsed=50(clockPos=2), tapPos=4 → pour(2)
-    expect(brewPhase(pours, total, 50, 4)).toEqual({ kind: "pour", stepIdx: 2 });
-  });
-
-  it("마지막 pour 뒤 탭이면 drawdown — 완료까지 남은 초", () => {
-    // elapsed=80(clockPos=4), tapPos=5 → drawdown, 210-80=130
-    expect(brewPhase(pours, total, 80, 5)).toEqual({
-      kind: "drawdown",
-      remainingSec: 130,
-    });
-  });
-
-  it("drawdown remainingSec은 0 밑으로 내려가지 않는다", () => {
-    expect(brewPhase(pours, total, 300, 5)).toEqual({
-      kind: "drawdown",
-      remainingSec: 0,
-    });
-  });
-
-  it("과다 탭은 drawdown 위치로 클램프된다", () => {
-    expect(brewPhase(pours, total, 80, 99)).toEqual({
-      kind: "drawdown",
-      remainingSec: 130,
-    });
-  });
-
-  it("푸어 1개짜리 레시피: pour(0) → 탭 → drawdown", () => {
-    const single = [mkPour(0, 0, 200, 200, true)];
-    expect(brewPhase(single, 180, 0, 0)).toEqual({ kind: "pour", stepIdx: 0 });
-    expect(brewPhase(single, 180, 30, 1)).toEqual({
-      kind: "drawdown",
-      remainingSec: 150,
     });
   });
 });

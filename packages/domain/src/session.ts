@@ -115,39 +115,3 @@ export const leadInCountdown = (
   const remaining = pours[next]!.atSec - elapsed;
   return remaining >= 1 && remaining <= leadInSec ? remaining : null;
 };
-
-export type BrewPhase =
-  | { readonly kind: "pour"; readonly stepIdx: number }
-  | {
-      readonly kind: "wait";
-      readonly nextIdx: number;
-      readonly remainingSec: number;
-    }
-  | { readonly kind: "drawdown"; readonly remainingSec: number };
-
-// 브루잉 시퀀스 위치: pos 2i = pour(i), 2i+1 = 그 뒤의 wait(마지막은 drawdown).
-// 유효 위치 = max(시계, 탭). 시계(activeStepIdx)는 경계마다 pour로 강제 전진하고
-// 뒤로 가지 않으므로, 실수 탭은 다음 경계에서 자동 재동기화된다.
-// tapPos >= 2 * pours.length (완료 신호) 판정은 호출부(UI) 몫 — 여기선 클램프만.
-export const brewPhase = (
-  pours: readonly Pour[],
-  totalTimeSec: number,
-  elapsed: number,
-  tapPos: number,
-): BrewPhase => {
-  const maxPos = 2 * (pours.length - 1) + 1; // drawdown 위치
-  const pos = Math.min(
-    maxPos,
-    Math.max(2 * activeStepIdx(pours, elapsed), tapPos),
-  );
-  if (pos % 2 === 0) return { kind: "pour", stepIdx: pos / 2 };
-  const nextIdx = (pos + 1) / 2;
-  if (nextIdx < pours.length) {
-    return {
-      kind: "wait",
-      nextIdx,
-      remainingSec: Math.max(0, pours[nextIdx]!.atSec - elapsed),
-    };
-  }
-  return { kind: "drawdown", remainingSec: Math.max(0, totalTimeSec - elapsed) };
-};

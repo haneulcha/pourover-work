@@ -1,24 +1,33 @@
-/* Brewing domain tokens — 상태가 곧 화면 (pour/wait 배경·전경).
+/* Brewing domain tokens — 표시 전용 브루잉 화면 (base 캔버스 / lead-in 물듦 / 진행 레일).
    spec 외 brand 차별화 영역. semantic 참조하지 않고 자체 값.
-   pour = 따뜻한 액센트로 화면 전체가 물듦 (주변시야 신호),
-   wait/drawdown = 차분한 캔버스. 큰 숫자는 fg, 보조 줄은 fg-muted. */
+   base = 차분한 캔버스, lead-in = 다음 푸어 5초 전 화면 전체가 액센트로 물듦(주변시야 신호).
+   큰 숫자는 fg, 보조 줄은 fg-muted. */
 
 :root {
-  --color-brewing-state-pour-bg: var(--accent-200);
-  --color-brewing-state-pour-fg: var(--neutral-900);
-  --color-brewing-state-pour-fg-muted: var(--neutral-700);
+  --color-brewing-base-bg: var(--neutral-0);
+  --color-brewing-base-fg: var(--neutral-900);
+  --color-brewing-base-fg-muted: var(--neutral-500);
 
-  --color-brewing-state-wait-bg: var(--neutral-0);
-  --color-brewing-state-wait-fg: var(--neutral-900);
-  --color-brewing-state-wait-fg-muted: var(--neutral-500);
+  --color-brewing-leadin-bg: var(--accent-200);
+  --color-brewing-leadin-fg: var(--neutral-900);
+  --color-brewing-leadin-fg-muted: var(--neutral-700);
+
+  /* 진행 레일 — 트랙 위 경과 채움 + 푸어 경계 눈금 */
+  --color-brewing-rail-track: var(--neutral-200);
+  --color-brewing-rail-fill: var(--accent-500);
+  --color-brewing-rail-tick: var(--neutral-500);
 }
 
 [data-theme="dark"] {
-  --color-brewing-state-pour-bg: var(--accent-800);
-  --color-brewing-state-pour-fg: var(--neutral-0);
-  --color-brewing-state-pour-fg-muted: var(--neutral-100);
+  --color-brewing-base-bg: var(--neutral-900);
+  --color-brewing-base-fg: var(--neutral-50);
+  --color-brewing-base-fg-muted: var(--neutral-400);
 
-  --color-brewing-state-wait-bg: var(--neutral-900);
-  --color-brewing-state-wait-fg: var(--neutral-50);
-  --color-brewing-state-wait-fg-muted: var(--neutral-400);
+  --color-brewing-leadin-bg: var(--accent-800);
+  --color-brewing-leadin-fg: var(--neutral-0);
+  --color-brewing-leadin-fg-muted: var(--neutral-100);
+
+  --color-brewing-rail-track: var(--neutral-700);
+  --color-brewing-rail-fill: var(--accent-400);
+  --color-brewing-rail-tick: var(--neutral-400);
 }

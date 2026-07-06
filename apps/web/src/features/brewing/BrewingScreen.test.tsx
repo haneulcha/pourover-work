@@ -59,8 +59,6 @@ const advanceTo = (elapsedMs: number) => {
   });
 };
 
-const tapArea = () => screen.getByTestId("tap-area");
-
 beforeEach(() => {
   vi.useFakeTimers();
   vi.setSystemTime(new Date(BASE));
@@ -71,113 +69,97 @@ afterEach(() => {
   localStorage.clear();
 });
 
-describe("BrewingScreen — pour 상태", () => {
-  it("시작 시 pour: 목표 누적량과 라벨, 액센트 배경", () => {
+describe("BrewingScreen — 스텝 표시", () => {
+  it("시작: 목표 누적량 + 라벨 + 상시 카운트다운, 배경은 base", () => {
     renderScreen();
     expect(screen.getByTestId("big-number")).toHaveTextContent("30");
     expect(screen.getByText(/bloom/)).toBeInTheDocument();
-    expect(screen.getByTestId("brewing-screen").dataset.accent).toBe("true");
-  });
-
-  it("마지막 pour에는 '마지막' 표기", () => {
-    renderScreen(BASE - 80_000); // elapsed=80 → pour(2)
-    expect(screen.getByTestId("big-number")).toHaveTextContent("250");
-    expect(screen.getByText(/마지막/)).toBeInTheDocument();
-  });
-
-  it("탭 없이도 경계에서 시계가 pour를 전진시킨다", () => {
-    renderScreen();
-    advanceTo(46_000);
-    expect(screen.getByTestId("big-number")).toHaveTextContent("150");
-  });
-});
-
-describe("BrewingScreen — 탭 전진", () => {
-  it("pour 중 탭 → wait: 다음 푸어까지 카운트다운 + 프리뷰, 차분한 배경", () => {
-    renderScreen();
-    fireEvent.click(tapArea());
-    // 다음 푸어 atSec=45, elapsed=0 → 0:45
-    expect(screen.getByTestId("big-number")).toHaveTextContent("0:45");
-    expect(screen.getByText(/다음 · 1차 150g/)).toBeInTheDocument();
+    // 다음 푸어 atSec=45, elapsed=0
+    expect(screen.getByTestId("countdown")).toHaveTextContent(
+      "다음 붓기까지 0:45",
+    );
     expect(screen.getByTestId("brewing-screen").dataset.accent).toBe("false");
   });
 
-  it("wait 중 탭 → 다음 pour를 미리 당긴다", () => {
+  it("탭 제스처 없음 — 전체 화면 탭 영역이 존재하지 않는다", () => {
     renderScreen();
-    fireEvent.click(tapArea()); // → wait
-    fireEvent.click(tapArea()); // → pour(1)
+    expect(screen.queryByTestId("tap-area")).toBeNull();
+  });
+
+  it("경계를 넘으면 시계가 다음 스텝으로 전진한다", () => {
+    renderScreen();
+    advanceTo(46_000);
     expect(screen.getByTestId("big-number")).toHaveTextContent("150");
+    // 다음 푸어 atSec=75, elapsed=46
+    expect(screen.getByTestId("countdown")).toHaveTextContent(
+      "다음 붓기까지 0:29",
+    );
   });
 
-  it("wait 중 시계가 경계를 넘으면 자동으로 pour 복귀 (자가 치유)", () => {
+  it("마지막 스텝: '마지막' 표기 + 완료까지 카운트다운", () => {
+    renderScreen(BASE - 80_000); // elapsed=80 → 마지막 푸어(idx 2)
+    expect(screen.getByTestId("big-number")).toHaveTextContent("250");
+    expect(screen.getByText(/마지막/)).toBeInTheDocument();
+    // 210-80=130
+    expect(screen.getByTestId("countdown")).toHaveTextContent("완료까지 2:10");
+  });
+
+  it("구석 정보: 경과/총시간과 스텝 카운트", () => {
     renderScreen();
-    fireEvent.click(tapArea()); // → wait
-    advanceTo(45_000);
-    expect(screen.getByTestId("big-number")).toHaveTextContent("150");
-  });
-
-  it("마지막 pour에서 탭 → drawdown: 완료까지 카운트다운", () => {
-    renderScreen(BASE - 80_000); // elapsed=80 → pour(2)
-    fireEvent.click(tapArea());
-    // 210-80=130 → 2:10
-    expect(screen.getByTestId("big-number")).toHaveTextContent("2:10");
-    expect(screen.getByText("드로우다운")).toBeInTheDocument();
-  });
-
-  it("drawdown 중 탭 → onComplete", () => {
-    const onComplete = vi.fn();
-    renderScreen(BASE - 80_000, { onComplete });
-    fireEvent.click(tapArea()); // → drawdown
-    expect(onComplete).not.toHaveBeenCalled();
-    fireEvent.click(tapArea()); // → 완료
-    expect(onComplete).toHaveBeenCalledTimes(1);
-  });
-
-  it("탭 영역 aria-label이 상태 따라 바뀐다", () => {
-    renderScreen();
-    expect(tapArea()).toHaveAttribute("aria-label", "붓기 완료");
-    fireEvent.click(tapArea());
-    expect(tapArea()).toHaveAttribute("aria-label", "다음 푸어로 건너뛰기");
-  });
-
-  it("drawdown에서 탭 영역 aria-label은 '브루잉 완료'", () => {
-    renderScreen(BASE - 80_000); // elapsed=80 → pour(2, 마지막)
-    fireEvent.click(tapArea()); // → drawdown
-    expect(tapArea()).toHaveAttribute("aria-label", "브루잉 완료");
+    expect(screen.getByText(/0:00 \/ 3:30/)).toBeInTheDocument();
+    expect(screen.getByText(/1\/3/)).toBeInTheDocument();
   });
 });
 
 describe("BrewingScreen — 리드인", () => {
-  it("다음 푸어 5초 전부터 wait에서도 액센트 배경", () => {
+  it("다음 푸어 5초 전부터 배경이 액센트로 물든다", () => {
     renderScreen();
-    fireEvent.click(tapArea()); // → wait
     advanceTo(41_000); // 45초 푸어 4초 전
     expect(screen.getByTestId("brewing-screen").dataset.accent).toBe("true");
-    expect(screen.getByTestId("big-number")).toHaveTextContent("0:04");
+    expect(screen.getByTestId("countdown")).toHaveTextContent(
+      "다음 붓기까지 0:04",
+    );
+  });
+
+  it("경계를 지나면 base로 복귀한다", () => {
+    renderScreen();
+    advanceTo(46_000);
+    expect(screen.getByTestId("brewing-screen").dataset.accent).toBe("false");
+  });
+});
+
+describe("BrewingScreen — 진행 레일", () => {
+  it("푸어 경계 눈금(atSec>0)과 경과 채움을 렌더한다", () => {
+    renderScreen(BASE - 60_000); // elapsed=60
+    const ticks = screen.getAllByTestId("brew-rail-tick");
+    expect(ticks).toHaveLength(2); // 45s, 75s
+    expect(ticks[0]!.style.left).toBe("21.43%"); // 45/210
+    expect(ticks[1]!.style.left).toBe("35.71%"); // 75/210
+    // 60/210 = 28.57%
+    expect(screen.getByTestId("brew-rail-fill").style.width).toBe("28.57%");
   });
 });
 
 describe("BrewingScreen — 중단", () => {
   it("길게 누르기(600ms)로 중단 다이얼로그가 열린다", () => {
     renderScreen();
-    fireEvent.pointerDown(tapArea());
+    fireEvent.pointerDown(screen.getByTestId("brewing-screen"));
     act(() => {
       vi.advanceTimersByTime(600);
     });
     expect(screen.getByText("브루잉을 중단할까요?")).toBeInTheDocument();
-    // 길게 누르기 후의 click은 전진으로 새지 않는다
-    fireEvent.pointerUp(tapArea());
-    fireEvent.click(tapArea());
-    expect(screen.getByTestId("big-number")).toHaveTextContent("30");
   });
 
   it("600ms 전에 떼면 다이얼로그가 열리지 않는다", () => {
     renderScreen();
-    fireEvent.pointerDown(tapArea());
+    fireEvent.pointerDown(screen.getByTestId("brewing-screen"));
     act(() => {
       vi.advanceTimersByTime(300);
     });
-    fireEvent.pointerUp(tapArea());
+    fireEvent.pointerUp(screen.getByTestId("brewing-screen"));
+    act(() => {
+      vi.advanceTimersByTime(600);
+    });
     expect(screen.queryByText("브루잉을 중단할까요?")).toBeNull();
   });
 
@@ -200,7 +182,6 @@ describe("BrewingScreen — 중단", () => {
     fireEvent.click(screen.getByRole("button", { name: "길게 눌러 중단" }));
     advanceTo(46_000);
     fireEvent.click(screen.getByRole("button", { name: "계속하기" }));
-    // 46초 경과가 반영되어 pour(1)
     expect(screen.getByTestId("big-number")).toHaveTextContent("150");
   });
 });
@@ -216,12 +197,6 @@ describe("BrewingScreen — 완료 / 부가", () => {
     const onComplete = vi.fn();
     renderScreen(BASE, { onComplete });
     expect(onComplete).not.toHaveBeenCalled();
-  });
-
-  it("구석 정보: 경과/총시간과 스텝 카운트", () => {
-    renderScreen();
-    expect(screen.getByText(/0:00 \/ 3:30/)).toBeInTheDocument();
-    expect(screen.getByText(/1\/3/)).toBeInTheDocument();
   });
 
   it("음소거 토글 aria-pressed", () => {

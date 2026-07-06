@@ -129,12 +129,15 @@ export default {
         overlay: { scrim: "var(--color-overlay-scrim)" },
         // Brewing domain
         brewing: {
-          "pour-bg": "var(--color-brewing-state-pour-bg)",
-          "pour-fg": "var(--color-brewing-state-pour-fg)",
-          "pour-fg-muted": "var(--color-brewing-state-pour-fg-muted)",
-          "wait-bg": "var(--color-brewing-state-wait-bg)",
-          "wait-fg": "var(--color-brewing-state-wait-fg)",
-          "wait-fg-muted": "var(--color-brewing-state-wait-fg-muted)",
+          "base-bg": "var(--color-brewing-base-bg)",
+          "base-fg": "var(--color-brewing-base-fg)",
+          "base-fg-muted": "var(--color-brewing-base-fg-muted)",
+          "leadin-bg": "var(--color-brewing-leadin-bg)",
+          "leadin-fg": "var(--color-brewing-leadin-fg)",
+          "leadin-fg-muted": "var(--color-brewing-leadin-fg-muted)",
+          "rail-track": "var(--color-brewing-rail-track)",
+          "rail-fill": "var(--color-brewing-rail-fill)",
+          "rail-tick": "var(--color-brewing-rail-tick)",
         },
         pour: {
           bloom: "var(--color-pour-bloom)",
