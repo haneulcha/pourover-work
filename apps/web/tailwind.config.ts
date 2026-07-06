@@ -69,8 +69,6 @@ export default {
         raised: "var(--shadow-raised)",
         floating: "var(--shadow-floating)",
         overlay: "var(--shadow-overlay)",
-        "rim-inset": "var(--shadow-rim-inset)",
-        "cup-inset": "var(--shadow-cup-inset)",
       },
       keyframes: {
         "popover-in": {
@@ -100,7 +98,6 @@ export default {
       },
       height: {
         "progress-rail": "var(--size-progress-rail)",
-        "brewing-rim": "var(--brewing-rim-height)",
       },
       colors: {
         // Surface (spec bg/* 슬롯)
@@ -117,7 +114,6 @@ export default {
           secondary: "var(--color-text-body)",
           muted: "var(--color-text-muted)",
           "on-accent": "var(--color-text-on-primary)",
-          "on-liquid": "var(--color-text-on-liquid)", // brewing domain
         },
         // Accent
         accent: {
@@ -133,11 +129,6 @@ export default {
         overlay: { scrim: "var(--color-overlay-scrim)" },
         // Brewing domain
         brewing: {
-          "liquid-top": "var(--color-brewing-liquid-top)",
-          "liquid-mid": "var(--color-brewing-liquid-mid)",
-          "liquid-deep": "var(--color-brewing-liquid-deep)",
-          "liquid-bottom": "var(--color-brewing-liquid-bottom)",
-          meniscus: "var(--color-meniscus-highlight)",
           "pour-bg": "var(--color-brewing-state-pour-bg)",
           "pour-fg": "var(--color-brewing-state-pour-fg)",
           "pour-fg-muted": "var(--color-brewing-state-pour-fg-muted)",
@@ -148,11 +139,6 @@ export default {
         pour: {
           bloom: "var(--color-pour-bloom)",
           main: "var(--color-pour-main)",
-        },
-        ring: {
-          future: "var(--color-ring-future)",
-          "on-liquid": "var(--color-ring-on-liquid)",
-          "on-liquid-label": "var(--color-ring-on-liquid-label)",
         },
         timeline: {
           axis: "var(--color-timeline-axis)",
