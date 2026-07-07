@@ -7,6 +7,7 @@ export default {
       transitionDuration: {
         DEFAULT: "var(--motion-duration-base)",
         long: "var(--motion-duration-long)",
+        leadin: "var(--motion-duration-leadin)",
       },
       transitionTimingFunction: {
         DEFAULT: "var(--motion-easing)",
@@ -27,6 +28,8 @@ export default {
       // raw size utility(text-2xs..2xl)도 폐지. 모든 텍스트는 named style 사용.
       // [size, { lineHeight, letterSpacing?, fontWeight? }]
       fontSize: {
+        // 글랜서블 디스플레이 — 브루잉 큰 숫자 전용. 뷰포트 반응, tabular-nums 전제.
+        "display-xl": ["clamp(88px, 26vw, 150px)", { lineHeight: "1", letterSpacing: "-0.03em", fontWeight: "500" }],
         "heading-xl": ["64px", { lineHeight: "1.1", letterSpacing: "-0.02em", fontWeight: "500" }],
         "heading-lg": ["48px", { lineHeight: "1.1", letterSpacing: "-0.02em", fontWeight: "500" }],
         "heading-md": ["32px", { lineHeight: "1.2", fontWeight: "600" }],
@@ -66,8 +69,6 @@ export default {
         raised: "var(--shadow-raised)",
         floating: "var(--shadow-floating)",
         overlay: "var(--shadow-overlay)",
-        "rim-inset": "var(--shadow-rim-inset)",
-        "cup-inset": "var(--shadow-cup-inset)",
       },
       keyframes: {
         "popover-in": {
@@ -97,7 +98,6 @@ export default {
       },
       height: {
         "progress-rail": "var(--size-progress-rail)",
-        "brewing-rim": "var(--brewing-rim-height)",
       },
       colors: {
         // Surface (spec bg/* 슬롯)
@@ -114,7 +114,6 @@ export default {
           secondary: "var(--color-text-body)",
           muted: "var(--color-text-muted)",
           "on-accent": "var(--color-text-on-primary)",
-          "on-liquid": "var(--color-text-on-liquid)", // brewing domain
         },
         // Accent
         accent: {
@@ -130,20 +129,19 @@ export default {
         overlay: { scrim: "var(--color-overlay-scrim)" },
         // Brewing domain
         brewing: {
-          "liquid-top": "var(--color-brewing-liquid-top)",
-          "liquid-mid": "var(--color-brewing-liquid-mid)",
-          "liquid-deep": "var(--color-brewing-liquid-deep)",
-          "liquid-bottom": "var(--color-brewing-liquid-bottom)",
-          meniscus: "var(--color-meniscus-highlight)",
+          "base-bg": "var(--color-brewing-base-bg)",
+          "base-fg": "var(--color-brewing-base-fg)",
+          "base-fg-muted": "var(--color-brewing-base-fg-muted)",
+          "leadin-bg": "var(--color-brewing-leadin-bg)",
+          "leadin-fg": "var(--color-brewing-leadin-fg)",
+          "leadin-fg-muted": "var(--color-brewing-leadin-fg-muted)",
+          "rail-track": "var(--color-brewing-rail-track)",
+          "rail-fill": "var(--color-brewing-rail-fill)",
+          "rail-tick": "var(--color-brewing-rail-tick)",
         },
         pour: {
           bloom: "var(--color-pour-bloom)",
           main: "var(--color-pour-main)",
-        },
-        ring: {
-          future: "var(--color-ring-future)",
-          "on-liquid": "var(--color-ring-on-liquid)",
-          "on-liquid-label": "var(--color-ring-on-liquid-label)",
         },
         timeline: {
           axis: "var(--color-timeline-axis)",

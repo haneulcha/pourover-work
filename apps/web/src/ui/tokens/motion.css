@@ -8,4 +8,7 @@
   /* Screen transitions (View Transitions API) — base보다 느리고 부드럽게 */
   --motion-duration-screen: 600ms;
   --motion-easing-screen: cubic-bezier(0.34, 1.12, 0.36, 1);
+
+  /* Brewing lead-in — 배경 물듦. 소리 리드인 큐(5초 전)와 함께 서서히 전환 */
+  --motion-duration-leadin: 1500ms;
 }

@@ -37,357 +37,206 @@ const recipe: Recipe = {
   notes: [],
 };
 
-// Session with startedAt anchored at mocked Date.now; we override Date.now inside tests.
+const BASE = 1_000_000_000_000;
 const makeSession = (startedAt: number): BrewSession => ({ recipe, startedAt });
 
-describe("BrewingScreen", () => {
-  beforeEach(() => {
-    vi.useFakeTimers();
+const renderScreen = (
+  startedAt = BASE,
+  handlers: { onExit?: () => void; onComplete?: () => void } = {},
+) =>
+  render(
+    <BrewingScreen
+      session={makeSession(startedAt)}
+      onExit={handlers.onExit ?? vi.fn()}
+      onComplete={handlers.onComplete ?? vi.fn()}
+    />,
+  );
+
+const advanceTo = (elapsedMs: number) => {
+  act(() => {
+    vi.setSystemTime(new Date(BASE + elapsedMs));
+    vi.advanceTimersByTime(500); // useElapsed 250ms 틱 최소 1회
   });
-  afterEach(() => {
-    vi.useRealTimers();
-    vi.restoreAllMocks();
+};
+
+beforeEach(() => {
+  vi.useFakeTimers();
+  vi.setSystemTime(new Date(BASE));
+});
+afterEach(() => {
+  vi.useRealTimers();
+  vi.restoreAllMocks();
+  localStorage.clear();
+});
+
+describe("BrewingScreen — 스텝 표시", () => {
+  it("시작: 목표 누적량 + 라벨 + 상시 카운트다운, 배경은 base", () => {
+    renderScreen();
+    expect(screen.getByTestId("big-number")).toHaveTextContent("30");
+    expect(screen.getByText(/bloom/)).toBeInTheDocument();
+    // 다음 푸어 atSec=45, elapsed=0
+    expect(screen.getByTestId("countdown")).toHaveTextContent(
+      "다음 붓기까지 0:45",
+    );
+    expect(screen.getByTestId("brewing-screen").dataset.accent).toBe("false");
   });
 
-  it("shows hero weight of active step (bloom at elapsed=0)", () => {
-    vi.setSystemTime(new Date(1_000_000_000_000));
-    const session = makeSession(1_000_000_000_000);
-    render(
-      <BrewingScreen session={session} onExit={vi.fn()} onComplete={vi.fn()} />,
-    );
-    // bloom pour cumulativeWater = 30
-    expect(screen.getByTestId("hero-weight")).toHaveTextContent("30");
-    // label for active step in progress rail
-    expect(screen.getByText("bloom")).toBeInTheDocument();
+  it("탭 제스처 없음 — 전체 화면 탭 영역이 존재하지 않는다", () => {
+    renderScreen();
+    expect(screen.queryByTestId("tap-area")).toBeNull();
   });
 
-  it("opens stop dialog when 중단 tapped", () => {
-    vi.setSystemTime(new Date(1_000_000_000_000));
-    const session = makeSession(1_000_000_000_000);
-    render(
-      <BrewingScreen session={session} onExit={vi.fn()} onComplete={vi.fn()} />,
+  it("경계를 넘으면 시계가 다음 스텝으로 전진한다", () => {
+    renderScreen();
+    advanceTo(46_000);
+    expect(screen.getByTestId("big-number")).toHaveTextContent("150");
+    // 다음 푸어 atSec=75, elapsed=46
+    expect(screen.getByTestId("countdown")).toHaveTextContent(
+      "다음 붓기까지 0:29",
     );
-    fireEvent.click(screen.getByRole("button", { name: "중단" }));
+  });
+
+  it("마지막 스텝: '마지막' 표기 + 완료까지 카운트다운", () => {
+    renderScreen(BASE - 80_000); // elapsed=80 → 마지막 푸어(idx 2)
+    expect(screen.getByTestId("big-number")).toHaveTextContent("250");
+    expect(screen.getByText(/마지막/)).toBeInTheDocument();
+    // 210-80=130
+    expect(screen.getByTestId("countdown")).toHaveTextContent("완료까지 2:10");
+  });
+
+  it("구석 정보: 경과/총시간과 스텝 카운트", () => {
+    renderScreen();
+    expect(screen.getByText(/0:00 \/ 3:30/)).toBeInTheDocument();
+    expect(screen.getByText(/1\/3/)).toBeInTheDocument();
+  });
+});
+
+describe("BrewingScreen — 리드인", () => {
+  it("다음 푸어 5초 전부터 배경이 액센트로 물든다", () => {
+    renderScreen();
+    advanceTo(41_000); // 45초 푸어 4초 전
+    expect(screen.getByTestId("brewing-screen").dataset.accent).toBe("true");
+    expect(screen.getByTestId("countdown")).toHaveTextContent(
+      "다음 붓기까지 0:04",
+    );
+  });
+
+  it("경계를 지나면 base로 복귀한다", () => {
+    renderScreen();
+    advanceTo(46_000);
+    expect(screen.getByTestId("brewing-screen").dataset.accent).toBe("false");
+  });
+});
+
+describe("BrewingScreen — 진행 레일", () => {
+  it("푸어 경계 눈금(atSec>0)과 경과 채움을 렌더한다", () => {
+    renderScreen(BASE - 60_000); // elapsed=60
+    const ticks = screen.getAllByTestId("brew-rail-tick");
+    expect(ticks).toHaveLength(2); // 45s, 75s
+    expect(ticks[0]!.style.left).toBe("21.43%"); // 45/210
+    expect(ticks[1]!.style.left).toBe("35.71%"); // 75/210
+    // 60/210 = 28.57%
+    expect(screen.getByTestId("brew-rail-fill").style.width).toBe("28.57%");
+  });
+});
+
+describe("BrewingScreen — 중단", () => {
+  it("길게 누르기(600ms)로 중단 다이얼로그가 열린다", () => {
+    renderScreen();
+    fireEvent.pointerDown(screen.getByTestId("brewing-screen"));
+    act(() => {
+      vi.advanceTimersByTime(600);
+    });
     expect(screen.getByText("브루잉을 중단할까요?")).toBeInTheDocument();
   });
 
-  it("calls onExit when 처음으로 confirmed in dialog", () => {
-    vi.setSystemTime(new Date(1_000_000_000_000));
-    const session = makeSession(1_000_000_000_000);
+  it("600ms 전에 떼면 다이얼로그가 열리지 않는다", () => {
+    renderScreen();
+    fireEvent.pointerDown(screen.getByTestId("brewing-screen"));
+    act(() => {
+      vi.advanceTimersByTime(300);
+    });
+    fireEvent.pointerUp(screen.getByTestId("brewing-screen"));
+    act(() => {
+      vi.advanceTimersByTime(600);
+    });
+    expect(screen.queryByText("브루잉을 중단할까요?")).toBeNull();
+  });
+
+  it("하단 힌트 버튼으로도 다이얼로그가 열린다 (키보드 경로)", () => {
+    renderScreen();
+    fireEvent.click(screen.getByRole("button", { name: "길게 눌러 중단" }));
+    expect(screen.getByText("브루잉을 중단할까요?")).toBeInTheDocument();
+  });
+
+  it("처음으로 확인 시 onExit", () => {
     const onExit = vi.fn();
-    render(
-      <BrewingScreen session={session} onExit={onExit} onComplete={vi.fn()} />,
-    );
-    fireEvent.click(screen.getByRole("button", { name: "중단" }));
+    renderScreen(BASE, { onExit });
+    fireEvent.click(screen.getByRole("button", { name: "길게 눌러 중단" }));
     fireEvent.click(screen.getByRole("button", { name: "처음으로" }));
     expect(onExit).toHaveBeenCalledTimes(1);
   });
 
-  it("fires onComplete once when elapsed >= totalTimeSec", () => {
-    vi.setSystemTime(new Date(1_000_000_000_000));
-    const session = makeSession(1_000_000_000_000 - 300_000); // 300s ago, > totalTime 210
-    const onComplete = vi.fn();
-    render(
-      <BrewingScreen
-        session={session}
-        onExit={vi.fn()}
-        onComplete={onComplete}
-      />,
-    );
-    expect(onComplete).toHaveBeenCalledTimes(1);
-  });
-
-  it("does not fire onComplete while running", () => {
-    vi.setSystemTime(new Date(1_000_000_000_000));
-    const session = makeSession(1_000_000_000_000);
-    const onComplete = vi.fn();
-    render(
-      <BrewingScreen
-        session={session}
-        onExit={vi.fn()}
-        onComplete={onComplete}
-      />,
-    );
-    expect(onComplete).not.toHaveBeenCalled();
-  });
-
-  it("advances active step when elapsed crosses next pour boundary", () => {
-    vi.setSystemTime(new Date(1_000_000_000_000));
-    const session = makeSession(1_000_000_000_000);
-    render(
-      <BrewingScreen session={session} onExit={vi.fn()} onComplete={vi.fn()} />,
-    );
-
-    // At elapsed=0: bloom step, cumulativeWater=30
-    expect(screen.getByTestId("hero-weight")).toHaveTextContent("30");
-
-    // Advance past the 45s boundary (2nd pour atSec)
-    act(() => {
-      vi.setSystemTime(new Date(1_000_000_046_000));
-      vi.advanceTimersByTime(500); // trigger useElapsed's 250ms interval to fire at least once
-    });
-
-    // 2nd pour is now active: cumulativeWater=150
-    expect(screen.getByTestId("hero-weight")).toHaveTextContent("150");
-
-    // aria-live region announces the new step
-    const status = screen.getByRole("status");
-    expect(status).toHaveTextContent("1차: 150그램까지");
-  });
-
-  it("tapping 건너뛰기 advances hero weight to next pour", () => {
-    vi.setSystemTime(new Date(1_000_000_000_000));
-    const session = makeSession(1_000_000_000_000);
-    render(
-      <BrewingScreen session={session} onExit={vi.fn()} onComplete={vi.fn()} />,
-    );
-
-    // At elapsed=0, bloom pour (cumulativeWater=30)
-    expect(screen.getByTestId("hero-weight")).toHaveTextContent("30");
-
-    fireEvent.click(
-      screen.getByRole("button", { name: "다음 스텝으로 건너뛰기" }),
-    );
-
-    // Advanced to pour 1 (cumulativeWater=150)
-    expect(screen.getByTestId("hero-weight")).toHaveTextContent("150");
-    // aria-live announces new step
-    expect(screen.getByRole("status")).toHaveTextContent("1차: 150그램까지");
-  });
-
-  it("keeps skipped step ahead of the clock", () => {
-    vi.setSystemTime(new Date(1_000_000_000_000));
-    const session = makeSession(1_000_000_000_000);
-    render(
-      <BrewingScreen session={session} onExit={vi.fn()} onComplete={vi.fn()} />,
-    );
-
-    // Skip from bloom (idx 0) → pour 1 at elapsed=0
-    fireEvent.click(
-      screen.getByRole("button", { name: "다음 스텝으로 건너뛰기" }),
-    );
-    expect(screen.getByTestId("hero-weight")).toHaveTextContent("150");
-
-    // Advance clock to 10s — still before pour 1's atSec=45, clockIdx=0.
-    // manualFloor=1 → activeIdx stays 1.
-    act(() => {
-      vi.setSystemTime(new Date(1_000_000_010_000));
-      vi.advanceTimersByTime(500);
-    });
-    expect(screen.getByTestId("hero-weight")).toHaveTextContent("150");
-  });
-
-  it("fires onComplete when skip tapped on last step", () => {
-    vi.setSystemTime(new Date(1_000_000_000_000));
-    // startedAt 80s ago → elapsed=80, past pour 2's atSec=75 (last pour idx=2)
-    const session = makeSession(1_000_000_000_000 - 80_000);
-    const onComplete = vi.fn();
-    render(
-      <BrewingScreen
-        session={session}
-        onExit={vi.fn()}
-        onComplete={onComplete}
-      />,
-    );
-
-    // Hero on last pour (cumulativeWater=250)
-    expect(screen.getByTestId("hero-weight")).toHaveTextContent("250");
-    expect(onComplete).not.toHaveBeenCalled();
-
-    fireEvent.click(
-      screen.getByRole("button", { name: "다음 스텝으로 건너뛰기" }),
-    );
-    expect(onComplete).toHaveBeenCalledTimes(1);
-  });
-
-  it("advances exactly one step per consecutive skip tap", () => {
-    vi.setSystemTime(new Date(1_000_000_000_000));
-    const session = makeSession(1_000_000_000_000);
-    const onComplete = vi.fn();
-    render(
-      <BrewingScreen
-        session={session}
-        onExit={vi.fn()}
-        onComplete={onComplete}
-      />,
-    );
-
-    expect(screen.getByTestId("hero-weight")).toHaveTextContent("30");
-
-    // Skip 1 → pour 1 (150)
-    fireEvent.click(
-      screen.getByRole("button", { name: "다음 스텝으로 건너뛰기" }),
-    );
-    expect(screen.getByTestId("hero-weight")).toHaveTextContent("150");
-
-    // Skip 2 → pour 2 (250)
-    fireEvent.click(
-      screen.getByRole("button", { name: "다음 스텝으로 건너뛰기" }),
-    );
-    expect(screen.getByTestId("hero-weight")).toHaveTextContent("250");
-
-    // Skip 3 → complete (button still visible on last step, triggers onComplete)
-    fireEvent.click(
-      screen.getByRole("button", { name: "다음 스텝으로 건너뛰기" }),
-    );
-    expect(onComplete).toHaveBeenCalledTimes(1);
-  });
-
-  it("liquid height grows proportionally to elapsed time (pour phase)", () => {
-    vi.setSystemTime(new Date(1_000_000_000_000));
-    // elapsed=60 of 210 → 28.57% fill, still in pour phase (last pour at 75)
-    const session = makeSession(1_000_000_000_000 - 60_000);
-    render(
-      <BrewingScreen session={session} onExit={vi.fn()} onComplete={vi.fn()} />,
-    );
-    const liquid = screen.getByTestId("liquid");
-    // 60/210 = 0.285714…, formatted "28.57%"
-    expect(liquid.style.height).toBe("28.57%");
-  });
-
-  it("hero floats above meniscus during pour phase", () => {
-    vi.setSystemTime(new Date(1_000_000_000_000));
-    const session = makeSession(1_000_000_000_000 - 60_000);
-    render(
-      <BrewingScreen session={session} onExit={vi.fn()} onComplete={vi.fn()} />,
-    );
-    const hero = screen.getByTestId("hero");
-    // bottom is calc(28.57% + var(--brewing-hero-gap))
-    expect(hero.style.bottom).toContain("28.57");
-  });
-
-  it("hero anchors below last pour ring during drawdown", () => {
-    vi.setSystemTime(new Date(1_000_000_000_000));
-    // elapsed=120 of 210 → past last pour at 75s → drawdown active
-    const session = makeSession(1_000_000_000_000 - 120_000);
-    render(
-      <BrewingScreen session={session} onExit={vi.fn()} onComplete={vi.fn()} />,
-    );
-    const hero = screen.getByTestId("hero");
-    // lastRingRatio = 75/210 = 0.3571…, formatted "35.71%"
-    expect(hero.style.bottom).toContain("35.71");
-    // drawdown label is shown (replaces "지금 · X차")
-    expect(screen.getByText("드로우다운")).toBeInTheDocument();
-  });
-
-  it("ring at next pour boundary has 'next' variant", () => {
-    vi.setSystemTime(new Date(1_000_000_000_000));
-    const session = makeSession(1_000_000_000_000); // elapsed=0; next boundary is pour 1 at 45s
-    render(
-      <BrewingScreen session={session} onExit={vi.fn()} onComplete={vi.fn()} />,
-    );
-    const nextRing = screen.getByTestId("ring-next");
-    expect(nextRing.dataset.atSec).toBe("45");
-  });
-
-  it("skip button is rendered inside the rim region", () => {
-    vi.setSystemTime(new Date(1_000_000_000_000));
-    const session = makeSession(1_000_000_000_000);
-    render(
-      <BrewingScreen session={session} onExit={vi.fn()} onComplete={vi.fn()} />,
-    );
-    const skip = screen.getByRole("button", { name: "다음 스텝으로 건너뛰기" });
-    expect(skip.closest('[data-region="rim"]')).not.toBeNull();
+  it("다이얼로그가 떠 있어도 시계는 흐른다 (일시정지 없음)", () => {
+    renderScreen();
+    fireEvent.click(screen.getByRole("button", { name: "길게 눌러 중단" }));
+    advanceTo(46_000);
+    fireEvent.click(screen.getByRole("button", { name: "계속하기" }));
+    expect(screen.getByTestId("big-number")).toHaveTextContent("150");
   });
 });
 
-describe("BrewingScreen — 큐 음소거 토글", () => {
-  beforeEach(() => {
-    vi.useFakeTimers();
-  });
-  afterEach(() => {
-    vi.useRealTimers();
-    localStorage.clear();
+describe("BrewingScreen — 완료 / 부가", () => {
+  it("elapsed >= totalTimeSec이면 onComplete 1회", () => {
+    const onComplete = vi.fn();
+    renderScreen(BASE - 300_000, { onComplete });
+    expect(onComplete).toHaveBeenCalledTimes(1);
   });
 
-  it("RIM 에 음소거 토글이 있고 클릭하면 aria-pressed 가 바뀐다", () => {
-    vi.setSystemTime(new Date(1_000_000_000_000));
-    const session = makeSession(1_000_000_000_000);
-    render(
-      <BrewingScreen session={session} onExit={vi.fn()} onComplete={vi.fn()} />,
-    );
+  it("진행 중에는 onComplete가 불리지 않는다", () => {
+    const onComplete = vi.fn();
+    renderScreen(BASE, { onComplete });
+    expect(onComplete).not.toHaveBeenCalled();
+  });
+
+  it("음소거 토글 aria-pressed", () => {
+    renderScreen();
     const toggle = screen.getByRole("button", { name: /큐 소리/ });
     expect(toggle).toHaveAttribute("aria-pressed", "false");
     fireEvent.click(toggle);
     expect(toggle).toHaveAttribute("aria-pressed", "true");
   });
-});
 
-describe("BrewingScreen — lead-in 카운트다운", () => {
-  const BASE = 1_000_000_000_000;
-
-  beforeEach(() => {
-    vi.useFakeTimers();
-  });
-  afterEach(() => {
-    vi.useRealTimers();
-  });
-
-  it("lead-in 창 밖(시작 직후)에는 카운트다운이 없다", () => {
-    vi.setSystemTime(new Date(BASE));
-    render(
-      <BrewingScreen session={makeSession(BASE)} onExit={vi.fn()} onComplete={vi.fn()} />,
-    );
-    expect(screen.queryByTestId("lead-in-countdown")).toBeNull();
-  });
-
-  it("푸어 5초 전 창에 들어가면 남은 초를 표시 (45초 푸어, elapsed 41 → 4)", () => {
-    vi.setSystemTime(new Date(BASE));
-    render(
-      <BrewingScreen session={makeSession(BASE)} onExit={vi.fn()} onComplete={vi.fn()} />,
-    );
-    act(() => {
-      vi.setSystemTime(new Date(BASE + 41_000));
-      vi.advanceTimersByTime(250); // useElapsed 틱
-    });
-    expect(screen.getByTestId("lead-in-countdown")).toHaveTextContent("4");
+  it("aria-live가 경계 통과 시 새 스텝을 안내한다", () => {
+    renderScreen();
+    advanceTo(46_000);
+    expect(screen.getByRole("status")).toHaveTextContent("1차: 150그램까지");
   });
 });
 
-describe("BrewingScreen — 큐 발화 배선", () => {
-  const BASE = 1_000_000_000_000;
-
-  beforeEach(() => {
-    vi.useFakeTimers();
-  });
-  afterEach(() => {
-    vi.useRealTimers();
-  });
-
-  it("시간이 푸어 경계를 넘으면 주입된 player.play 가 호출된다", () => {
+describe("BrewingScreen — 큐 발화 배선 (불변 확인)", () => {
+  it("푸어 경계를 넘으면 player.play 호출 (lead-in + pour)", () => {
     const play = vi.fn();
     vi.spyOn(cuePlayerModule, "createCuePlayer").mockReturnValue({
       unlock: vi.fn(),
       play,
     });
-    vi.setSystemTime(new Date(BASE));
-    render(
-      <BrewingScreen session={makeSession(BASE)} onExit={vi.fn()} onComplete={vi.fn()} />,
-    );
-    act(() => {
-      vi.setSystemTime(new Date(BASE + 46_000)); // lead-in@40 + pour@45 통과
-      vi.advanceTimersByTime(250);
-    });
-    const kinds = play.mock.calls.map((c) => c[0]);
+    renderScreen();
+    advanceTo(46_000);
+    const kinds = play.mock.calls.map((call) => call[0]);
     expect(kinds).toContain("lead-in");
     expect(kinds).toContain("pour");
   });
 
-  it("시간이 totalTimeSec 에 도달하면 complete 큐가 발화한다", () => {
+  it("totalTimeSec 도달 시 complete 큐 발화", () => {
     const play = vi.fn();
     vi.spyOn(cuePlayerModule, "createCuePlayer").mockReturnValue({
       unlock: vi.fn(),
       play,
     });
-    vi.setSystemTime(new Date(BASE));
-    render(
-      <BrewingScreen session={makeSession(BASE)} onExit={vi.fn()} onComplete={vi.fn()} />,
-    );
-    act(() => {
-      vi.setSystemTime(new Date(BASE + 210_000)); // totalTimeSec = 210
-      vi.advanceTimersByTime(250);
-    });
-    const kinds = play.mock.calls.map((c) => c[0]);
+    renderScreen();
+    advanceTo(210_000);
+    const kinds = play.mock.calls.map((call) => call[0]);
     expect(kinds).toContain("complete");
   });
 });

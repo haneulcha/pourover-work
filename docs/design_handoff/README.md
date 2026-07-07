@@ -1,5 +1,7 @@
 # Handoff: tteum (뜸) — Pour-Over Wall Flow
 
+> **Historical (2026-04).** 4-스크린 리추얼 플로우의 원본 핸드오프. 이후 실제 화면은 계속 진화했다 — 특히 §3 Brewing은 2026-07 v2 리디자인(`docs/superpowers/specs/2026-07-06-brewing-timer-redesign-design.md`)으로 대체됨. "뜸" 네이밍도 드롭됨 (`docs/decisions.md`). 현재 상태의 근거로 인용하지 말 것.
+
 ## Overview
 
 **뜸**은 이미 존재하는 pour-over 앱 위에 얹을 **새 UI 껍데기**입니다. 이 핸드오프는 "집에서 한 잔"이라는 리추얼을 강조하는 조용한 vibe의 4-스크린 플로우를 정의합니다.

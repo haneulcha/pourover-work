@@ -3,6 +3,8 @@
 핸드드립 레시피 계산기 앱 **뜸**의 철학, 보이스, 비주얼 언어 정의.
 어떤 감각으로 만들지를 담는 문서.
 
+> **상태 (2026-07)**: "뜸" 네이밍은 2026-04-19 드롭됨 (`docs/decisions.md`) — 본문의 "뜸" 표기는 히스토리로 유지. **보이스·톤·비주얼 원칙은 여전히 유효.** "무엇을 왜 만드는가"는 `docs/product.md`가 담당하며, 이 문서의 침묵 원칙은 그곳의 "침묵은 냉담이 아니다"와 함께 읽을 것. 구체적 토큰 값은 `docs/design-tokens.md`가 단일 출처.
+
 ---
 
 ## 이름
@@ -114,19 +116,7 @@
 - 숫자 표시: **tabular figures** 필수 (`font-variant-numeric: tabular-nums`). 값 변경 시 레이아웃이 흔들리지 않게.
 - 브랜드 / 일부 강조: JetBrains Mono 또는 IBM Plex Mono를 **한 끗만** 사용. 제목 전체를 mono나 serif로 채우지 않음.
 
-**스케일** (구현 기준 — 실제 토큰: `docs/design-tokens.md` § Typography scale):
-
-| Role              | 클래스          | 값    | 용도                                     |
-| ----------------- | --------------- | ----- | ---------------------------------------- |
-| Meta              | `text-2xs`      | 10px  | 유닛·인디케이터·아주 작은 캡션           |
-| Label (narrow)    | `text-xs`       | 12px  | 좁은 라벨·세그먼트                       |
-| Label / Body      | `text-sm`       | 14px  | 표준 라벨·본문·버튼 내부                 |
-| Body (emphasis)   | `text-md`       | 16px  | 강조 본문·다이얼로그 타이틀 보조         |
-| Title             | `text-lg`       | 20px  | 섹션 헤더                                |
-| Metric (small)    | `text-xl`       | 22px  | 시점·다음 푸어 프리뷰                    |
-| Metric (medium)   | `text-2xl`      | 24px  | 경과 타이머·Wall 타이틀                  |
-| Hero (complete)   | `text-hero-sm`  | 72px  | Complete 화면 총 시간                    |
-| Hero (timer)      | `text-hero-lg`  | 96px  | Brewing 화면 저울 목표                   |
+**스케일**: 실제 named text style(`text-display-xl` / `text-heading-*` / `text-body-*` / `text-caption-*`)은 `docs/design-tokens.md` § Typography가 단일 출처. (이 문서에 있던 구 클래스 표는 명명 개편으로 폐기.)
 
 - `tabular-nums` 필수 (값 변경 시 레이아웃 흔들림 방지)
 - 글꼴: Pretendard Variable → Inter → system sans
@@ -186,7 +176,7 @@
 
 > 앱을 열면 레시피가 이미 거기 있다.
 
-- 첫 로딩 시 기본값: **V60 / Kasuya 4:6 / 1인분(15g) / medium roast / balanced / medium strength**.
+- 첫 로딩 시 기본값: **V60 / Kasuya 4:6 / 커피 20g / medium roast / balanced / medium strength** (servings 모드는 제거됨 — `docs/decisions.md`).
 - 제출 버튼 없음. "계산하기" 같은 CTA 없음.
 - 유저가 아무것도 안 해도 유효한 레시피 한 잔이 완성되어 있음.
 
@@ -242,6 +232,8 @@
 ## 카피 라이브러리
 
 실제 UI에 쓸 문구. Claude Code 구현 시 이 문구를 우선 사용하고, 필요한 게 없으면 위 톤 규칙에 맞게 생성.
+
+> **메서드 설명·팁의 단일 출처는 코드다** (`packages/domain/src/methods/*.ts`의 `description` 등 — 현재 9종 + custom). 아래 메서드 문구 3종은 **톤 예시**로만 유지하며, 새 메서드 추가 시 이 문서를 갱신하지 않는다. ("Kalita 펄스"는 현 메서드 목록에 없음 — 히스토리.)
 
 ### 시스템 / 상태
 

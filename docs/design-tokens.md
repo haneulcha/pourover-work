@@ -1,8 +1,8 @@
 # Design Tokens
 
-`design.md` § Architecture의 보조 문서. 색/타이포/모션의 의미·선택 근거는 `brand.md`, 실제 값과 레이어 구조는 이 문서.
+색/타이포/모션의 의미·선택 근거는 `brand.md`, 실제 값과 레이어 구조는 이 문서.
 
-토큰 명명·구조는 `figma-system.json` + `DESIGN.md` (Untitled archetype) 정합. 단, 색·반경 등 **값은 brand 정체성("뜸" — warm modern, 카페 정취) 유지**. Figma 파일은 spec 값 그대로, 코드는 brand 값 — 명명 규칙만 1:1 매칭.
+토큰 **명명·구조**는 `figma-system.json` + `DESIGN.md`(명명 레퍼런스 전용 — 무드·값 서술은 따르지 않음) 정합. 색·반경 등 **값은 brand 정체성(warm modern, 카페 정취) 유지**. Figma 파일은 spec 값 그대로, 코드는 brand 값 — 명명 규칙만 1:1 매칭.
 
 ## Principles
 
@@ -25,21 +25,21 @@ primitives                semantic (role)              component (Tailwind)
 primitives                component-domain             component (Tailwind)
 ─────────────────         ─────────────────────        ─────────────────────
 --accent-500         →    --color-pour-main      →    bg-pour-main
-                          --color-brewing-liquid-top →  bg-brewing-liquid-top
+--accent-200         →    --color-brewing-leadin-bg →  bg-brewing-leadin-bg
 ```
 
 ## File Layout
 
 ```
-src/ui/tokens/
+apps/web/src/ui/tokens/
 ├── primitives.css         # raw color scales (neutral, accent, status)
 ├── typography.css         # font families, raw font-size/lh/ls
-├── motion.css             # duration, easing
+├── motion.css             # duration, easing (screen/lead-in 포함)
 ├── layout.css             # spacing, z-index, opacity, sizes
 ├── elevation.css          # radius role aliases + shadow tier
 ├── semantic.css           # role-only color tokens (bg/text/accent/status/overlay)
 └── components/
-    ├── brewing.css        # liquid stops, meniscus, ring-on-liquid, rim/cup shadow
+    ├── brewing.css        # 브루잉 화면 base/lead-in 배경·전경 + 진행 레일
     └── timeline.css       # pour-bloom/main, timeline-axis/grid
 ```
 
@@ -99,11 +99,6 @@ spec 4 status × 2 variants (50 = bg, 500 = text):
 /* Raw font-size scale — named text style 정의에서만 사용 */
 --font-size-{10,11,12,14,16,18,20,24,32,48,64}: …px;
 
-/* Brand-domain hero (spec 외) */
---font-size-hero-sm: 72px;        /* Complete 히어로 */
---font-size-hero-lg: 96px;        /* Brewing 타이머 */
---font-size-brewing-hero: clamp(32px, 6.5vh, 48px);
-
 /* Line-height / letter-spacing */
 --line-height-{tight,snug,base}: {1, 1.2, 1.5};
 --letter-spacing-{tight,wide,wider,widest}: {-0.02em, 0.05em, 0.08em, 0.12em};
@@ -132,6 +127,9 @@ Tailwind `spacing` extend로 노출: `gap-md`, `p-lg`, `mt-section` 등.
 /* Screen transitions */
 --motion-duration-screen: 600ms;
 --motion-easing-screen: cubic-bezier(0.34, 1.12, 0.36, 1);
+
+/* Brewing lead-in — 다음 푸어 5초 전 배경 물듦. 소리 리드인 큐와 함께 서서히 */
+--motion-duration-leadin: 1500ms;
 ```
 
 ## Elevation (`elevation.css`)
@@ -245,17 +243,22 @@ semantic으로 표현하기 부적절한 도메인 전용 값. 한 파일 = 한 
 
 ### Brewing (`components/brewing.css`)
 
+표시 전용 브루잉 화면 (base 캔버스 / lead-in 물듦 / 진행 레일). semantic을 참조하지 않는 자체 값 — light↔dark가 단순 swap이 아니기 때문.
+
 ```css
---color-brewing-liquid-{top,mid,deep,bottom}: …;  /* 4-stop liquid gradient */
---color-meniscus-highlight: …;                    /* 액체 표면 하이라이트 */
---color-ring-future, --color-ring-on-liquid, --color-ring-on-liquid-label: …;
---color-text-on-liquid: …;                        /* drawdown hero 위 텍스트 */
---shadow-rim-inset, --shadow-cup-inset: …;        /* 컵 내부 inset 그림자 */
---brewing-rim-height: 92px;
---brewing-hero-gap: 12px;
+/* base — 차분한 캔버스. 큰 숫자는 fg, 보조 줄은 fg-muted */
+--color-brewing-base-{bg,fg,fg-muted}: …;
+
+/* lead-in — 다음 푸어 5초 전 화면 전체가 액센트로 물듦 (주변시야 신호) */
+--color-brewing-leadin-{bg,fg,fg-muted}: …;
+
+/* 진행 레일 — 트랙 위 경과 채움 + 푸어 경계 눈금 */
+--color-brewing-rail-{track,fill,tick}: …;
 ```
 
-Tailwind: `bg-brewing-liquid-top` 등, `text-text-on-liquid`, `shadow-rim-inset`, `h-brewing-rim`, `text-brewing-hero`.
+Tailwind: `bg-brewing-base-bg`, `text-brewing-base-fg`, `bg-brewing-leadin-bg`, `bg-brewing-rail-fill` 등.
+
+> 구 컵 메타포 토큰(liquid 4-stop, meniscus, ring-on-liquid, rim/cup inset shadow, `--brewing-rim-height`)은 2026-07 브루잉 v2 리디자인에서 삭제됨.
 
 ### Timeline / Pour (`components/timeline.css`)
 
@@ -270,10 +273,11 @@ Tailwind: `bg-pour-bloom`, `bg-pour-main`, `bg-timeline-axis`, `bg-timeline-grid
 
 ## Typography — Named Text Styles (Tailwind utility)
 
-`tailwind.config.ts`의 `fontSize` extend로 **heading / body / caption 3 계열만** 정의. 각 utility는 size + line-height + (있으면) letter-spacing + font-weight를 한꺼번에 적용. 다른 의미적 변형(button, badge, code, hero 등)은 위 3계열 + `font-*` / `tracking-*` / `font-mono` utility 조합으로 표현.
+`tailwind.config.ts`의 `fontSize` extend로 **display / heading / body / caption 계열만** 정의. 각 utility는 size + line-height + (있으면) letter-spacing + font-weight를 한꺼번에 적용. 다른 의미적 변형(button, badge, code 등)은 이 계열 + `font-*` / `tracking-*` / `font-mono` utility 조합으로 표현.
 
 | Category | Utility | size / weight / lh / ls |
 |---|---|---|
+| Display | `text-display-xl` | clamp(88px, 26vw, 150px) / 500 / 1 / -0.03em — 브루잉 카운트다운 전용 |
 | Heading | `text-heading-xl` | 64 / 500 / 1.1 / -0.02em |
 | | `text-heading-lg` | 48 / 500 / 1.1 / -0.02em |
 | | `text-heading-md` | 32 / 600 / 1.2 / 0 |
@@ -335,15 +339,14 @@ Tailwind: `min-w-popover`, `h-progress-rail`.
 | 영역 | 키 | 출처 |
 |---|---|---|
 | `colors.surface.{DEFAULT,soft,strong,card,hairline}` | bg/* | semantic |
-| `colors.text.{primary,secondary,muted,on-accent,on-liquid}` | text/* | semantic + brewing |
+| `colors.text.{primary,secondary,muted,on-accent}` | text/* | semantic |
 | `colors.accent.{DEFAULT,hover,active}` | accent/* | semantic |
 | `colors.{danger,warning,success}` | status/*-text | semantic |
 | `colors.overlay.scrim`, `colors.focus` | overlay, focus | semantic |
-| `colors.brewing.*`, `colors.pour.*`, `colors.ring.*`, `colors.timeline.*` | domain | components/* |
+| `colors.brewing.*`, `colors.pour.*`, `colors.timeline.*` | domain | components/* |
 | `borderRadius.{subtle,button,input,card,large,pill}` | radius role | elevation |
 | `boxShadow.{hairline,raised,floating,overlay}` | shadow tier | elevation |
-| `boxShadow.{rim-inset,cup-inset}` | brewing | components/brewing |
-| `fontSize.{heading,body,caption}-*` | named styles (3 계열) | tailwind extend |
+| `fontSize.{display,heading,body,caption}-*` | named styles | tailwind extend |
 | `fontFamily.{sans,mono}` | family chain | typography |
 | `spacing.{xxs..section}` | 8 step scale | layout |
 
@@ -441,7 +444,8 @@ rem 단위 arbitrary는 허용. Stylelint가 CSS raw hex를 금지 — `primitiv
 | `shadow-dialog` | `shadow-overlay` |
 | `text-{2xs..2xl}` raw | `text-{caption,body,heading}-{xxs..xl}` named |
 | `text-hero-{sm,lg}` | `text-heading-xl` (sizes consolidated) |
-| `text-brewing-hero` | `text-heading-md` (clamp 폐지) |
+| `text-brewing-hero` | `text-heading-md` (clamp 폐지) → v2에서 `text-display-xl` 신설 (카운트다운) |
+| `bg-brewing-liquid-*`, meniscus, ring-on-liquid, `shadow-{rim,cup}-inset`, `text-text-on-liquid` | 삭제 (2026-07 브루잉 v2 — 컵 메타포 제거). 대체: `brewing-{base,leadin}-{bg,fg,fg-muted}`, `brewing-rail-{track,fill,tick}` |
 | `text-code-*` | `text-{body,caption}-* font-mono` |
 | `text-button-*` | `text-body-* font-medium` |
 | `text-{card,nav,link,badge}` | 위 3계열 + utility 조합 |
