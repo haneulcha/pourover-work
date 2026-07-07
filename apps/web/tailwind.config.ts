@@ -135,9 +135,7 @@ export default {
           "leadin-bg": "var(--color-brewing-leadin-bg)",
           "leadin-fg": "var(--color-brewing-leadin-fg)",
           "leadin-fg-muted": "var(--color-brewing-leadin-fg-muted)",
-          "rail-track": "var(--color-brewing-rail-track)",
-          "rail-fill": "var(--color-brewing-rail-fill)",
-          "rail-tick": "var(--color-brewing-rail-tick)",
+          // rail-* 토큰은 BrewRail.css에서 var()로 직접 참조 (유틸리티 미사용)
         },
         pour: {
           bloom: "var(--color-pour-bloom)",
