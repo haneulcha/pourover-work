@@ -7,12 +7,12 @@ import {
   pourLabel,
   type BrewSession,
 } from "@pourover/domain/session";
-import type { Pour } from "@pourover/domain/types";
 import { createCuePlayer } from "./cuePlayer";
 import { useBrewCues } from "./useBrewCues";
 import { useCueMuted } from "./useCueMuted";
-import { formatTime, toPct } from "@/ui/format";
+import { formatTime } from "@/ui/format";
 import { cx } from "@/ui/cx";
+import { BrewRail } from "./BrewRail";
 import { StopConfirmDialog } from "./StopConfirmDialog";
 import { useElapsed } from "./useElapsed";
 import { useScreenWakeLock } from "./useScreenWakeLock";
@@ -161,42 +161,6 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
           onConfirm={onExit}
         />
       )}
-    </div>
-  );
-}
-
-// 진행 레일 — 전체 흐름의 지형감. 정보는 구석 텍스트·aria-live가 담당하므로 장식으로 처리.
-function BrewRail({
-  pours,
-  totalTimeSec,
-  elapsed,
-}: {
-  readonly pours: readonly Pour[];
-  readonly totalTimeSec: number;
-  readonly elapsed: number;
-}) {
-  const progress = totalTimeSec > 0 ? Math.min(1, elapsed / totalTimeSec) : 0;
-  return (
-    <div
-      data-testid="brew-rail"
-      aria-hidden="true"
-      className="relative mx-5 h-0.5 rounded-pill bg-brewing-rail-track"
-    >
-      <div
-        data-testid="brew-rail-fill"
-        className="absolute inset-y-0 left-0 rounded-pill bg-brewing-rail-fill"
-        style={{ width: toPct(progress) }}
-      />
-      {pours
-        .filter((p) => p.atSec > 0)
-        .map((p) => (
-          <span
-            key={p.index}
-            data-testid="brew-rail-tick"
-            className="absolute top-1/2 h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-pill bg-brewing-rail-tick"
-            style={{ left: toPct(p.atSec / totalTimeSec) }}
-          />
-        ))}
     </div>
   );
 }

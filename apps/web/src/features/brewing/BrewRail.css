@@ -1,0 +1,114 @@
+/* BrewRail — 진행 레일 "이음". 색·기하는 전부 brewing.css의 rail 토큰 참조.
+   구조: 끊긴 세그먼트(트랙 + 구간별 채움) + 경계 앵커(다리 + 물방울).
+   흡수 choreography: data-passed 플립 → 방울 sink(가라앉으며 납작) → 다리 등장(틈 이음). */
+
+.brew-rail {
+  position: relative;
+  height: var(--size-brewing-rail-h);
+}
+
+/* 선은 레일 하단, 위 공간은 방울 부양 영역 */
+.brew-rail-seg {
+  position: absolute;
+  bottom: 0;
+  height: var(--size-brewing-rail-line);
+  border-radius: var(--radius-pill);
+  background: var(--color-brewing-rail-track);
+  overflow: hidden;
+}
+
+.brew-rail-seg-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: var(--radius-pill);
+  background: var(--color-brewing-rail-fill);
+}
+
+/* 경계 앵커 — 선 중심 높이의 0×0 기준점 */
+.brew-rail-boundary {
+  position: absolute;
+  bottom: calc(var(--size-brewing-rail-line) / 2);
+}
+
+/* 다리 — 흡수 시 나타나 틈을 잇는다.
+   세그먼트 라운드 캡을 같은 색으로 덮어 이음새가 남지 않도록 틈의 2배 폭. */
+.brew-rail-bridge {
+  position: absolute;
+  left: calc(-1 * var(--size-brewing-rail-gap));
+  bottom: calc(-0.5 * var(--size-brewing-rail-line));
+  width: calc(2 * var(--size-brewing-rail-gap));
+  height: var(--size-brewing-rail-line);
+  border-radius: var(--radius-pill);
+  background: var(--color-brewing-rail-fill);
+  opacity: 0;
+  transform: scaleX(0.55);
+
+  /* 방울이 스며든 직후 이어지도록 sink보다 220ms 늦게 시작 */
+  transition:
+    opacity var(--motion-duration-base) var(--motion-easing) 220ms,
+    transform var(--motion-duration-base) var(--motion-easing) 220ms;
+}
+
+.brew-rail-boundary[data-passed="true"] .brew-rail-bridge {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+/* 물방울 — 바닥이 선 위 공기층만큼 뜬다. 성장 scale은 인라인 transform으로 구동. */
+.brew-rail-drop {
+  position: absolute;
+  bottom: calc(var(--size-brewing-rail-air) + var(--size-brewing-rail-line) / 2);
+  width: var(--size-brewing-rail-drop-w);
+  transform-origin: bottom center;
+  transition: transform 250ms linear; /* useElapsed 250ms 틱 사이 성장 보간 */
+}
+
+.brew-rail-drop-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.brew-rail-drop-svg path {
+  fill: var(--color-brewing-rail-drop);
+}
+
+/* 흡수 — 가라앉으며 납작하게 스며들고(가속 이징 = 낙하감), 스며든 뒤 사라진다 */
+.brew-rail-drop-sink {
+  transform-origin: bottom center;
+  transition:
+    transform var(--motion-duration-base) cubic-bezier(0.6, 0, 0.8, 0.5),
+    opacity var(--motion-duration-base) var(--motion-easing) 140ms;
+}
+
+.brew-rail-boundary[data-passed="true"] .brew-rail-drop-sink {
+  transform: translateY(
+      calc(var(--size-brewing-rail-air) + var(--size-brewing-rail-line))
+    )
+    scale(0.7, 0.12);
+  opacity: 0;
+}
+
+/* 리드인 — 떨어지기 직전의 미세한 들썩임 (소리 큐·배경 물듦과 동기) */
+@keyframes brew-rail-quiver {
+  50% {
+    transform: translateY(-1.6px);
+  }
+}
+
+.brew-rail-boundary[data-soon="true"] .brew-rail-drop-svg {
+  animation: brew-rail-quiver 550ms ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brew-rail-boundary[data-soon="true"] .brew-rail-drop-svg {
+    animation: none;
+  }
+
+  .brew-rail-bridge,
+  .brew-rail-drop,
+  .brew-rail-drop-sink {
+    transition: none;
+  }
+}

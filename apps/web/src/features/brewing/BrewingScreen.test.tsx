@@ -129,14 +129,10 @@ describe("BrewingScreen — 리드인", () => {
 });
 
 describe("BrewingScreen — 진행 레일", () => {
-  it("푸어 경계 눈금(atSec>0)과 경과 채움을 렌더한다", () => {
+  it("레일이 레시피 경계로 렌더된다 (상세 동작은 BrewRail.test)", () => {
     renderScreen(BASE - 60_000); // elapsed=60
-    const ticks = screen.getAllByTestId("brew-rail-tick");
-    expect(ticks).toHaveLength(2); // 45s, 75s
-    expect(ticks[0]!.style.left).toBe("21.43%"); // 45/210
-    expect(ticks[1]!.style.left).toBe("35.71%"); // 75/210
-    // 60/210 = 28.57%
-    expect(screen.getByTestId("brew-rail-fill").style.width).toBe("28.57%");
+    expect(screen.getByTestId("brew-rail")).toBeInTheDocument();
+    expect(screen.getAllByTestId("brew-rail-drop")).toHaveLength(2); // 45s, 75s
   });
 });
 
