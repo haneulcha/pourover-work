@@ -2,7 +2,7 @@
 
 색/타이포/모션의 의미·선택 근거는 `brand.md`, 실제 값과 레이어 구조는 이 문서.
 
-토큰 **명명·구조**는 `figma-system.json` + `DESIGN.md`(명명 레퍼런스 전용 — 무드·값 서술은 따르지 않음) 정합. 색·반경 등 **값은 brand 정체성(warm modern, 카페 정취) 유지**. Figma 파일은 spec 값 그대로, 코드는 brand 값 — 명명 규칙만 1:1 매칭.
+토큰 **명명·구조**는 `figma-system.json` + `DESIGN.md`(명명 레퍼런스 전용 — 무드·값 서술은 따르지 않음) 정합. 색·반경 등 **값은 brand 정체성("자기와 물" — 본화이트 자기, 청먹, 심수 청록. 2026-07 개정) 유지**. Figma 파일은 spec 값 그대로, 코드는 brand 값 — 명명 규칙만 1:1 매칭.
 
 ## Principles
 
@@ -47,47 +47,51 @@ apps/web/src/ui/tokens/
 
 ## Primitive Tokens
 
-### Neutral scale (ivory → espresso)
+### Neutral scale (porcelain → 청먹)
+
+본화이트 자기(약한 그린-그레이 언더톤)에서 블루 언더톤 먹색으로. 언더톤 없는 순수 무채색 그레이 금지 (`docs/brand.md`).
 
 ```css
---neutral-0: #fbf7ef;   /* brand bg 밝은 한계 — bg/canvas 앵커 */
---neutral-50: #f5efe4;
---neutral-100: #ebe3d2;
---neutral-200: #d8cab3;
---neutral-300: #bfae92;
---neutral-400: #9e8e74;
---neutral-500: #7a6c56;
---neutral-600: #5b503e;
---neutral-700: #4a4133;
---neutral-800: #3a2f26;
---neutral-900: #2a241e;  /* brand ink 어두운 한계 */
---neutral-950: #1c1813;
+--neutral-0: #fbfbf9;   /* brand bg 밝은 한계 — bg/canvas 앵커. 본화이트 */
+--neutral-50: #f4f4f0;
+--neutral-100: #e9e9e3;
+--neutral-200: #d3d5d0;
+--neutral-300: #aeb4b1;
+--neutral-400: #8b9698;
+--neutral-500: #79827f;
+--neutral-600: #5d6668;
+--neutral-700: #414a4f;
+--neutral-800: #2a3238;
+--neutral-900: #232a2e;  /* brand ink 어두운 한계 — 청먹 */
+--neutral-950: #1f262a;  /* dark 테마 canvas */
 ```
 
-### Accent scale (muted ochre)
+### Accent scale (심수 — 깊은 물의 청록)
 
 ```css
---accent-50:  #faf1e0;
---accent-100: #f2deb8;
---accent-200: #e5c289;
---accent-300: #d4a25c;
---accent-400: #c48f46;
---accent-500: #b8843f;  /* 주 accent */
---accent-600: #a86832;  /* hover */
---accent-700: #8a5528;  /* active */
---accent-800: #6e4420;
---accent-900: #543319;
+--accent-50:  #edf4f4;
+--accent-100: #deeced;
+--accent-200: #cee3e5;  /* lead-in bg (light) */
+--accent-300: #91bec4;  /* dark hover / focus */
+--accent-400: #7caeb7;  /* dark 주 accent / light focus ring */
+--accent-500: #3b727b;  /* 주 accent */
+--accent-600: #315f66;  /* hover — 액센트 텍스트 최소 단계 */
+--accent-700: #284f56;  /* active */
+--accent-800: #254d52;  /* lead-in bg (dark) */
+--accent-900: #1b3a3f;
 ```
 
-### Status scales (50 / 500 pair, warm-adjusted)
+**접근성 규칙**: 액센트를 **텍스트**로 쓸 때는 `accent-600/700`(semantic으로는 `--color-accent-hover/active` 계열)을 쓴다. `accent-500`은 fill·아이콘·레일 등 비텍스트 용도 기준. (500은 canvas 대비 ≈5:1로 경계선상 — 작은 글자에 쓰지 않는다.)
 
-spec 4 status × 2 variants (50 = bg, 500 = text):
+### Status scales (50 / 500 pair, 쿨 뉴트럴 위 재조율)
+
+spec 4 status × 2 variants (50 = bg, 500 = text). info 블루는 액센트 청록(≈190°)과 색상 간격을 벌린 인디고 쪽(≈220°):
 
 ```css
---red-50: #fbeae6;     --red-500: #c45a4d;
---green-50: #eef5ea;   --green-500: #6b9360;
---amber-50: #faf0d9;   --amber-500: #d49a3c;
---blue-50: #eaf1f8;    --blue-500: #4a78a3;
+--red-50: #f9e9e7;     --red-500: #bc544b;
+--green-50: #eaf3eb;   --green-500: #58915f;
+--amber-50: #f8f0dc;   --amber-500: #c1912e;
+--blue-50: #e9eef7;    --blue-500: #4a67ad;
 ```
 
 ### Typography primitives (`typography.css`)
@@ -202,8 +206,10 @@ role-only. 도메인 토큰 절대 금지.
 --color-status-info-text:    var(--blue-500);
 
 /* Overlay */
---color-overlay-scrim: rgba(44, 40, 35, 0.45);
+--color-overlay-scrim: rgba(35, 42, 46, 0.45);
 ```
+
+> 액센트 텍스트 접근성: 본문 크기 텍스트에 액센트 색을 쓸 때는 `--color-accent-hover/active`(= accent-600/700)를 참조. `--color-accent-primary`(500)는 fill·아이콘 전용.
 
 ### Dark (`[data-theme="dark"]`)
 
@@ -211,10 +217,10 @@ role-only. 도메인 토큰 절대 금지.
 
 ```css
 [data-theme="dark"] {
-  --color-bg-canvas:   var(--neutral-900);
+  --color-bg-canvas:   var(--neutral-950);
   --color-bg-soft:     var(--neutral-800);
   --color-bg-strong:   var(--neutral-700);
-  --color-bg-card:     var(--neutral-900);
+  --color-bg-card:     var(--neutral-950);
   --color-bg-hairline: var(--neutral-700);
 
   --color-text-ink:         var(--neutral-50);
@@ -229,8 +235,8 @@ role-only. 도메인 토큰 절대 금지.
   --color-focus-ring:     var(--accent-300);
 
   /* Status bg는 dark에서 alpha tint로 재지정 */
-  --color-status-error-bg:   rgba(196, 90, 77, 0.15);
-  --color-status-success-bg: rgba(107, 147, 96, 0.15);
+  --color-status-error-bg:   rgba(188, 84, 75, 0.15);
+  --color-status-success-bg: rgba(88, 145, 95, 0.15);
   /* … */
 
   --color-overlay-scrim: rgba(0, 0, 0, 0.6);
