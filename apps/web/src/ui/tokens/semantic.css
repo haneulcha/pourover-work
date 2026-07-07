@@ -33,14 +33,14 @@
   --color-status-info-text: var(--blue-500);
 
   /* Overlay */
-  --color-overlay-scrim: rgba(44, 40, 35, 0.45);
+  --color-overlay-scrim: rgba(35, 42, 46, 0.45);
 }
 
 [data-theme="dark"] {
-  --color-bg-canvas: var(--neutral-900);
+  --color-bg-canvas: var(--neutral-950);
   --color-bg-soft: var(--neutral-800);
   --color-bg-strong: var(--neutral-700);
-  --color-bg-card: var(--neutral-900);
+  --color-bg-card: var(--neutral-950);
   --color-bg-hairline: var(--neutral-700);
 
   --color-text-ink: var(--neutral-50);
@@ -54,10 +54,10 @@
   --color-accent-active: var(--accent-200);
   --color-focus-ring: var(--accent-300);
 
-  --color-status-error-bg: rgba(196, 90, 77, 0.15);
-  --color-status-success-bg: rgba(107, 147, 96, 0.15);
-  --color-status-warning-bg: rgba(212, 154, 60, 0.15);
-  --color-status-info-bg: rgba(74, 120, 163, 0.15);
+  --color-status-error-bg: rgba(188, 84, 75, 0.15);
+  --color-status-success-bg: rgba(88, 145, 95, 0.15);
+  --color-status-warning-bg: rgba(193, 145, 46, 0.15);
+  --color-status-info-bg: rgba(74, 103, 173, 0.15);
 
   --color-overlay-scrim: rgba(0, 0, 0, 0.6);
 }

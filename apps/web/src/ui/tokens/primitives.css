@@ -1,39 +1,42 @@
-/* Raw color scales — 직접 사용 금지. semantic 또는 component 토큰을 통해서만 참조. */
+/* Raw color scales — 직접 사용 금지. semantic 또는 component 토큰을 통해서만 참조.
+   2026-07 팔레트 개정 "자기와 물" — 본화이트 자기 + 청먹 + 심수 청록 (docs/brand.md § 컬러). */
 
 :root {
-  /* Neutral scale — ivory → espresso (브랜드 앵커 정렬) */
-  --neutral-0: #fbf7ef;
-  --neutral-50: #f5efe4;
-  --neutral-100: #ebe3d2;
-  --neutral-200: #d8cab3;
-  --neutral-300: #bfae92;
-  --neutral-400: #9e8e74;
-  --neutral-500: #7a6c56;
-  --neutral-600: #5b503e;
-  --neutral-700: #4a4133;
-  --neutral-800: #3a2f26;
-  --neutral-900: #2a241e;
-  --neutral-950: #1c1813;
+  /* Neutral scale — porcelain → 청먹 (본화이트 자기에서 블루 언더톤 먹색으로) */
+  --neutral-0: #fbfbf9;
+  --neutral-50: #f4f4f0;
+  --neutral-100: #e9e9e3;
+  --neutral-200: #d3d5d0;
+  --neutral-300: #aeb4b1;
+  --neutral-400: #8b9698;
+  --neutral-500: #79827f;
+  --neutral-600: #5d6668;
+  --neutral-700: #414a4f;
+  --neutral-800: #2a3238;
+  --neutral-900: #232a2e;
+  --neutral-950: #1f262a;
 
-  /* Accent scale — muted ochre / roasted orange */
-  --accent-50: #faf1e0;
-  --accent-100: #f2deb8;
-  --accent-200: #e5c289;
-  --accent-300: #d4a25c;
-  --accent-400: #c48f46;
-  --accent-500: #b8843f;
-  --accent-600: #a86832;
-  --accent-700: #8a5528;
-  --accent-800: #6e4420;
-  --accent-900: #543319;
+  /* Accent scale — 심수(深水), 깊은 물의 청록.
+     200 = lead-in bg(light), 300/400 = dark accent 슬롯, 800 = lead-in bg(dark) */
+  --accent-50: #edf4f4;
+  --accent-100: #deeced;
+  --accent-200: #cee3e5;
+  --accent-300: #91bec4;
+  --accent-400: #7caeb7;
+  --accent-500: #3b727b;
+  --accent-600: #315f66;
+  --accent-700: #284f56;
+  --accent-800: #254d52;
+  --accent-900: #1b3a3f;
 
-  /* Status scales — 50(bg, 매우 옅음) + 500(text, 진함). spec 4 status × 2 variants. */
-  --red-50: #fbeae6;
-  --red-500: #c45a4d;
-  --green-50: #eef5ea;
-  --green-500: #6b9360;
-  --amber-50: #faf0d9;
-  --amber-500: #d49a3c;
-  --blue-50: #eaf1f8;
-  --blue-500: #4a78a3;
+  /* Status scales — 50(bg, 매우 옅음) + 500(text, 진함). spec 4 status × 2 variants.
+     쿨 뉴트럴 위에서 재조율. info 블루는 액센트 청록과 색상 간격 확보(≈220° vs 190°). */
+  --red-50: #f9e9e7;
+  --red-500: #bc544b;
+  --green-50: #eaf3eb;
+  --green-500: #58915f;
+  --amber-50: #f8f0dc;
+  --amber-500: #c1912e;
+  --blue-50: #e9eef7;
+  --blue-500: #4a67ad;
 }
