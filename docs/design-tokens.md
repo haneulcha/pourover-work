@@ -258,8 +258,8 @@ semantic으로 표현하기 부적절한 도메인 전용 값. 한 파일 = 한 
 /* lead-in — 다음 푸어 5초 전 화면 전체가 액센트로 물듦 (주변시야 신호) */
 --color-brewing-leadin-{bg,fg,fg-muted}: …;
 
-/* 진행 레일 — 트랙 위 경과 채움 + 푸어 경계 눈금 */
---color-brewing-rail-{track,fill,tick}: …;
+/* 진행 레일 "스텝 필" — 붓기마다 분리된 pill 구간, 구간 사이 틈이 곧 경계 */
+--color-brewing-rail-{track,fill}: …;
 ```
 
 Tailwind: `bg-brewing-base-bg`, `text-brewing-base-fg`, `bg-brewing-leadin-bg`, `bg-brewing-rail-fill` 등.
@@ -451,7 +451,7 @@ rem 단위 arbitrary는 허용. Stylelint가 CSS raw hex를 금지 — `primitiv
 | `text-{2xs..2xl}` raw | `text-{caption,body,heading}-{xxs..xl}` named |
 | `text-hero-{sm,lg}` | `text-heading-xl` (sizes consolidated) |
 | `text-brewing-hero` | `text-heading-md` (clamp 폐지) → v2에서 `text-display-xl` 신설 (카운트다운) |
-| `bg-brewing-liquid-*`, meniscus, ring-on-liquid, `shadow-{rim,cup}-inset`, `text-text-on-liquid` | 삭제 (2026-07 브루잉 v2 — 컵 메타포 제거). 대체: `brewing-{base,leadin}-{bg,fg,fg-muted}`, `brewing-rail-{track,fill,tick}` |
+| `bg-brewing-liquid-*`, meniscus, ring-on-liquid, `shadow-{rim,cup}-inset`, `text-text-on-liquid` | 삭제 (2026-07 브루잉 v2 — 컵 메타포 제거). 대체: `brewing-{base,leadin}-{bg,fg,fg-muted}`, `brewing-rail-{track,fill}` |
 | `text-code-*` | `text-{body,caption}-* font-mono` |
 | `text-button-*` | `text-body-* font-medium` |
 | `text-{card,nav,link,badge}` | 위 3계열 + utility 조합 |

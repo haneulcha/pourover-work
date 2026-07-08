@@ -31,35 +31,24 @@ describe("BrewRail — 세그먼트", () => {
     expect(fills[1]!.style.width).toBe("50%"); // (60-45)/(75-45)
     expect(fills[2]!.style.width).toBe("0%"); // 미도달
   });
-});
 
-describe("BrewRail — 물방울", () => {
-  it("붓기 경계(atSec>0)마다 시간 비례 위치에 방울", () => {
-    renderRail(0);
-    const drops = screen.getAllByTestId("brew-rail-drop");
-    expect(drops).toHaveLength(2);
-    expect(drops[0]!.style.left).toBe("21.43%"); // 45/210
-    expect(drops[1]!.style.left).toBe("35.71%"); // 75/210
-  });
-
-  it("구간 경과에 비례해 자란다 (scale 0.25→1)", () => {
-    renderRail(60); // 45–75 구간 절반
-    const drops = screen.getAllByTestId("brew-rail-drop");
-    const growing = drops[1]!.querySelector<HTMLElement>(".brew-rail-drop")!;
-    expect(growing.style.transform).toContain("scale(0.625)");
-  });
-
-  it("지난 경계는 흡수 상태(passed)", () => {
+  it("경계 마커(물방울)를 렌더하지 않는다 — 구간 사이 틈이 곧 경계", () => {
     renderRail(60);
-    const drops = screen.getAllByTestId("brew-rail-drop");
-    expect(drops[0]!.dataset.passed).toBe("true");
-    expect(drops[1]!.dataset.passed).toBe("false");
+    expect(screen.queryByTestId("brew-rail-drop")).toBeNull();
   });
 
-  it("리드인 창(5초 전)에는 soon — 지난 경계는 제외", () => {
-    renderRail(71); // 75초 경계 4초 전
-    const drops = screen.getAllByTestId("brew-rail-drop");
-    expect(drops[1]!.dataset.soon).toBe("true");
-    expect(drops[0]!.dataset.soon).toBe("false");
+  it("세그먼트가 시간 비례 위치에 놓인다 (경계 틈 = gap의 절반씩)", () => {
+    renderRail(0);
+    const segs = screen
+      .getAllByTestId("brew-rail-fill")
+      .map((fill) => fill.parentElement as HTMLElement);
+    expect(segs[0]!.style.left).toBe("0px");
+    expect(segs[1]!.style.left).toBe(
+      "calc(21.43% + var(--size-brewing-rail-gap) / 2)", // 45/210
+    );
+    expect(segs[2]!.style.left).toBe(
+      "calc(35.71% + var(--size-brewing-rail-gap) / 2)", // 75/210
+    );
+    expect(segs[2]!.style.right).toBe("0px");
   });
 });

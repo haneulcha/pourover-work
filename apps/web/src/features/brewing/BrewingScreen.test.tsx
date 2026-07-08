@@ -132,7 +132,7 @@ describe("BrewingScreen — 진행 레일", () => {
   it("레일이 레시피 경계로 렌더된다 (상세 동작은 BrewRail.test)", () => {
     renderScreen(BASE - 60_000); // elapsed=60
     expect(screen.getByTestId("brew-rail")).toBeInTheDocument();
-    expect(screen.getAllByTestId("brew-rail-drop")).toHaveLength(2); // 45s, 75s
+    expect(screen.getAllByTestId("brew-rail-fill")).toHaveLength(3); // 푸어 3회
   });
 });
 

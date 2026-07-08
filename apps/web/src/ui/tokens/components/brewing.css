@@ -12,18 +12,13 @@
   --color-brewing-leadin-fg: var(--neutral-900);
   --color-brewing-leadin-fg-muted: var(--neutral-700);
 
-  /* 진행 레일 "이음" — 붓기 경계마다 끊긴 트랙 + 그 위에 맺혀 자라는 물방울.
-     붓는 순간 방울이 틈으로 스며들며(흡수) 끊긴 선을 하나로 잇는다. */
-  --color-brewing-rail-track: var(--neutral-200);
+  /* 진행 레일 "스텝 필" — 붓기마다 분리된 pill 구간, 구간 사이 틈이 곧 붓기 경계. */
+  --color-brewing-rail-track: var(--neutral-100);
   --color-brewing-rail-fill: var(--accent-500);
-  --color-brewing-rail-drop: var(--accent-500);
 
   /* 레일 기하 — 라이트/다크 공통 */
-  --size-brewing-rail-h: 26px; /* 방울 부양 공간 포함 전체 높이 */
-  --size-brewing-rail-line: 2.5px; /* 선 두께 — 단절부 라운드 캡이 보이는 최소 두께 */
-  --size-brewing-rail-gap: 4px; /* 붓기 경계 단절 폭 */
-  --size-brewing-rail-drop-w: 11px; /* 물방울 폭 (높이는 viewBox 10:13 비율) */
-  --size-brewing-rail-air: 5px; /* 방울과 트랙 사이 공기층 */
+  --size-brewing-rail-h: 8px; /* pill 구간 두께 */
+  --size-brewing-rail-gap: 6px; /* 붓기 경계 틈 */
 }
 
 [data-theme="dark"] {
@@ -37,5 +32,4 @@
 
   --color-brewing-rail-track: var(--neutral-700);
   --color-brewing-rail-fill: var(--accent-400);
-  --color-brewing-rail-drop: var(--accent-400);
 }
