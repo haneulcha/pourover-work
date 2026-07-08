@@ -36,4 +36,19 @@ describe("BrewRail — 세그먼트", () => {
     renderRail(60);
     expect(screen.queryByTestId("brew-rail-drop")).toBeNull();
   });
+
+  it("세그먼트가 시간 비례 위치에 놓인다 (경계 틈 = gap의 절반씩)", () => {
+    renderRail(0);
+    const segs = screen
+      .getAllByTestId("brew-rail-fill")
+      .map((fill) => fill.parentElement as HTMLElement);
+    expect(segs[0]!.style.left).toBe("0px");
+    expect(segs[1]!.style.left).toBe(
+      "calc(21.43% + var(--size-brewing-rail-gap) / 2)", // 45/210
+    );
+    expect(segs[2]!.style.left).toBe(
+      "calc(35.71% + var(--size-brewing-rail-gap) / 2)", // 75/210
+    );
+    expect(segs[2]!.style.right).toBe("0px");
+  });
 });
