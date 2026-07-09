@@ -1,3 +1,5 @@
+import { Button } from "@/ui/Button";
+
 type Props = {
   readonly onCancel: () => void;
   readonly onConfirm: () => void;
@@ -23,20 +25,12 @@ export function StopConfirmDialog({ onCancel, onConfirm }: Props) {
         </h2>
         <p className="mt-2 text-body-sm text-text-muted">기록은 남지 않습니다.</p>
         <div className="mt-5 flex gap-2.5">
-          <button
-            type="button"
-            onClick={onCancel}
-            className="h-11 flex-1 rounded-button border border-surface-hairline text-body-sm text-text-secondary transition-colors hover:bg-surface-strong"
-          >
+          <Button variant="ghost" size="sm" onClick={onCancel} className="h-11 flex-1">
             계속하기
-          </button>
-          <button
-            type="button"
-            onClick={onConfirm}
-            className="h-11 flex-1 rounded-button border border-text-primary bg-surface-soft text-body-sm font-medium transition-colors hover:bg-surface-strong"
-          >
+          </Button>
+          <Button size="sm" onClick={onConfirm} className="h-11 flex-1">
             처음으로
-          </button>
+          </Button>
         </div>
       </div>
     </div>
