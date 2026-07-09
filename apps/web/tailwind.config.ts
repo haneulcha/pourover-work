@@ -21,6 +21,7 @@ export default {
         card: "var(--radius-card)",
         large: "var(--radius-large)",
         pill: "var(--radius-pill)",
+        btn: "var(--btn-radius)",
       },
       // Named text styles — heading / body / caption 3 계열만.
       // 다른 named style(code/button/card/nav/link/badge/hero/brewing-hero)은 폐지 →
@@ -144,6 +145,16 @@ export default {
         timeline: {
           axis: "var(--color-timeline-axis)",
           grid: "var(--color-timeline-grid)",
+        },
+        btn: {
+          "primary-bg": "var(--btn-primary-bg)",
+          "primary-hover": "var(--btn-primary-bg-hover)",
+          "primary-active": "var(--btn-primary-bg-active)",
+          "primary-fg": "var(--btn-primary-fg)",
+          "secondary-border": "var(--btn-secondary-border)",
+          "secondary-fg": "var(--btn-secondary-fg)",
+          "ghost-fg": "var(--btn-ghost-fg)",
+          "hover-bg": "var(--btn-hover-bg)",
         },
       },
     },
