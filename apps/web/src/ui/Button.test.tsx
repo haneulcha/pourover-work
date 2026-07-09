@@ -37,7 +37,7 @@ describe("Button", () => {
     expect(screen.getByRole("button").className).toContain("w-full");
   });
 
-  it("native props 전달 (disabled, onClick)", async () => {
+  it("native props 전달 (disabled)", () => {
     render(<Button disabled>시작</Button>);
     expect(screen.getByRole("button")).toBeDisabled();
   });
