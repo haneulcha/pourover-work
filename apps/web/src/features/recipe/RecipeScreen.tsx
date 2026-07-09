@@ -11,6 +11,7 @@ import type {
   SweetnessProfile,
   TasteProfile,
 } from "@pourover/domain/types";
+import { Button } from "@/ui/Button";
 import { Segmented } from "@/ui/Segmented";
 import { Slider } from "@/ui/Slider";
 import { DripperIcon } from "@/ui/DripperIcon";
@@ -268,20 +269,12 @@ export function RecipeScreen({
 
       {/* start button */}
       <div className="px-5 pb-6 mt-4 space-y-2">
-        <button
-          type="button"
-          onClick={onStart}
-          className="w-full flex items-center justify-center gap-3 rounded-button border border-text-primary bg-surface-soft py-3 transition-colors hover:bg-surface-strong"
-        >
+        <Button onClick={onStart} className="w-full">
           시작
-        </button>
-        <button
-          type="button"
-          onClick={onCustomize}
-          className="w-full flex items-center justify-center gap-3 rounded-button border border-surface-hairline py-2 text-body-sm text-text-secondary transition-colors hover:bg-surface-strong"
-        >
+        </Button>
+        <Button variant="secondary" size="sm" onClick={onCustomize} className="w-full">
           {isCustom ? "Edit custom recipe" : "Customize this recipe"}
-        </button>
+        </Button>
       </div>
     </div>
   );
