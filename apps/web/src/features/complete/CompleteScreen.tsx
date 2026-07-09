@@ -7,6 +7,7 @@ import {
   type Feeling,
 } from "@pourover/domain/session";
 import { cx } from "@/ui/cx";
+import { Button } from "@/ui/Button";
 import { Footer } from "@/ui/Footer";
 import { formatBrewedAt, formatGrindHint, formatTime } from "@/ui/format";
 import { FeelingGlyph } from "./FeelingGlyph";
@@ -103,21 +104,17 @@ export function CompleteScreen({ session, onFeelingChange, onExit }: Props) {
 
       {/* bottom buttons */}
       <div className="mt-auto flex gap-2 pt-10 text-body-sm font-medium">
-        <button
-          type="button"
+        <Button
+          variant="secondary"
           onClick={() => setShareOpen(true)}
           aria-label="공유"
-          className="w-16 rounded-button border border-text-primary bg-surface-soft py-3 text-text-primary transition-colors hover:bg-surface-strong"
+          className="w-16"
         >
           공유
-        </button>
-        <button
-          type="button"
-          onClick={onExit}
-          className="flex-1 rounded-button border border-text-primary bg-surface-soft py-3 transition-colors hover:bg-surface-strong"
-        >
+        </Button>
+        <Button onClick={onExit} className="flex-1">
           처음으로
-        </button>
+        </Button>
       </div>
 
       <Footer />
