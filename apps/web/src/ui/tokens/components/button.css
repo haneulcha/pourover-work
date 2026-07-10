@@ -1,0 +1,19 @@
+/* Button 컴포넌트 토큰 — 버튼 시각 리디자인의 단일 출처.
+   semantic 토큰만 참조하므로 라이트/다크 분기는 semantic 레이어가 처리 (다크 블록 불필요). */
+
+:root {
+  --btn-primary-bg: var(--color-accent-primary);
+  --btn-primary-bg-hover: var(--color-accent-hover);
+  --btn-primary-bg-active: var(--color-accent-active);
+  --btn-primary-fg: var(--color-text-on-primary);
+
+  --btn-secondary-border: var(--color-bg-hairline);
+  --btn-secondary-fg: var(--color-text-body);
+
+  --btn-ghost-fg: var(--color-text-body);
+
+  /* secondary/ghost 공용 hover 배경 */
+  --btn-hover-bg: var(--color-bg-strong);
+
+  --btn-radius: var(--radius-button);
+}
