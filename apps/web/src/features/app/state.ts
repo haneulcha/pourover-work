@@ -9,7 +9,9 @@ import type {
 } from "@pourover/domain/types";
 import { g } from "@pourover/domain/units";
 
-export type Screen = "wall" | "recipe" | "brewing" | "complete" | "custom";
+export type Screen =
+  | "wall" | "recipe" | "brewing" | "complete" | "custom"
+  | "diary" | "diary-detail";
 
 export type AppState = {
   readonly screen: Screen;
@@ -19,6 +21,7 @@ export type AppState = {
   readonly roast: RoastLevel;
   readonly taste: TasteProfile;
   readonly customRecipe?: Recipe;
+  readonly selectedLogId?: string;
 };
 
 export const DEFAULT_STATE: AppState = {

@@ -13,6 +13,8 @@ import { g } from "@pourover/domain/units";
 import { BrewingScreen } from "@/features/brewing/BrewingScreen";
 import { CompleteScreen } from "@/features/complete/CompleteScreen";
 import { CustomRecipeScreen } from "@/features/custom/CustomRecipeScreen";
+import { DiaryDetailScreen } from "@/features/diary/DiaryDetailScreen";
+import { DiaryScreen } from "@/features/diary/DiaryScreen";
 import { RecipeScreen } from "@/features/recipe/RecipeScreen";
 import { WallScreen } from "@/features/wall/WallScreen";
 import { loadParams, saveParams, saveSession } from "@/features/share/storage";
@@ -151,11 +153,36 @@ export function AppRoot() {
     );
   }, []);
 
+  if (state.screen === "diary") {
+    return (
+      <DiaryScreen
+        onBack={() => withViewTransition(() =>
+          setState((prev) => mergeState(prev, { screen: "wall" })))}
+        onOpen={(id) => withViewTransition(() =>
+          setState((prev) => mergeState(prev, { screen: "diary-detail", selectedLogId: id })))}
+      />
+    );
+  }
+
+  if (state.screen === "diary-detail" && state.selectedLogId) {
+    return (
+      <DiaryDetailScreen
+        id={state.selectedLogId}
+        onBack={() => withViewTransition(() =>
+          setState((prev) => mergeState(prev, { screen: "diary" })))}
+        onDeleted={() => withViewTransition(() =>
+          setState((prev) => mergeState(prev, { screen: "diary" })))}
+      />
+    );
+  }
+
   if (state.screen === "wall") {
     return (
       <WallScreen
         selectedDripper={state.dripper}
         onPickDripper={handlePickDripper}
+        onOpenDiary={() => withViewTransition(() =>
+          setState((prev) => mergeState(prev, { screen: "diary" })))}
       />
     );
   }
