@@ -9,7 +9,8 @@
     "./session": "./src/session.ts",
     "./drippers": "./src/drippers.ts",
     "./methods": "./src/methods/index.ts",
-    "./methods/*": "./src/methods/*.ts"
+    "./methods/*": "./src/methods/*.ts",
+    "./serialize": "./src/serialize.ts"
   },
   "scripts": {
     "test": "vitest",
