@@ -9,6 +9,13 @@ export function recipeToJSON(recipe: Recipe): string {
   return JSON.stringify(recipe);
 }
 
+function assertFinite(value: unknown): number {
+  if (!Number.isFinite(value)) {
+    throw new Error("recipeFromJSON: malformed recipe payload");
+  }
+  return value as number;
+}
+
 export function recipeFromJSON(json: string): Recipe {
   const raw = JSON.parse(json) as Record<string, unknown>;
   if (
@@ -20,22 +27,22 @@ export function recipeFromJSON(json: string): Recipe {
   }
 
   const pours: Pour[] = (raw.pours as Record<string, unknown>[]).map((p) => ({
-    index: p.index as number,
-    atSec: s(p.atSec as number),
-    pourAmount: g(p.pourAmount as number),
-    cumulativeWater: g(p.cumulativeWater as number),
+    index: assertFinite(p.index),
+    atSec: s(assertFinite(p.atSec)),
+    pourAmount: g(assertFinite(p.pourAmount)),
+    cumulativeWater: g(assertFinite(p.cumulativeWater)),
     ...(p.label === "bloom" ? { label: "bloom" as const } : {}),
   }));
 
   return {
     method: raw.method as Recipe["method"],
     dripper: raw.dripper as Recipe["dripper"],
-    coffee: g(raw.coffee as number),
-    totalWater: g(raw.totalWater as number),
-    ratio: ratio(raw.ratio as number),
-    temperature: c(raw.temperature as number),
+    coffee: g(assertFinite(raw.coffee)),
+    totalWater: g(assertFinite(raw.totalWater)),
+    ratio: ratio(assertFinite(raw.ratio)),
+    temperature: c(assertFinite(raw.temperature)),
     pours,
-    totalTimeSec: s(raw.totalTimeSec as number),
+    totalTimeSec: s(assertFinite(raw.totalTimeSec)),
     grindHint: raw.grindHint as Recipe["grindHint"],
     notes: (raw.notes as string[]) ?? [],
   };

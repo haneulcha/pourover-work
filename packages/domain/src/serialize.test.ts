@@ -33,4 +33,23 @@ describe("recipe serialize round-trip", () => {
     expect(() => recipeFromJSON("{not json")).toThrow();
     expect(() => recipeFromJSON('{"method":"v60"}')).toThrow();
   });
+
+  it("throws when a top-level numeric field is non-numeric (e.g. coffee is a string)", () => {
+    const json = recipeToJSON(sample);
+    const obj = JSON.parse(json) as Record<string, unknown>;
+    obj["coffee"] = "twenty";
+    expect(() => recipeFromJSON(JSON.stringify(obj))).toThrow(
+      "recipeFromJSON: malformed recipe payload",
+    );
+  });
+
+  it("throws when a pour numeric field is non-numeric (e.g. pourAmount is null)", () => {
+    const json = recipeToJSON(sample);
+    const obj = JSON.parse(json) as Record<string, unknown>;
+    const pours = obj["pours"] as Record<string, unknown>[];
+    pours[0] = { ...pours[0], pourAmount: null };
+    expect(() => recipeFromJSON(JSON.stringify(obj))).toThrow(
+      "recipeFromJSON: malformed recipe payload",
+    );
+  });
 });

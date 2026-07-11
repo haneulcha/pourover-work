@@ -26,5 +26,8 @@ export const methodList: readonly BrewMethod[] = Object.values(brewMethods);
 export const methodsForDripper = (dripper: DripperId): readonly BrewMethod[] =>
   methodList.filter((m) => m.supportedDrippers.includes(dripper));
 
-export const getMethodName = (id: BrewMethodId): string =>
-  id === "custom" ? "Custom" : brewMethods[id].name;
+export const getMethodName = (id: BrewMethodId): string => {
+  if (id === "custom") return "Custom";
+  const m = brewMethods[id] as (typeof brewMethods)[keyof typeof brewMethods] | undefined;
+  return m ? m.name : id;
+};
