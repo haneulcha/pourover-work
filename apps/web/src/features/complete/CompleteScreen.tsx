@@ -50,7 +50,9 @@ export function CompleteScreen({ session, logId, onFeelingChange, onExit }: Prop
       feeling: session.feeling ?? null,
       memo: null,
     });
-  }, [isLoggedIn, logId, session]);
+    // fires once via createdRef; session is read at fire time (stable after mount)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoggedIn, logId]);
 
   const handleFeelingTap = (feeling: Feeling): void => {
     const next = session.feeling === feeling ? null : feeling;
@@ -124,13 +126,16 @@ export function CompleteScreen({ session, logId, onFeelingChange, onExit }: Prop
           />
         </section>
       ) : (
-        <button
-          type="button"
-          onClick={() => void signInWithGoogle(window.location.href)}
-          className="mt-6 block w-full text-center text-caption-sm text-text-muted underline underline-offset-2 hover:text-text-secondary"
-        >
-          로그인하면 이 기록이 일기에 남아요
-        </button>
+        <p className="mt-6 text-center text-caption-sm text-text-muted">
+          <button
+            type="button"
+            onClick={() => void signInWithGoogle(window.location.href)}
+            className="underline underline-offset-2 hover:text-text-secondary"
+          >
+            로그인
+          </button>
+          하면 이 기록이 일기에 남아요
+        </p>
       )}
 
       {/* bottom buttons */}

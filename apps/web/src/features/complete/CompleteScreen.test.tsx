@@ -96,7 +96,8 @@ describe("CompleteScreen logging", () => {
     render(
       <CompleteScreen session={loggingSession} logId="log_test" onFeelingChange={noop} onExit={noop} />,
     );
-    expect(screen.getByText(/로그인하면.*일기에 남아요/)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "로그인" })).toBeInTheDocument();
+    expect(screen.getByText(/하면 이 기록이 일기에 남아요/)).toBeInTheDocument();
     expect(screen.queryByLabelText("메모")).not.toBeInTheDocument();
     expect(createLog).not.toHaveBeenCalled();
   });
