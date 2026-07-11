@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   sessionDurationSec,
   type BrewSession,
@@ -7,12 +7,16 @@ import {
 import { cx } from "@/ui/cx";
 import { Footer } from "@/ui/Footer";
 import { formatBrewedAt, formatTime } from "@/ui/format";
+import { useSession } from "@/features/auth/useSession";
+import { signInWithGoogle } from "@/features/auth/api";
+import { createLog, patchLog } from "@/features/diary/api";
 import { BrewSummary } from "./BrewSummary";
 import { FeelingGlyph } from "./FeelingGlyph";
 import { ShareImageDialog } from "@/features/share-image/ShareImageDialog";
 
 type Props = {
   readonly session: BrewSession;
+  readonly logId: string;
   readonly onFeelingChange: (feeling: Feeling | null) => void;
   readonly onExit: () => void;
 };
@@ -23,13 +27,35 @@ const FEELINGS: readonly { id: Feeling; label: string }[] = [
   { id: "wave", label: "아쉬워요" },
 ];
 
-export function CompleteScreen({ session, onFeelingChange, onExit }: Props) {
+export function CompleteScreen({ session, logId, onFeelingChange, onExit }: Props) {
   const { recipe } = session;
   const dateText = formatBrewedAt(session.startedAt);
   const [shareOpen, setShareOpen] = useState(false);
 
+  const auth = useSession();
+  const isLoggedIn = auth.status === "loaded" && auth.session != null;
+  const [memo, setMemo] = useState("");
+  const createdRef = useRef(false);
+
+  // 완료 진입 시 1회 자동 저장(멱등). StrictMode 이중 마운트는 ref로 가드하고,
+  // 서버도 ON CONFLICT 로 멱등이라 이중 안전.
+  useEffect(() => {
+    if (!isLoggedIn || createdRef.current) return;
+    createdRef.current = true;
+    void createLog({
+      id: logId,
+      recipe: session.recipe,
+      brewedAt: new Date(session.startedAt).toISOString(),
+      durationSec: sessionDurationSec(session),
+      feeling: session.feeling ?? null,
+      memo: null,
+    });
+  }, [isLoggedIn, logId, session]);
+
   const handleFeelingTap = (feeling: Feeling): void => {
-    onFeelingChange(session.feeling === feeling ? null : feeling);
+    const next = session.feeling === feeling ? null : feeling;
+    onFeelingChange(next);
+    if (isLoggedIn) void patchLog(logId, { feeling: next });
   };
 
   return (
@@ -82,6 +108,30 @@ export function CompleteScreen({ session, onFeelingChange, onExit }: Props) {
           })}
         </div>
       </section>
+
+      {/* memo / whisper */}
+      {isLoggedIn ? (
+        <section aria-label="메모" className="mt-6">
+          <textarea
+            aria-label="메모"
+            value={memo}
+            maxLength={280}
+            onChange={(e) => setMemo(e.target.value)}
+            onBlur={() => void patchLog(logId, { memo: memo.trim() || null })}
+            placeholder="한 줄 남겨둘까요"
+            rows={2}
+            className="w-full resize-none rounded-card border border-surface-hairline bg-surface-soft px-3 py-2 text-body-sm text-text-primary placeholder:text-text-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-focus"
+          />
+        </section>
+      ) : (
+        <button
+          type="button"
+          onClick={() => void signInWithGoogle(window.location.href)}
+          className="mt-6 block w-full text-center text-caption-sm text-text-muted underline underline-offset-2 hover:text-text-secondary"
+        >
+          로그인하면 이 기록이 일기에 남아요
+        </button>
+      )}
 
       {/* bottom buttons */}
       <div className="mt-auto flex gap-2 pt-10 text-body-sm font-medium">

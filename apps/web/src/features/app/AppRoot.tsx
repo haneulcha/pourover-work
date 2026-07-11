@@ -34,6 +34,7 @@ const loadInitialState = (): AppState => {
 export function AppRoot() {
   const [state, setState] = useState<AppState>(loadInitialState);
   const [session, setSession] = useState<BrewSession | null>(null);
+  const [logId, setLogId] = useState<string | null>(null);
 
   const recipe = useMemo<Recipe | null>(() => {
     if (state.method === "custom") return state.customRecipe ?? null;
@@ -88,6 +89,7 @@ export function AppRoot() {
   };
 
   const handleComplete = useCallback((): void => {
+    setLogId(crypto.randomUUID());
     withViewTransition(() => {
       setSession((prev) =>
         prev ? { ...prev, completedAt: Date.now() } : null,
@@ -172,6 +174,7 @@ export function AppRoot() {
     return (
       <CompleteScreen
         session={session}
+        logId={logId ?? "pending"}
         onFeelingChange={handleFeeling}
         onExit={handleExit}
       />
