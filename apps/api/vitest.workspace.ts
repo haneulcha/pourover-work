@@ -25,6 +25,16 @@ export default defineWorkspace([
         name: "integration",
         include: ["test/**/*.integration.test.ts"],
         setupFiles: ["./test/apply-migrations.ts"],
+        // kysely-d1(CJS)의 `require("kysely")`가 miniflare 워커 풀의
+        // no-cjs-esm-shim 하에서 named export(SqliteQueryCompiler 등)를
+        // 못 읽는 문제 회피 — 두 패키지를 인라인(SSR 번들)해 interop을
+        // Vite가 처리하게 한다. 이래야 createAuth()/getSession()이 테스트
+        // 환경에서도 로드된다.
+        server: {
+          deps: {
+            inline: ["kysely", "kysely-d1"],
+          },
+        },
         poolOptions: {
           workers: {
             wrangler: { configPath: "./wrangler.jsonc" },

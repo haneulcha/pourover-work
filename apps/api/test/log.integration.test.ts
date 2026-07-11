@@ -1,9 +1,18 @@
 import { env, SELF } from "cloudflare:test";
-import { beforeEach, describe, expect, it } from "vitest";
+import { describe, expect, it } from "vitest";
 
 const now = "2026-07-01T00:00:00.000Z";
+const future = "2099-01-01T00:00:00.000Z";
 
-// 실 D1에 user + session 행을 심고, 그 세션 토큰을 쿠키로 반환.
+// 세션을 better-auth가 프로덕션에서 쓰는 것과 동일한 형태로 KV
+// (secondaryStorage)에 심는다. 키는 raw 세션 토큰, 값은
+// JSON.stringify({ session, user }) — internal-adapter.mjs 의
+// createSession KV write(≈212줄) / findSession read(≈222줄) 형태와 일치.
+//
+// 인증은 Authorization: Bearer <rawToken> 로 한다. better-auth bearer 플러그인
+// (auth.ts에서 활성)이 서명 없는 raw 토큰을 secret으로 서명해 세션 쿠키로
+// 주입하면, getSession()의 getSignedCookie가 다시 raw 토큰으로 풀어 KV를
+// 조회한다. 즉 실 가드(createAuth().api.getSession)를 그대로 태운다.
 async function seedSession(userId: string): Promise<string> {
   const token = `tok_${userId}`;
   await env.DB.prepare(
@@ -12,15 +21,31 @@ async function seedSession(userId: string): Promise<string> {
   )
     .bind(userId, "Test", `${userId}@test.dev`, 1, now, now)
     .run();
-  await env.DB.prepare(
-    `INSERT OR REPLACE INTO "session"
-       ("id","expiresAt","token","createdAt","updatedAt","userId")
-     VALUES (?,?,?,?,?,?)`,
-  )
-    .bind(`sess_${userId}`, "2099-01-01T00:00:00.000Z", token, now, now, userId)
-    .run();
-  // better-auth 기본 세션 쿠키명.
-  return `better-auth.session_token=${token}`;
+
+  const value = JSON.stringify({
+    session: {
+      id: `sess_${userId}`,
+      token,
+      userId,
+      expiresAt: future,
+      createdAt: now,
+      updatedAt: now,
+      ipAddress: "",
+      userAgent: "",
+    },
+    user: {
+      id: userId,
+      name: "Test",
+      email: `${userId}@test.dev`,
+      emailVerified: true,
+      image: null,
+      createdAt: now,
+      updatedAt: now,
+    },
+  });
+  await env.AUTH_KV.put(token, value);
+  // better-auth bearer 플러그인이 인식하는 raw 토큰 인증 헤더.
+  return `Bearer ${token}`;
 }
 
 const validRecipe = JSON.stringify({
@@ -46,12 +71,12 @@ function createBody(over: Record<string, unknown> = {}) {
   });
 }
 
-async function post(cookie: string | null, body: string) {
+async function post(auth: string | null, body: string) {
   return SELF.fetch("https://api.test/api/log", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      ...(cookie ? { Cookie: cookie } : {}),
+      ...(auth ? { Authorization: auth } : {}),
     },
     body,
   });
@@ -108,7 +133,7 @@ describe("GET /api/log", () => {
     await post(a, createBody({ id: "l_new", brewedAt: "2026-06-02T00:00:00.000Z" }));
     await post(b, createBody({ id: "l_other" }));
 
-    const res = await SELF.fetch("https://api.test/api/log", { headers: { Cookie: a } });
+    const res = await SELF.fetch("https://api.test/api/log", { headers: { Authorization: a } });
     expect(res.status).toBe(200);
     const list = (await res.json()) as { id: string; method: string; totalWater: number }[];
     expect(list.map((e) => e.id)).toEqual(["l_new", "l_old"]);
@@ -124,13 +149,13 @@ describe("GET /api/log/:id", () => {
     const b = await seedSession("u_get_b");
     await post(a, createBody({ id: "g_1", memo: "hi" }));
 
-    const ok = await SELF.fetch("https://api.test/api/log/g_1", { headers: { Cookie: a } });
+    const ok = await SELF.fetch("https://api.test/api/log/g_1", { headers: { Authorization: a } });
     expect(ok.status).toBe(200);
     const detail = (await ok.json()) as { recipe: string; memo: string | null };
     expect(JSON.parse(detail.recipe).method).toBe("kasuya_4_6");
     expect(detail.memo).toBe("hi");
 
-    const forbidden = await SELF.fetch("https://api.test/api/log/g_1", { headers: { Cookie: b } });
+    const forbidden = await SELF.fetch("https://api.test/api/log/g_1", { headers: { Authorization: b } });
     expect(forbidden.status).toBe(404);
   });
 });
@@ -143,7 +168,7 @@ describe("PATCH /api/log/:id", () => {
     // memo만 변경 — feeling 유지
     await SELF.fetch("https://api.test/api/log/p_1", {
       method: "PATCH",
-      headers: { "Content-Type": "application/json", Cookie: a },
+      headers: { "Content-Type": "application/json", Authorization: a },
       body: JSON.stringify({ memo: "updated" }),
     });
     let row = await env.DB.prepare(`SELECT "feeling","memo" FROM "brewLogEntry" WHERE "id"=?`)
@@ -153,7 +178,7 @@ describe("PATCH /api/log/:id", () => {
     // feeling: null — 지우기
     await SELF.fetch("https://api.test/api/log/p_1", {
       method: "PATCH",
-      headers: { "Content-Type": "application/json", Cookie: a },
+      headers: { "Content-Type": "application/json", Authorization: a },
       body: JSON.stringify({ feeling: null }),
     });
     row = await env.DB.prepare(`SELECT "feeling","memo" FROM "brewLogEntry" WHERE "id"=?`)
@@ -167,7 +192,7 @@ describe("PATCH /api/log/:id", () => {
     await post(a, createBody({ id: "p_owned" }));
     const res = await SELF.fetch("https://api.test/api/log/p_owned", {
       method: "PATCH",
-      headers: { "Content-Type": "application/json", Cookie: b },
+      headers: { "Content-Type": "application/json", Authorization: b },
       body: JSON.stringify({ memo: "hijack" }),
     });
     expect(res.status).toBe(404);
@@ -181,14 +206,14 @@ describe("DELETE /api/log/:id", () => {
     await post(a, createBody({ id: "d_1" }));
 
     const forbidden = await SELF.fetch("https://api.test/api/log/d_1", {
-      method: "DELETE", headers: { Cookie: b },
+      method: "DELETE", headers: { Authorization: b },
     });
     expect(forbidden.status).toBe(404);
     let row = await env.DB.prepare(`SELECT "id" FROM "brewLogEntry" WHERE "id"=?`).bind("d_1").first();
     expect(row).not.toBeNull();
 
     const ok = await SELF.fetch("https://api.test/api/log/d_1", {
-      method: "DELETE", headers: { Cookie: a },
+      method: "DELETE", headers: { Authorization: a },
     });
     expect(ok.status).toBe(204);
     row = await env.DB.prepare(`SELECT "id" FROM "brewLogEntry" WHERE "id"=?`).bind("d_1").first();

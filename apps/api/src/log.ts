@@ -1,4 +1,5 @@
 import { Hono } from "hono";
+import { createAuth } from "./auth";
 import type { Env } from "./index";
 
 const FEELINGS = new Set(["calm", "neutral", "wave"]);
@@ -8,36 +9,17 @@ type Vars = { userId: string };
 
 const logRoutes = new Hono<{ Bindings: Env; Variables: Vars }>();
 
-// better-auth가 발행하는 세션 쿠키명 목록 (버전에 따라 달라질 수 있음).
-const SESSION_COOKIE_NAMES = [
-  "better-auth.session_token",
-  "__Secure-better-auth.session_token",
-];
-
-// 세션 가드 — D1 세션 테이블을 직접 조회해 userId를 추출한다.
-// better-auth의 Kysely 어댑터를 우회하여 miniflare 통합 환경에서도 동작한다.
+// 세션 가드 — better-auth의 getSession()으로 세션을 해석한다.
+// 웹 클라이언트가 보내는 서명된 세션 쿠키(__Secure- 프리픽스, KV secondaryStorage
+// 조회, HMAC 서명 검증)를 모두 better-auth가 처리한다. 통합 테스트는 bearer
+// 플러그인을 통해 Authorization: Bearer <rawToken> 로 같은 경로를 태운다.
+// 절대 D1 "session" 테이블을 직접 조회하지 않는다 — 프로덕션에서 세션은 KV에만
+// 저장되고(D1 미기록), 쿠키 값도 서명되어 있어 raw 토큰 매칭이 불가능하다.
 logRoutes.use("*", async (c, next) => {
-  const cookieHeader = c.req.header("Cookie") ?? "";
-  let token: string | null = null;
-  for (const name of SESSION_COOKIE_NAMES) {
-    const match = cookieHeader.match(
-      new RegExp(`(?:^|;\\s*)${name.replace(".", "\\.")}=([^;]+)`),
-    );
-    if (match?.[1]) {
-      token = match[1];
-      break;
-    }
-  }
-  if (!token) return c.json({ error: "unauthorized" }, 401);
-
-  const row = await c.env.DB.prepare(
-    `SELECT "userId" FROM "session" WHERE "token"=? AND "expiresAt" > ?`,
-  )
-    .bind(token, new Date().toISOString())
-    .first<{ userId: string }>();
-
-  if (!row) return c.json({ error: "unauthorized" }, 401);
-  c.set("userId", row.userId);
+  const auth = createAuth(c.env);
+  const session = await auth.api.getSession({ headers: c.req.raw.headers });
+  if (!session?.user) return c.json({ error: "unauthorized" }, 401);
+  c.set("userId", session.user.id);
   await next();
 });
 
