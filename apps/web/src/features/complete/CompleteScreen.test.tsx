@@ -55,15 +55,13 @@ const loggingRecipe = brewMethods.kasuya_4_6.compute({
 });
 const loggingSession: BrewSession = { recipe: loggingRecipe, startedAt: 1_000, completedAt: 201_000 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const createLog = vi.fn(async (..._a: any[]) => {});
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const patchLog = vi.fn(async (..._a: any[]) => {});
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const createLog = vi.fn(async (..._a: unknown[]) => {});
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const patchLog = vi.fn(async (..._a: unknown[]) => {});
 vi.mock("@/features/diary/api", () => ({
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  createLog: (...a: any[]) => createLog(...a),
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  patchLog: (...a: any[]) => patchLog(...a),
+  createLog: (...a: unknown[]) => createLog(...a),
+  patchLog: (...a: unknown[]) => patchLog(...a),
 }));
 
 const useSession = vi.fn();
