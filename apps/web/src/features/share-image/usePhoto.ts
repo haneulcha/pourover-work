@@ -43,15 +43,15 @@ const downscaleIfLarge = async (originalDataUrl: string): Promise<string> => {
   }
 };
 
-// Reads the file as a data URL rather than a blob URL because html-to-image's
-// foreignObject rasterization cannot reliably inline blob: sources during
-// canvas export — the resulting PNG silently drops the photo or throws
-// SecurityError when the canvas is tainted.
+// Reads the file as a data URL rather than a blob URL so the loaded photo can
+// be persisted/rehydrated without object-URL lifetime management, and decoded
+// straight into a canvas at export time (see `render/photoToBlob`).
 //
 // Camera-original photos (4000+px, several MB) bloat React state, DOM, and
-// localStorage, and amplify the foreignObject decode race on iOS Safari.
-// Downscale long-edge > 1600px sources to a 1600px JPEG (quality 0.85) before
-// storing; smaller inputs pass through untouched.
+// localStorage, so downscale long-edge > 1600px sources to a 1600px JPEG
+// (quality 0.85) before storing; smaller inputs pass through untouched. The
+// share export downscales again to 800px, but a 1600px store keeps the
+// on-screen preview crisp.
 export const usePhoto = (): {
   state: PhotoState;
   setFile: (file: File) => void;

@@ -1,20 +1,14 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import type { BrewSession } from "@pourover/domain/session";
 import { cx } from "@/ui/cx";
 import { PhotoPicker } from "./PhotoPicker";
-import { ShareComposer } from "./ShareComposer";
 import { usePhoto } from "./usePhoto";
-import { domToBlob } from "./render/domToBlob";
+import { photoToBlob } from "./render/photoToBlob";
 import {
   canNativeShareImage,
   shareOrDownload,
   type ShareOutcome,
 } from "./output/shareOrDownload";
-import {
-  DEFAULT_COLOR,
-  DEFAULT_LAYOUT,
-  getVariant,
-} from "./variants/registry";
 
 type Props = {
   readonly open: boolean;
@@ -29,17 +23,13 @@ const filenameFor = (session: BrewSession): string => {
   const y = d.getFullYear();
   const m = String(d.getMonth() + 1).padStart(2, "0");
   const day = String(d.getDate()).padStart(2, "0");
-  return `pourover-${y}-${m}-${day}.png`;
+  return `pourover-${y}-${m}-${day}.jpg`;
 };
 
 export function ShareImageDialog({ open, session, onClose }: Props) {
   const photo = usePhoto();
   const [phase, setPhase] = useState<Phase>("preview");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const composerRef = useRef<HTMLDivElement>(null);
-  const layout = DEFAULT_LAYOUT;
-  const color = DEFAULT_COLOR;
-  const variant = getVariant(layout);
 
   useEffect(() => {
     if (!open) {
@@ -54,11 +44,11 @@ export function ShareImageDialog({ open, session, onClose }: Props) {
   const shareLabel = canNativeShareImage() ? "공유하기" : "이미지 저장";
 
   const handleShare = async (): Promise<void> => {
-    if (composerRef.current == null || photo.state.kind !== "loaded") return;
+    if (photo.state.kind !== "loaded") return;
     setPhase("exporting");
     setErrorMsg(null);
     try {
-      const blob = await domToBlob(composerRef.current, variant.exportSize);
+      const blob = await photoToBlob(photo.state.url);
       const outcome: ShareOutcome = await shareOrDownload(
         blob,
         filenameFor(session),
@@ -79,10 +69,6 @@ export function ShareImageDialog({ open, session, onClose }: Props) {
       setPhase("error");
     }
   };
-
-  // Preview viewport: render at exportSize then scale down to fit dialog.
-  const PREVIEW_WIDTH = 320;
-  const scale = PREVIEW_WIDTH / variant.exportSize.width;
 
   return (
     <div
@@ -127,28 +113,11 @@ export function ShareImageDialog({ open, session, onClose }: Props) {
       {photo.state.kind === "loaded" && (
         <div className="mt-6 flex flex-1 flex-col gap-6">
           <div className="flex flex-1 items-center justify-center overflow-hidden">
-            <div
-              style={{
-                width: `${PREVIEW_WIDTH}px`,
-                height: `${variant.exportSize.height * scale}px`,
-                overflow: "hidden",
-              }}
-            >
-              <div
-                style={{
-                  transform: `scale(${scale})`,
-                  transformOrigin: "top left",
-                }}
-              >
-                <ShareComposer
-                  ref={composerRef}
-                  session={session}
-                  photoUrl={photo.state.url}
-                  layout={layout}
-                  color={color}
-                />
-              </div>
-            </div>
+            <img
+              src={photo.state.url}
+              alt="저장할 사진 미리보기"
+              className="max-h-full max-w-full rounded-card object-contain"
+            />
           </div>
 
           {phase === "error" && errorMsg != null && (

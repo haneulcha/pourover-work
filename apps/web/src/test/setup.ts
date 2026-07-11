@@ -59,3 +59,13 @@ HTMLCanvasElement.prototype.getContext = function (
 HTMLCanvasElement.prototype.toDataURL = function (type?: string): string {
   return `data:${type ?? "image/png"};base64,STUB`;
 };
+
+// jsdom does not rasterize, so `canvas.toBlob` is a no-op that never invokes
+// its callback. The share-image export path (`photoToBlob`) awaits toBlob, so
+// resolve it synchronously with a stub blob carrying the requested MIME type.
+HTMLCanvasElement.prototype.toBlob = function (
+  callback: BlobCallback,
+  type?: string,
+): void {
+  callback(new Blob([new Uint8Array([1])], { type: type ?? "image/png" }));
+};
