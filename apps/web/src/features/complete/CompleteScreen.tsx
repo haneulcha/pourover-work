@@ -1,6 +1,4 @@
 import { useState } from "react";
-import { getMethodName } from "@pourover/domain/methods";
-import { drippers } from "@pourover/domain/drippers";
 import {
   sessionDurationSec,
   type BrewSession,
@@ -8,7 +6,8 @@ import {
 } from "@pourover/domain/session";
 import { cx } from "@/ui/cx";
 import { Footer } from "@/ui/Footer";
-import { formatBrewedAt, formatGrindHint, formatTime } from "@/ui/format";
+import { formatBrewedAt, formatTime } from "@/ui/format";
+import { BrewSummary } from "./BrewSummary";
 import { FeelingGlyph } from "./FeelingGlyph";
 import { ShareImageDialog } from "@/features/share-image/ShareImageDialog";
 
@@ -26,8 +25,6 @@ const FEELINGS: readonly { id: Feeling; label: string }[] = [
 
 export function CompleteScreen({ session, onFeelingChange, onExit }: Props) {
   const { recipe } = session;
-  const dripperName = drippers[recipe.dripper].name;
-  const methodName = getMethodName(recipe.method);
   const dateText = formatBrewedAt(session.startedAt);
   const [shareOpen, setShareOpen] = useState(false);
 
@@ -51,22 +48,7 @@ export function CompleteScreen({ session, onFeelingChange, onExit }: Props) {
       </section>
 
       {/* recipe summary card */}
-      <section aria-label="레시피 요약" className="mt-10">
-        <div className="h-px bg-border" />
-        <div className="grid grid-cols-2 gap-x-4 gap-y-4 py-5">
-          <SummaryCell label="드리퍼" value={dripperName} />
-          <SummaryCell label="레시피" value={methodName} />
-          <SummaryCell
-            label="원두 · 물"
-            value={`${recipe.coffee} · ${recipe.totalWater} g`}
-          />
-          <SummaryCell
-            label="온도 · 분쇄"
-            value={`${recipe.temperature}° · ${formatGrindHint(recipe.grindHint)}`}
-          />
-        </div>
-        <div className="h-px bg-border" />
-      </section>
+      <BrewSummary recipe={recipe} />
 
       {/* feeling */}
       <section
@@ -126,32 +108,6 @@ export function CompleteScreen({ session, onFeelingChange, onExit }: Props) {
         session={session}
         onClose={() => setShareOpen(false)}
       />
-    </div>
-  );
-}
-
-function SummaryCell({
-  label,
-  value,
-  small,
-}: {
-  readonly label: string;
-  readonly value: string;
-  readonly small?: boolean;
-}) {
-  return (
-    <div className="flex flex-col gap-0.5">
-      <span className="text-caption-xxs uppercase tracking-wider text-text-muted">
-        {label}
-      </span>
-      <span
-        className={cx(
-          "tabular-nums",
-          small ? "text-body-sm text-text-secondary" : "text-body-md",
-        )}
-      >
-        {value}
-      </span>
     </div>
   );
 }
