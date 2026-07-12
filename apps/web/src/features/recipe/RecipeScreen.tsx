@@ -155,7 +155,7 @@ export function RecipeScreen({
       </header>
 
       <main className="flex flex-1 flex-col gap-3 px-5 py-4">
-        <div className="h-px bg-border" />
+        <div className="h-px bg-surface-hairline" />
 
         {/* controls */}
         <Row label="커피 양">
@@ -242,7 +242,7 @@ export function RecipeScreen({
           </span>
         </div>
 
-        <div className="h-px bg-border my-2" />
+        <div className="h-px bg-surface-hairline my-2" />
 
         {/* pour schedule */}
         <section className="min-h-0" aria-label="푸어 스케줄">

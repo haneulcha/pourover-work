@@ -9,7 +9,7 @@ export function BrewSummary({ recipe }: { readonly recipe: Recipe }) {
   const methodName = getMethodName(recipe.method);
   return (
     <section aria-label="레시피 요약" className="mt-10">
-      <div className="h-px bg-border" />
+      <div className="h-px bg-surface-hairline" />
       <div className="grid grid-cols-2 gap-x-4 gap-y-4 py-5">
         <SummaryCell label="드리퍼" value={dripperName} />
         <SummaryCell label="레시피" value={methodName} />
@@ -19,7 +19,7 @@ export function BrewSummary({ recipe }: { readonly recipe: Recipe }) {
           value={`${recipe.temperature}° · ${formatGrindHint(recipe.grindHint)}`}
         />
       </div>
-      <div className="h-px bg-border" />
+      <div className="h-px bg-surface-hairline" />
     </section>
   );
 }

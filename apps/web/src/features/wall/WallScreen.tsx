@@ -60,7 +60,7 @@ export function WallScreen({ selectedDripper, onPickDripper, onOpenDiary }: Prop
             );
           })}
         </div>
-        <div className="mx-8 h-px bg-border-strong" />
+        <div className="mx-8 h-px bg-surface-hairline" />
         <p className="mt-8 text-center text-body-sm text-text-muted">
           드리퍼를 선택하면 레시피를 고르러 가요
         </p>
