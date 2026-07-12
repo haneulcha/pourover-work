@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { formatBrewedAt, formatGrindHint, formatTime } from "./format";
+import {
+  formatBrewedAt,
+  formatGrindHint,
+  formatLogClock,
+  formatLogDay,
+  formatTime,
+} from "./format";
 
 describe("formatBrewedAt", () => {
   it("formats AM time with leading-zero month/day", () => {
@@ -30,6 +36,41 @@ describe("formatBrewedAt", () => {
   it("pads minute with leading zero", () => {
     const d = new Date(2026, 0, 1, 9, 5);
     expect(formatBrewedAt(d.getTime())).toBe("2026 · 01 · 01 · 오전 9:05");
+  });
+});
+
+describe("formatLogDay", () => {
+  const now = new Date(2026, 6, 12, 9, 0); // 2026-07-12 09:00 local
+
+  const iso = (...args: [number, number, number, number?, number?]): string =>
+    new Date(...args).toISOString();
+
+  it("labels the same local day 오늘", () => {
+    expect(formatLogDay(iso(2026, 6, 12, 0, 5), now)).toBe("오늘");
+    expect(formatLogDay(iso(2026, 6, 12, 23, 55), now)).toBe("오늘");
+  });
+
+  it("labels the previous local day 어제", () => {
+    expect(formatLogDay(iso(2026, 6, 11, 22, 0), now)).toBe("어제");
+  });
+
+  it("labels older days in the same year without the year", () => {
+    expect(formatLogDay(iso(2026, 6, 8, 9, 10), now)).toBe("7월 8일");
+  });
+
+  it("keeps the year for other years", () => {
+    expect(formatLogDay(iso(2025, 11, 3, 9, 10), now)).toBe("2025년 12월 3일");
+  });
+});
+
+describe("formatLogClock", () => {
+  it("formats the local wall clock", () => {
+    expect(formatLogClock(new Date(2026, 6, 12, 8, 20).toISOString())).toBe(
+      "오전 8:20",
+    );
+    expect(formatLogClock(new Date(2026, 6, 12, 16, 2).toISOString())).toBe(
+      "오후 4:02",
+    );
   });
 });
 

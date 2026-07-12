@@ -12,6 +12,7 @@
   --space-section: 80px;
 
   /* Z-index — 부상 레이어 순서 */
+  --z-sticky: 10; /* 스크롤에 붙는 머리말 — 흘러가는 콘텐츠 위 */
   --z-popover: 20;
   --z-dialog: 30;
 

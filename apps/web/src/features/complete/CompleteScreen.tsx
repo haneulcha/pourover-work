@@ -11,7 +11,7 @@ import { useSession } from "@/features/auth/useSession";
 import { signInWithGoogle } from "@/features/auth/api";
 import { createLog, patchLog } from "@/features/diary/api";
 import { BrewSummary } from "./BrewSummary";
-import { FeelingGlyph } from "./FeelingGlyph";
+import { FEELING_LABEL, FeelingGlyph } from "./FeelingGlyph";
 import { ShareImageDialog } from "@/features/share-image/ShareImageDialog";
 
 type Props = {
@@ -21,11 +21,7 @@ type Props = {
   readonly onExit: () => void;
 };
 
-const FEELINGS: readonly { id: Feeling; label: string }[] = [
-  { id: "calm", label: "만족스러워요" },
-  { id: "neutral", label: "글쎄요" },
-  { id: "wave", label: "아쉬워요" },
-];
+const FEELINGS: readonly Feeling[] = ["calm", "neutral", "wave"];
 
 export function CompleteScreen({ session, logId, onFeelingChange, onExit }: Props) {
   const { recipe } = session;
@@ -87,15 +83,16 @@ export function CompleteScreen({ session, logId, onFeelingChange, onExit }: Prop
           오늘의 핸드드립 경험은 어땠나요?
         </p>
         <div className="flex w-full gap-2">
-          {FEELINGS.map((f) => {
-            const isSelected = session.feeling === f.id;
+          {FEELINGS.map((feeling) => {
+            const label = FEELING_LABEL[feeling];
+            const isSelected = session.feeling === feeling;
             return (
               <button
-                key={f.id}
+                key={feeling}
                 type="button"
                 aria-pressed={isSelected}
-                aria-label={f.label}
-                onClick={() => handleFeelingTap(f.id)}
+                aria-label={label}
+                onClick={() => handleFeelingTap(feeling)}
                 className={cx(
                   "flex h-20 flex-1 flex-col items-center justify-center gap-1.5 rounded-card border transition-colors",
                   isSelected
@@ -103,8 +100,8 @@ export function CompleteScreen({ session, logId, onFeelingChange, onExit }: Prop
                     : "border-surface-hairline text-text-secondary hover:bg-surface-strong/60",
                 )}
               >
-                <FeelingGlyph kind={f.id} size={34} />
-                <span className="text-caption-sm">{f.label}</span>
+                <FeelingGlyph kind={feeling} size={34} />
+                <span className="text-caption-sm">{label}</span>
               </button>
             );
           })}
