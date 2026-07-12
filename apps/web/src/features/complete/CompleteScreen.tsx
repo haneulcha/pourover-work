@@ -1,6 +1,4 @@
-import { useState } from "react";
-import { getMethodName } from "@pourover/domain/methods";
-import { drippers } from "@pourover/domain/drippers";
+import { useEffect, useRef, useState } from "react";
 import {
   sessionDurationSec,
   type BrewSession,
@@ -8,31 +6,54 @@ import {
 } from "@pourover/domain/session";
 import { cx } from "@/ui/cx";
 import { Footer } from "@/ui/Footer";
-import { formatBrewedAt, formatGrindHint, formatTime } from "@/ui/format";
-import { FeelingGlyph } from "./FeelingGlyph";
+import { formatBrewedAt, formatTime } from "@/ui/format";
+import { useSession } from "@/features/auth/useSession";
+import { signInWithGoogle } from "@/features/auth/api";
+import { createLog, patchLog } from "@/features/diary/api";
+import { BrewSummary } from "./BrewSummary";
+import { FEELING_LABEL, FeelingGlyph } from "./FeelingGlyph";
 import { ShareImageDialog } from "@/features/share-image/ShareImageDialog";
 
 type Props = {
   readonly session: BrewSession;
+  readonly logId: string;
   readonly onFeelingChange: (feeling: Feeling | null) => void;
   readonly onExit: () => void;
 };
 
-const FEELINGS: readonly { id: Feeling; label: string }[] = [
-  { id: "calm", label: "만족스러워요" },
-  { id: "neutral", label: "글쎄요" },
-  { id: "wave", label: "아쉬워요" },
-];
+const FEELINGS: readonly Feeling[] = ["calm", "neutral", "wave"];
 
-export function CompleteScreen({ session, onFeelingChange, onExit }: Props) {
+export function CompleteScreen({ session, logId, onFeelingChange, onExit }: Props) {
   const { recipe } = session;
-  const dripperName = drippers[recipe.dripper].name;
-  const methodName = getMethodName(recipe.method);
   const dateText = formatBrewedAt(session.startedAt);
   const [shareOpen, setShareOpen] = useState(false);
 
+  const auth = useSession();
+  const isLoggedIn = auth.status === "loaded" && auth.session != null;
+  const [memo, setMemo] = useState("");
+  const createdRef = useRef(false);
+
+  // 완료 진입 시 1회 자동 저장(멱등). StrictMode 이중 마운트는 ref로 가드하고,
+  // 서버도 ON CONFLICT 로 멱등이라 이중 안전.
+  useEffect(() => {
+    if (!isLoggedIn || createdRef.current) return;
+    createdRef.current = true;
+    void createLog({
+      id: logId,
+      recipe: session.recipe,
+      brewedAt: new Date(session.startedAt).toISOString(),
+      durationSec: sessionDurationSec(session),
+      feeling: session.feeling ?? null,
+      memo: null,
+    });
+    // fires once via createdRef; session is read at fire time (stable after mount)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoggedIn, logId]);
+
   const handleFeelingTap = (feeling: Feeling): void => {
-    onFeelingChange(session.feeling === feeling ? null : feeling);
+    const next = session.feeling === feeling ? null : feeling;
+    onFeelingChange(next);
+    if (isLoggedIn) void patchLog(logId, { feeling: next });
   };
 
   return (
@@ -51,22 +72,7 @@ export function CompleteScreen({ session, onFeelingChange, onExit }: Props) {
       </section>
 
       {/* recipe summary card */}
-      <section aria-label="레시피 요약" className="mt-10">
-        <div className="h-px bg-border" />
-        <div className="grid grid-cols-2 gap-x-4 gap-y-4 py-5">
-          <SummaryCell label="드리퍼" value={dripperName} />
-          <SummaryCell label="레시피" value={methodName} />
-          <SummaryCell
-            label="원두 · 물"
-            value={`${recipe.coffee} · ${recipe.totalWater} g`}
-          />
-          <SummaryCell
-            label="온도 · 분쇄"
-            value={`${recipe.temperature}° · ${formatGrindHint(recipe.grindHint)}`}
-          />
-        </div>
-        <div className="h-px bg-border" />
-      </section>
+      <BrewSummary recipe={recipe} />
 
       {/* feeling */}
       <section
@@ -77,15 +83,16 @@ export function CompleteScreen({ session, onFeelingChange, onExit }: Props) {
           오늘의 핸드드립 경험은 어땠나요?
         </p>
         <div className="flex w-full gap-2">
-          {FEELINGS.map((f) => {
-            const isSelected = session.feeling === f.id;
+          {FEELINGS.map((feeling) => {
+            const label = FEELING_LABEL[feeling];
+            const isSelected = session.feeling === feeling;
             return (
               <button
-                key={f.id}
+                key={feeling}
                 type="button"
                 aria-pressed={isSelected}
-                aria-label={f.label}
-                onClick={() => handleFeelingTap(f.id)}
+                aria-label={label}
+                onClick={() => handleFeelingTap(feeling)}
                 className={cx(
                   "flex h-20 flex-1 flex-col items-center justify-center gap-1.5 rounded-card border transition-colors",
                   isSelected
@@ -93,13 +100,40 @@ export function CompleteScreen({ session, onFeelingChange, onExit }: Props) {
                     : "border-surface-hairline text-text-secondary hover:bg-surface-strong/60",
                 )}
               >
-                <FeelingGlyph kind={f.id} size={34} />
-                <span className="text-caption-sm">{f.label}</span>
+                <FeelingGlyph kind={feeling} size={34} />
+                <span className="text-caption-sm">{label}</span>
               </button>
             );
           })}
         </div>
       </section>
+
+      {/* memo / whisper */}
+      {isLoggedIn ? (
+        <section aria-label="메모" className="mt-6">
+          <textarea
+            aria-label="메모"
+            value={memo}
+            maxLength={280}
+            onChange={(e) => setMemo(e.target.value)}
+            onBlur={() => void patchLog(logId, { memo: memo.trim() || null })}
+            placeholder="한 줄 남겨둘까요"
+            rows={2}
+            className="w-full resize-none rounded-card border border-surface-hairline bg-surface-soft px-3 py-2 text-body-sm text-text-primary placeholder:text-text-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-focus"
+          />
+        </section>
+      ) : (
+        <p className="mt-6 text-center text-caption-sm text-text-muted">
+          <button
+            type="button"
+            onClick={() => void signInWithGoogle(window.location.href)}
+            className="underline underline-offset-2 hover:text-text-secondary"
+          >
+            로그인
+          </button>
+          하면 이 기록이 일기에 남아요
+        </p>
+      )}
 
       {/* bottom buttons */}
       <div className="mt-auto flex gap-2 pt-10 text-body-sm font-medium">
@@ -126,32 +160,6 @@ export function CompleteScreen({ session, onFeelingChange, onExit }: Props) {
         session={session}
         onClose={() => setShareOpen(false)}
       />
-    </div>
-  );
-}
-
-function SummaryCell({
-  label,
-  value,
-  small,
-}: {
-  readonly label: string;
-  readonly value: string;
-  readonly small?: boolean;
-}) {
-  return (
-    <div className="flex flex-col gap-0.5">
-      <span className="text-caption-xxs uppercase tracking-wider text-text-muted">
-        {label}
-      </span>
-      <span
-        className={cx(
-          "tabular-nums",
-          small ? "text-body-sm text-text-secondary" : "text-body-md",
-        )}
-      >
-        {value}
-      </span>
     </div>
   );
 }

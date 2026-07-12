@@ -13,6 +13,8 @@ import { g } from "@pourover/domain/units";
 import { BrewingScreen } from "@/features/brewing/BrewingScreen";
 import { CompleteScreen } from "@/features/complete/CompleteScreen";
 import { CustomRecipeScreen } from "@/features/custom/CustomRecipeScreen";
+import { DiaryDetailScreen } from "@/features/diary/DiaryDetailScreen";
+import { DiaryScreen } from "@/features/diary/DiaryScreen";
 import { RecipeScreen } from "@/features/recipe/RecipeScreen";
 import { WallScreen } from "@/features/wall/WallScreen";
 import { loadParams, saveParams, saveSession } from "@/features/share/storage";
@@ -34,6 +36,7 @@ const loadInitialState = (): AppState => {
 export function AppRoot() {
   const [state, setState] = useState<AppState>(loadInitialState);
   const [session, setSession] = useState<BrewSession | null>(null);
+  const [logId, setLogId] = useState<string | null>(null);
 
   const recipe = useMemo<Recipe | null>(() => {
     if (state.method === "custom") return state.customRecipe ?? null;
@@ -88,6 +91,7 @@ export function AppRoot() {
   };
 
   const handleComplete = useCallback((): void => {
+    setLogId(crypto.randomUUID());
     withViewTransition(() => {
       setSession((prev) =>
         prev ? { ...prev, completedAt: Date.now() } : null,
@@ -149,11 +153,36 @@ export function AppRoot() {
     );
   }, []);
 
+  if (state.screen === "diary") {
+    return (
+      <DiaryScreen
+        onBack={() => withViewTransition(() =>
+          setState((prev) => mergeState(prev, { screen: "wall" })))}
+        onOpen={(id) => withViewTransition(() =>
+          setState((prev) => mergeState(prev, { screen: "diary-detail", selectedLogId: id })))}
+      />
+    );
+  }
+
+  if (state.screen === "diary-detail" && state.selectedLogId) {
+    return (
+      <DiaryDetailScreen
+        id={state.selectedLogId}
+        onBack={() => withViewTransition(() =>
+          setState((prev) => mergeState(prev, { screen: "diary" })))}
+        onDeleted={() => withViewTransition(() =>
+          setState((prev) => mergeState(prev, { screen: "diary" })))}
+      />
+    );
+  }
+
   if (state.screen === "wall") {
     return (
       <WallScreen
         selectedDripper={state.dripper}
         onPickDripper={handlePickDripper}
+        onOpenDiary={() => withViewTransition(() =>
+          setState((prev) => mergeState(prev, { screen: "diary" })))}
       />
     );
   }
@@ -172,6 +201,7 @@ export function AppRoot() {
     return (
       <CompleteScreen
         session={session}
+        logId={logId ?? "pending"}
         onFeelingChange={handleFeeling}
         onExit={handleExit}
       />

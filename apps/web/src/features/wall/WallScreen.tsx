@@ -1,6 +1,7 @@
 import { dripperList } from "@pourover/domain/drippers";
 import type { DripperId } from "@pourover/domain/types";
 import { LoginPill } from "@/features/auth/LoginPill";
+import { DiaryLink } from "@/features/diary/DiaryLink";
 import { cx } from "@/ui/cx";
 import { DripperIcon } from "@/ui/DripperIcon";
 import { Footer } from "@/ui/Footer";
@@ -8,12 +9,14 @@ import { Footer } from "@/ui/Footer";
 type Props = {
   readonly selectedDripper: DripperId;
   readonly onPickDripper: (id: DripperId) => void;
+  readonly onOpenDiary: () => void;
 };
 
-export function WallScreen({ selectedDripper, onPickDripper }: Props) {
+export function WallScreen({ selectedDripper, onPickDripper, onOpenDiary }: Props) {
   return (
     <div className="mx-auto flex min-h-svh max-w-lg flex-col bg-surface-strong text-text-primary">
-      <div className="flex justify-end px-5 pt-4">
+      <div className="flex items-center justify-end gap-2 px-5 pt-4">
+        <DiaryLink onOpen={onOpenDiary} />
         <LoginPill />
       </div>
       {/* 타이틀 zone */}
@@ -57,7 +60,7 @@ export function WallScreen({ selectedDripper, onPickDripper }: Props) {
             );
           })}
         </div>
-        <div className="mx-8 h-px bg-border-strong" />
+        <div className="mx-8 h-px bg-surface-hairline" />
         <p className="mt-8 text-center text-body-sm text-text-muted">
           드리퍼를 선택하면 레시피를 고르러 가요
         </p>

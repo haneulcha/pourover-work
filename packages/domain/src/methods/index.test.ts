@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { brewMethods, methodList, methodsForDripper } from "./index";
+import { brewMethods, getMethodName, methodList, methodsForDripper } from "./index";
 
 describe("brew method registry", () => {
   it("includes all v1 methods", () => {
@@ -35,6 +35,23 @@ describe("brew method registry", () => {
       "scott_rao",
       "standard_3_stage",
     ]);
+  });
+
+  describe("getMethodName", () => {
+    it("returns the registered name for a known method id", () => {
+      expect(getMethodName("kasuya_4_6")).toBe(brewMethods.kasuya_4_6.name);
+    });
+
+    it("returns 'Custom' for the custom id", () => {
+      expect(getMethodName("custom")).toBe("Custom");
+    });
+
+    it("returns the raw id string (does not throw) for an unknown/retired method id", () => {
+      // D4: stored logs may reference method ids that were later retired from the registry.
+      // getMethodName must not crash during diary list render in that case.
+      expect(() => getMethodName("deleted_method" as never)).not.toThrow();
+      expect(getMethodName("deleted_method" as never)).toBe("deleted_method");
+    });
   });
 
   describe("methodsForDripper", () => {

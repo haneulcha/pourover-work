@@ -1,5 +1,12 @@
 import type { Feeling } from "@pourover/domain/session";
 
+// 감정의 이름은 한 곳에서만. 완료 화면의 선택지와 일기의 표시가 같은 말을 쓴다.
+export const FEELING_LABEL: Record<Feeling, string> = {
+  calm: "만족스러워요",
+  neutral: "글쎄요",
+  wave: "아쉬워요",
+};
+
 type Props = {
   readonly kind: Feeling;
   readonly size?: number;

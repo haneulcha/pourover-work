@@ -85,6 +85,7 @@ export default {
         "overlay-in": "overlay-in var(--motion-duration-base) var(--motion-easing) both",
       },
       zIndex: {
+        sticky: "var(--z-sticky)",
         popover: "var(--z-popover)",
         dialog: "var(--z-dialog)",
       },

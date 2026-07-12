@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { createAuth } from "./auth";
+import { logRoutes } from "./log";
 
 export type Env = {
   readonly DB: D1Database;
@@ -21,7 +22,7 @@ app.use("/api/*", (c, next) =>
     origin: c.env.WEB_ORIGIN,
     credentials: true,
     allowHeaders: ["Content-Type", "Authorization"],
-    allowMethods: ["GET", "POST", "OPTIONS"],
+    allowMethods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
   })(c, next),
 );
 
@@ -30,6 +31,8 @@ app.on(["GET", "POST"], "/api/auth/*", (c) => {
   const auth = createAuth(c.env);
   return auth.handler(c.req.raw);
 });
+
+app.route("/api/log", logRoutes);
 
 app.get("/healthz", async (c) => {
   try {

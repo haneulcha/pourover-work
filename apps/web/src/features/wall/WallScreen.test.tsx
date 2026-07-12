@@ -6,9 +6,13 @@ vi.mock("@/features/auth/LoginPill", () => ({
   LoginPill: () => null,
 }));
 
+vi.mock("@/features/diary/DiaryLink", () => ({
+  DiaryLink: () => null,
+}));
+
 describe("WallScreen", () => {
   it("renders title and subtitle", () => {
-    render(<WallScreen selectedDripper="v60" onPickDripper={vi.fn()} />);
+    render(<WallScreen selectedDripper="v60" onPickDripper={vi.fn()} onOpenDiary={vi.fn()} />);
     expect(
       screen.getByRole("heading", { level: 1, name: "핸드드립 계산기" }),
     ).toBeInTheDocument();
@@ -16,7 +20,7 @@ describe("WallScreen", () => {
   });
 
   it("renders both dripper options with names", () => {
-    render(<WallScreen selectedDripper="v60" onPickDripper={vi.fn()} />);
+    render(<WallScreen selectedDripper="v60" onPickDripper={vi.fn()} onOpenDiary={vi.fn()} />);
     expect(screen.getByRole("button", { name: /V60/ })).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: /Kalita Wave/ }),
@@ -25,14 +29,14 @@ describe("WallScreen", () => {
 
   it("calls onPickDripper with tapped dripper id", () => {
     const onPickDripper = vi.fn();
-    render(<WallScreen selectedDripper="v60" onPickDripper={onPickDripper} />);
+    render(<WallScreen selectedDripper="v60" onPickDripper={onPickDripper} onOpenDiary={vi.fn()} />);
     fireEvent.click(screen.getByRole("button", { name: /Kalita Wave/ }));
     expect(onPickDripper).toHaveBeenCalledWith("kalita_wave");
   });
 
   it("marks the selected dripper with aria-pressed", () => {
     render(
-      <WallScreen selectedDripper="kalita_wave" onPickDripper={vi.fn()} />,
+      <WallScreen selectedDripper="kalita_wave" onPickDripper={vi.fn()} onOpenDiary={vi.fn()} />,
     );
     const v60 = screen.getByRole("button", { name: /V60/ });
     const kalita = screen.getByRole("button", { name: /Kalita Wave/ });
